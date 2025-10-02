@@ -1,13 +1,14 @@
 'use client'
 
 import { useCart } from '@/contexts/CartContext'
+import Link from 'next/link'
 
 export default function CartIcon() {
   const { state } = useCart()
   const { totalItems } = state
 
   return (
-    <a href="/cart" style={{
+    <Link href="/cart" style={{
       color: 'var(--text-secondary)',
       fontWeight: '500',
       transition: 'color 0.2s ease',
@@ -52,6 +53,6 @@ export default function CartIcon() {
         )}
       </div>
       <span>Cart</span>
-    </a>
+    </Link>
   )
 }

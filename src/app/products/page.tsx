@@ -2,6 +2,7 @@
 
 import { useProducts } from '@/hooks/useProducts'
 import { useCart } from '@/contexts/CartContext'
+import Image from 'next/image'
 
 export default function ProductsPage() {
   const { data: products = [], isLoading, error } = useProducts()
@@ -57,12 +58,11 @@ export default function ProductsPage() {
                   borderRadius: '12px',
                   overflow: 'hidden'
                 }}>
-                  <img
+                  <Image
                     src={product.images[0]}
                     alt={product.name}
+                    fill
                     style={{
-                      width: '100%',
-                      height: '100%',
                       objectFit: 'cover'
                     }}
                   />

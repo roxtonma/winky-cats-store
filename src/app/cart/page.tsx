@@ -1,6 +1,8 @@
 'use client'
 
 import { useCart } from '@/contexts/CartContext'
+import Link from 'next/link'
+import Image from 'next/image'
 
 export default function CartPage() {
   const { state, updateQuantity, removeItem } = useCart()
@@ -26,7 +28,7 @@ export default function CartPage() {
           <p style={{ fontSize: '1.2rem', color: 'var(--text-secondary)', marginBottom: '2rem' }}>
             Your cart is empty
           </p>
-          <a href="/products" style={{
+          <Link href="/products" style={{
             background: 'linear-gradient(135deg, var(--accent-primary), var(--accent-secondary))',
             color: 'white',
             padding: '1rem 2rem',
@@ -38,7 +40,7 @@ export default function CartPage() {
             transition: 'transform 0.2s ease'
           }}>
             Continue Shopping
-          </a>
+          </Link>
         </div>
       ) : (
         <div>
@@ -55,11 +57,14 @@ export default function CartPage() {
                 marginBottom: '1rem'
               }}>
                 {item.image && (
-                  <img
-                    src={item.image}
-                    alt={item.name}
-                    style={{ width: '80px', height: '80px', objectFit: 'cover', borderRadius: '4px' }}
-                  />
+                  <div style={{ position: 'relative', width: '80px', height: '80px' }}>
+                    <Image
+                      src={item.image}
+                      alt={item.name}
+                      fill
+                      style={{ objectFit: 'cover', borderRadius: '4px' }}
+                    />
+                  </div>
                 )}
 
                 <div style={{ flex: 1 }}>

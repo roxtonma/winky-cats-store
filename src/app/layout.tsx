@@ -4,6 +4,7 @@ import "./globals.css";
 import QueryProvider from "@/providers/QueryProvider";
 import { CartProvider } from "@/contexts/CartContext";
 import CartIcon from "@/components/CartIcon";
+import Link from "next/link";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -37,23 +38,24 @@ export default function RootLayout({
             }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <h1>
-                  <span style={{
+                  <Link href="/" style={{
                     fontSize: '1.5rem',
                     fontWeight: '600',
                     color: 'var(--text-primary)',
-                    cursor: 'pointer'
-                  }} onClick={() => window.location.href = '/'}>
+                    textDecoration: 'none'
+                  }}>
                     Winky Store
-                  </span>
+                  </Link>
                 </h1>
                 <div style={{ display: 'flex', gap: '2rem', alignItems: 'center' }}>
-                  <a href="/products" style={{
+                  <Link href="/products" style={{
                     color: 'var(--text-secondary)',
                     fontWeight: '500',
-                    transition: 'color 0.2s ease'
+                    transition: 'color 0.2s ease',
+                    textDecoration: 'none'
                   }}>
                     Products
-                  </a>
+                  </Link>
                   <CartIcon />
                 </div>
               </div>

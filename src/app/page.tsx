@@ -1,3 +1,5 @@
+import Link from 'next/link'
+
 export default function Home() {
   return (
     <div style={{ padding: '3rem 2rem', maxWidth: '1200px', margin: '0 auto' }}>
@@ -85,7 +87,7 @@ export default function Home() {
         </section>
 
         <section style={{ textAlign: 'center' }}>
-          <a href="/products" style={{
+          <Link href="/products" style={{
             background: 'linear-gradient(135deg, var(--accent-primary), var(--accent-secondary))',
             color: 'white',
             padding: '1rem 2.5rem',
@@ -97,7 +99,7 @@ export default function Home() {
             boxShadow: '0 4px 12px rgba(167, 139, 250, 0.3)'
           }}>
             Shop All Products
-          </a>
+          </Link>
         </section>
       </main>
     </div>
