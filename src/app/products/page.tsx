@@ -56,12 +56,14 @@ export default function ProductsPage() {
                   justifyContent: 'center',
                   marginBottom: '1.5rem',
                   borderRadius: '12px',
-                  overflow: 'hidden'
+                  overflow: 'hidden',
+                  position: 'relative'
                 }}>
                   <Image
                     src={product.images[0]}
                     alt={product.name}
                     fill
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     style={{
                       objectFit: 'cover'
                     }}

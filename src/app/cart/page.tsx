@@ -57,12 +57,20 @@ export default function CartPage() {
                 marginBottom: '1rem'
               }}>
                 {item.image && (
-                  <div style={{ position: 'relative', width: '80px', height: '80px' }}>
+                  <div style={{
+                    position: 'relative',
+                    width: '80px',
+                    height: '80px',
+                    flexShrink: 0,
+                    borderRadius: '8px',
+                    overflow: 'hidden'
+                  }}>
                     <Image
                       src={item.image}
                       alt={item.name}
                       fill
-                      style={{ objectFit: 'cover', borderRadius: '4px' }}
+                      sizes="80px"
+                      style={{ objectFit: 'cover' }}
                     />
                   </div>
                 )}

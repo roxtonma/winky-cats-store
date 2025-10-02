@@ -85,3 +85,31 @@ input:focus, textarea:focus, select:focus {
   outline: none;
   border-color: var(--accent-primary);
 }
+
+/* Mobile improvements */
+@media (max-width: 768px) {
+  .card {
+    padding: 1rem;
+  }
+
+  /* Fix image loading issues */
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+
+  /* Better mobile spacing */
+  body {
+    font-size: 14px;
+  }
+
+  /* Mobile navigation */
+  nav {
+    padding: 1rem !important;
+  }
+
+  /* Mobile button sizes */
+  button {
+    min-height: 44px; /* iOS touch target */
+  }
+}
