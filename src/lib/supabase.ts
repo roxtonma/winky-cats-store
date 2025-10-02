@@ -40,8 +40,8 @@ export type Order = {
   customer_phone?: string
   status: string
   total_amount: number
-  shipping_address?: any
-  billing_address?: any
+  shipping_address?: Record<string, unknown>
+  billing_address?: Record<string, unknown>
   notes?: string
   created_at: string
   updated_at: string

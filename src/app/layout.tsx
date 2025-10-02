@@ -37,13 +37,14 @@ export default function RootLayout({
             }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <h1>
-                  <a href="/" style={{
+                  <span style={{
                     fontSize: '1.5rem',
                     fontWeight: '600',
-                    color: 'var(--text-primary)'
-                  }}>
+                    color: 'var(--text-primary)',
+                    cursor: 'pointer'
+                  }} onClick={() => window.location.href = '/'}>
                     Winky Store
-                  </a>
+                  </span>
                 </h1>
                 <div style={{ display: 'flex', gap: '2rem', alignItems: 'center' }}>
                   <a href="/products" style={{
