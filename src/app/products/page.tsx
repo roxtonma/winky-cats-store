@@ -6,10 +6,21 @@ import Image from 'next/image'
 import styles from './products.module.css'
 import { ProductSkeletonGrid } from '@/components/ProductSkeleton'
 import LoadingSpinner from '@/components/LoadingSpinner'
+import { useSearchParams } from 'next/navigation'
+import { useMemo } from 'react'
 
 export default function ProductsPage() {
-  const { data: products = [], isLoading, error } = useProducts()
+  const searchParams = useSearchParams()
+  const categoryFilter = searchParams.get('category')
+
+  // Build API URL with category filter
+  const apiUrl = categoryFilter ? `/api/products?category=${categoryFilter}` : '/api/products'
+
+  const { data: products = [], isLoading, error } = useProducts(apiUrl)
   const { addItem } = useCart()
+
+  // Products already filtered by API
+  const filteredProducts = products
 
   if (error) return (
     <div className={styles.container}>
@@ -20,22 +31,29 @@ export default function ProductsPage() {
     </div>
   )
 
+  // Get category display name
+  const categoryName = categoryFilter
+    ? categoryFilter.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')
+    : null
+
   return (
     <div className={styles.container}>
-      <h1 className={styles.title}>Our Products</h1>
+      <h1 className={styles.title}>
+        {categoryName ? `${categoryName}` : 'Our Products'}
+      </h1>
 
       {isLoading ? (
         <div className={styles.productsGrid}>
           <ProductSkeletonGrid count={6} />
         </div>
-      ) : products.length === 0 ? (
+      ) : filteredProducts.length === 0 ? (
         <div className={styles.emptyState}>
-          <p>No products available yet.</p>
+          <p>No products found{categoryName ? ` in ${categoryName}` : ''}.</p>
           <p>Add some products to your Supabase database to see them here!</p>
         </div>
       ) : (
         <div className={styles.productsGrid}>
-          {products.map((product) => (
+          {filteredProducts.map((product) => (
             <div key={product.id} className={styles.productCard}>
               {product.images && product.images.length > 0 && (
                 <div className={styles.productImageWrapper}>

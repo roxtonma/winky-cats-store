@@ -1,13 +1,24 @@
 import { supabase } from '@/lib/supabase'
 import { NextResponse } from 'next/server'
+import { NextRequest } from 'next/server'
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
-    const { data: products, error } = await supabase
+    const searchParams = request.nextUrl.searchParams
+    const categorySlug = searchParams.get('category')
+
+    // Build query with category join
+    let query = supabase
       .from('products')
-      .select('*')
+      .select('*, category:categories(id, name, slug)')
       .eq('is_active', true)
-      .order('created_at', { ascending: false })
+
+    // Filter by category slug if provided
+    if (categorySlug) {
+      query = query.eq('categories.slug', categorySlug)
+    }
+
+    const { data: products, error } = await query.order('created_at', { ascending: false })
 
     if (error) throw error
 

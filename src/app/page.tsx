@@ -15,24 +15,24 @@ export default function Home() {
         <section className={styles.featuredSection}>
           <h2 className={styles.sectionTitle}>Featured Categories</h2>
           <div className={styles.categoriesGrid}>
-            <div className={styles.categoryCard}>
+            <Link href="/products?category=t-shirts" className={styles.categoryCard}>
               <h3 className={styles.categoryTitle}>T-Shirts & Apparel</h3>
               <p className={styles.categoryDescription}>
                 Custom printed t-shirts, hoodies, and apparel for every style
               </p>
-            </div>
-            <div className={styles.categoryCard}>
+            </Link>
+            <Link href="/products?category=accessories" className={styles.categoryCard}>
               <h3 className={styles.categoryTitle}>Accessories</h3>
               <p className={styles.categoryDescription}>
                 Bags, mugs, and other custom accessories with your designs
               </p>
-            </div>
-            <div className={styles.categoryCard}>
+            </Link>
+            <Link href="/products" className={styles.categoryCard}>
               <h3 className={styles.categoryTitle}>Custom Designs</h3>
               <p className={styles.categoryDescription}>
                 Upload your artwork and create unique personalized products
               </p>
-            </div>
+            </Link>
           </div>
         </section>
 

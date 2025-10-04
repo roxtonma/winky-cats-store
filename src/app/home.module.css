@@ -48,11 +48,21 @@
   padding: 2rem;
   text-align: center;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
 }
 
 .categoryCard:hover {
   transform: translateY(-4px);
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  text-decoration: none;
+}
+
+.categoryCard:focus-visible {
+  outline: 3px solid var(--focus-ring);
+  outline-offset: 2px;
 }
 
 .categoryTitle {

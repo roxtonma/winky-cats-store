@@ -1,11 +1,11 @@
 import { useQuery } from '@tanstack/react-query'
 import { Product } from '@/lib/supabase'
 
-export const useProducts = () => {
+export const useProducts = (apiUrl: string = '/api/products') => {
   return useQuery<Product[]>({
-    queryKey: ['products'],
+    queryKey: ['products', apiUrl],
     queryFn: async () => {
-      const response = await fetch('/api/products')
+      const response = await fetch(apiUrl)
       if (!response.ok) {
         throw new Error('Failed to fetch products')
       }

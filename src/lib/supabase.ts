@@ -25,9 +25,15 @@ export type Product = {
   sku?: string
   inventory_quantity: number
   category_id?: string
+  category?: {
+    id: string
+    name: string
+    slug: string
+  }
   images?: string[]
   is_active: boolean
   weight?: number
+  tags?: string[]
   created_at: string
   updated_at: string
 }
