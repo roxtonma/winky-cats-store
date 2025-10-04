@@ -1,0 +1,123 @@
+.container {
+  padding: 3rem 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.hero {
+  text-align: center;
+  margin-bottom: 4rem;
+}
+
+.heroTitle {
+  font-size: clamp(2rem, 5vw, 3rem);
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: var(--text-primary);
+}
+
+.heroSubtitle {
+  font-size: clamp(1rem, 3vw, 1.2rem);
+  color: var(--text-secondary);
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.featuredSection {
+  margin-bottom: 4rem;
+}
+
+.sectionTitle {
+  font-size: clamp(1.5rem, 4vw, 2rem);
+  font-weight: 600;
+  margin-bottom: 2rem;
+  text-align: center;
+  color: var(--text-primary);
+}
+
+.categoriesGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+.categoryCard {
+  background: var(--bg-card);
+  border: 1px solid var(--border-light);
+  border-radius: 12px;
+  padding: 2rem;
+  text-align: center;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.categoryCard:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+.categoryTitle {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  color: var(--accent-primary);
+}
+
+.categoryDescription {
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.ctaSection {
+  text-align: center;
+}
+
+.shopAllBtn {
+  background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+  color: white;
+  padding: 1rem 2.5rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  border-radius: 12px;
+  display: inline-block;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 4px 12px rgba(167, 139, 250, 0.3);
+  text-decoration: none;
+}
+
+.shopAllBtn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(167, 139, 250, 0.4);
+  text-decoration: none;
+}
+
+.shopAllBtn:focus-visible {
+  outline: 3px solid var(--focus-ring);
+  outline-offset: 4px;
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 2rem 1rem;
+  }
+
+  .hero {
+    margin-bottom: 3rem;
+  }
+
+  .featuredSection {
+    margin-bottom: 3rem;
+  }
+
+  .categoriesGrid {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+
+  .categoryCard {
+    padding: 1.5rem;
+  }
+
+  .shopAllBtn {
+    padding: 0.875rem 2rem;
+    font-size: 1rem;
+  }
+}

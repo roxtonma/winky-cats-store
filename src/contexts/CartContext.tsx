@@ -1,6 +1,7 @@
 'use client'
 
 import { createContext, useContext, useReducer, ReactNode, useEffect } from 'react'
+import { toast } from 'react-toastify'
 
 export type CartItem = {
   id: string
@@ -118,15 +119,42 @@ export function CartProvider({ children }: { children: ReactNode }) {
   }, [state.items])
 
   const addItem = (item: Omit<CartItem, 'quantity'>) => {
-    dispatch({ type: 'ADD_ITEM', payload: item })
-  }
+    dispatch({ type: 'ADD_ITEM', payload: item });
+    toast.success(`${item.name} added to cart!`, {
+      position: "bottom-right",
+      autoClose: 2000,
+    });
+  };
 
   const removeItem = (id: string) => {
-    dispatch({ type: 'REMOVE_ITEM', payload: id })
-  }
+    const item = state.items.find(i => i.id === id);
+    dispatch({ type: 'REMOVE_ITEM', payload: id });
+    if (item) {
+      toast.info(`${item.name} removed from cart`, {
+        position: "bottom-right",
+        autoClose: 2000,
+      });
+    }
+  };
 
   const updateQuantity = (id: string, quantity: number) => {
-    dispatch({ type: 'UPDATE_QUANTITY', payload: { id, quantity } })
+    const item = state.items.find(i => i.id === id);
+    const oldQuantity = item?.quantity || 0;
+    dispatch({ type: 'UPDATE_QUANTITY', payload: { id, quantity } });
+
+    if (item && quantity > 0) {
+      if (quantity > oldQuantity) {
+        toast.success(`${item.name} added`, {
+          position: "bottom-right",
+          autoClose: 1500,
+        });
+      } else if (quantity < oldQuantity) {
+        toast.info(`${item.name} removed`, {
+          position: "bottom-right",
+          autoClose: 1500,
+        });
+      }
+    }
   }
 
   const clearCart = () => {

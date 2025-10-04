@@ -1,18 +1,20 @@
 :root {
-  /* Dark pastel minimalist palette */
-  --bg-primary: #2d2d30;
-  --bg-secondary: #3c3c41;
-  --bg-card: #484851;
-  --text-primary: #e8e8ea;
-  --text-secondary: #b4b4b7;
-  --text-muted: #8a8a8e;
-  --accent-primary: #a78bfa;
-  --accent-secondary: #7c3aed;
-  --border: #52525b;
-  --border-light: #3f3f46;
-  --success: #86efac;
-  --warning: #fbbf24;
-  --error: #f87171;
+  /* Playful and vibrant palette */
+  --bg-primary: #FDFDFD;
+  --bg-secondary: #F5F5F5;
+  --bg-card: #FFFFFF;
+  --text-primary: #333333;
+  --text-secondary: #666666;
+  --text-muted: #999999;
+  --accent-primary: #FF69B4;
+  --accent-secondary: #FF1493;
+  --border: #E0E0E0;
+  --border-light: #F5F5F5;
+  --success: #7CFC00;
+  --warning: #FFD700;
+  --error: #FA8072;
+  --focus-ring: #FF69B4;
+  --focus-ring-offset: #FFFFFF;
 }
 
 html,
@@ -44,11 +46,41 @@ a {
 
 a:hover {
   color: var(--accent-secondary);
+  text-decoration: underline;
+}
+
+/* Focus styles for accessibility */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: 3px solid var(--focus-ring);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Remove default focus outline but keep for keyboard users */
+a:focus:not(:focus-visible),
+button:focus:not(:focus-visible) {
+  outline: none;
 }
 
 /* Smooth scrolling */
 html {
   scroll-behavior: smooth;
+}
+
+/* Reduce motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 
 /* Button base styles */
@@ -60,6 +92,15 @@ button {
   cursor: pointer;
   transition: all 0.2s ease;
   font-size: 0.95rem;
+}
+
+button:disabled {
+  cursor: not-allowed;
+}
+
+button:focus-visible {
+  outline: 3px solid var(--focus-ring);
+  outline-offset: 2px;
 }
 
 /* Card styles */
@@ -86,6 +127,26 @@ input:focus, textarea:focus, select:focus {
   border-color: var(--accent-primary);
 }
 
+/* Cart animation */
+@keyframes cart-bounce {
+  0% {
+    transform: scale(1);
+    color: var(--text-secondary);
+  }
+  50% {
+    transform: scale(1.2);
+    color: var(--accent-primary);
+  }
+  100% {
+    transform: scale(1);
+    color: var(--text-secondary);
+  }
+}
+
+.cart-updated {
+  animation: cart-bounce 0.3s ease-in-out;
+}
+
 /* Mobile improvements */
 @media (max-width: 768px) {
   .card {
@@ -98,14 +159,15 @@ input:focus, textarea:focus, select:focus {
     height: auto;
   }
 
+  /* Mobile navigation */
+  nav {
+    padding: 1rem;
+  }
+
   /* Better mobile spacing */
   body {
     font-size: 14px;
-  }
-
-  /* Mobile navigation */
-  nav {
-    padding: 1rem !important;
+    line-height: 1.5;
   }
 
   /* Mobile button sizes */

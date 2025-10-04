@@ -10,19 +10,39 @@ A simple online store built with Next.js and Supabase. Ready for Qikink integrat
 4. Run `npm run dev`
 5. Visit http://localhost:3000
 
+## Recent Updates
+
+**Live Site**: https://winky-cats-store-ckzoauav2-roxtonmas-projects.vercel.app
+
+**Database**:
+- URL: https://oaxmkxesjpwombjemuum.supabase.co
+- Tables: categories, products, orders, order_items with print-on-demand fields
+
+**Features Added**:
+- Working shopping cart with localStorage persistence
+- Dark pastel theme with proper mobile responsiveness
+- 1-hour caching (L1: React Query, L2: Next.js API routes)
+- Bulk product upload script using official Supabase Python SDK
+
+**Cart System**:
+- Add/remove items, quantity controls, cart icon with count
+- Stores in browser, persists between sessions
+- Free shipping over ₹1000
+
 ## Adding Products
 
-### Method 1: Through Supabase Dashboard
-- Go to your Supabase project
-- Click "Table Editor"
-- Find the "products" table
-- Click "Insert row"
-- Fill in the details and save
+### Method 1: Bulk Upload Script (Recommended)
+```bash
+pip install supabase python-dotenv
+python scripts/upload_products.py sync
+```
+- Edit `products.json` for product data
+- Add images to `images/` folder
+- Creates Supabase Storage bucket and uploads automatically
 
-### Method 2: Import from CSV
-- Prepare a CSV with your product data
-- Go to Supabase > Table Editor > products
-- Click the three dots > Import data via CSV
+### Method 2: Manual via Dashboard
+- Supabase > Table Editor > products > Insert row
+- Or import CSV data directly
 
 ## Managing Categories
 
@@ -67,11 +87,12 @@ src/
 └── api/              # Server endpoints
 ```
 
-## Deploying Updates
+## Deployment
 
-1. Make your changes
-2. Push to GitHub
-3. Vercel deploys automatically
+**Current**: Deployed on Vercel, auto-deploys from GitHub pushes
+**Domain**: Using free .vercel.app URL (custom domain can be added later)
+
+Push changes to main branch - Vercel handles the rest.
 
 ## Environment Variables
 

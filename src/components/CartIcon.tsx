@@ -2,22 +2,25 @@
 
 import { useCart } from '@/contexts/CartContext'
 import Link from 'next/link'
+import { useEffect, useState } from 'react'
+import styles from './CartIcon.module.css'
 
 export default function CartIcon() {
   const { state } = useCart()
   const { totalItems } = state
+  const [isCartUpdated, setIsCartUpdated] = useState(false)
+
+  useEffect(() => {
+    if (totalItems > 0) {
+      setIsCartUpdated(true)
+      const timer = setTimeout(() => setIsCartUpdated(false), 300)
+      return () => clearTimeout(timer)
+    }
+  }, [totalItems])
 
   return (
-    <Link href="/cart" style={{
-      color: 'var(--text-secondary)',
-      fontWeight: '500',
-      transition: 'color 0.2s ease',
-      position: 'relative',
-      display: 'flex',
-      alignItems: 'center',
-      gap: '0.5rem'
-    }}>
-      <div style={{ position: 'relative' }}>
+    <Link href="/cart" className={styles.cartLink} aria-label="View shopping cart">
+      <div className={`${styles.iconWrapper} ${isCartUpdated ? styles.updated : ''}`}>
         <svg
           width="24"
           height="24"
@@ -33,21 +36,7 @@ export default function CartIcon() {
           <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57L23.1 4H5.12" />
         </svg>
         {totalItems > 0 && (
-          <span style={{
-            position: 'absolute',
-            top: '-8px',
-            right: '-8px',
-            background: 'var(--accent-primary)',
-            color: 'white',
-            borderRadius: '50%',
-            width: '20px',
-            height: '20px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            fontSize: '0.75rem',
-            fontWeight: '600'
-          }}>
+          <span className={styles.badge} aria-label={`${totalItems} items in cart`}>
             {totalItems > 99 ? '99+' : totalItems}
           </span>
         )}

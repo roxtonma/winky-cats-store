@@ -1,6 +1,10 @@
+import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer } from 'react-toastify';
+
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import styles from "./layout.module.css";
 import QueryProvider from "@/providers/QueryProvider";
 import { CartProvider } from "@/contexts/CartContext";
 import CartIcon from "@/components/CartIcon";
@@ -17,8 +21,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Winky Store",
-  description: "Your favorite online fashion store",
+  title: "Winky Cats Store",
+  description: "Your favorite online fashion store for custom designed clothes, accessories and more",
 };
 
 export default function RootLayout({
@@ -31,29 +35,16 @@ export default function RootLayout({
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
         <QueryProvider>
           <CartProvider>
-            <nav style={{
-              padding: '1.25rem 2rem',
-              borderBottom: '1px solid var(--border-light)',
-              background: 'var(--bg-secondary)'
-            }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <ToastContainer />
+            <nav className={styles.nav}>
+              <div className={styles.navContainer}>
                 <h1>
-                  <Link href="/" style={{
-                    fontSize: '1.5rem',
-                    fontWeight: '600',
-                    color: 'var(--text-primary)',
-                    textDecoration: 'none'
-                  }}>
-                    Winky Store
+                  <Link href="/" className={styles.logo}>
+                    Winky Cats
                   </Link>
                 </h1>
-                <div style={{ display: 'flex', gap: '2rem', alignItems: 'center' }}>
-                  <Link href="/products" style={{
-                    color: 'var(--text-secondary)',
-                    fontWeight: '500',
-                    transition: 'color 0.2s ease',
-                    textDecoration: 'none'
-                  }}>
+                <div className={styles.navLinks}>
+                  <Link href="/products" className={styles.navLink}>
                     Products
                   </Link>
                   <CartIcon />

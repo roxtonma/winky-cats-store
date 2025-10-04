@@ -1,0 +1,71 @@
+.cartLink {
+  color: var(--text-secondary);
+  font-weight: 500;
+  transition: color 0.2s ease;
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
+}
+
+.cartLink:hover {
+  color: var(--accent-primary);
+  text-decoration: none;
+}
+
+.cartLink:focus-visible {
+  outline: 3px solid var(--focus-ring);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+.iconWrapper {
+  position: relative;
+}
+
+.iconWrapper.updated {
+  animation: cart-bounce 0.3s ease-in-out;
+}
+
+.badge {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: var(--accent-primary);
+  color: white;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+@media (max-width: 768px) {
+  /* Hide "Cart" text on mobile, but keep the badge inside iconWrapper */
+  .cartLink > span {
+    display: none;
+  }
+
+  .iconWrapper {
+    min-width: 44px;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Ensure badge stays visible on mobile */
+  .badge {
+    display: flex !important;
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    width: 18px;
+    height: 18px;
+    font-size: 0.7rem;
+  }
+}

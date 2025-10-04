@@ -1,0 +1,104 @@
+{
+  "categories": [
+    {
+      "name": "T-Shirts",
+      "slug": "t-shirts",
+      "description": "Custom printed t-shirts for every style",
+      "products": [
+        {
+          "name": "Classic White T-Shirt",
+          "description": "Premium cotton t-shirt perfect for any casual occasion.",
+          "price": 499.00,
+          "compare_at_price": 599.00,
+          "sku": "TSHIRT-001",
+          "material": "cotton",
+          "product_type": "t-shirt",
+          "vendor": "qikink",
+          "tags": ["custom", "casual", "cotton"],
+          "variants": {
+            "sizes": ["S", "M", "L", "XL", "XXL"],
+            "colors": ["white", "black", "navy", "red"],
+            "price_variants": {
+              "S": 499, "M": 499, "L": 529, "XL": 559, "XXL": 599
+            }
+          },
+          "image_file": "white-tshirt.jpg",
+          "active": true
+        },
+        {
+          "name": "Vintage Logo Tee",
+          "description": "Retro-style t-shirt with vintage logo design.",
+          "price": 549.00,
+          "compare_at_price": null,
+          "sku": "TSHIRT-002",
+          "material": "cotton",
+          "product_type": "t-shirt",
+          "vendor": "qikink",
+          "tags": ["vintage", "logo", "custom"],
+          "variants": {
+            "sizes": ["S", "M", "L", "XL"],
+            "colors": ["black", "grey"],
+            "price_variants": {
+              "S": 549, "M": 549, "L": 579, "XL": 609
+            }
+          },
+          "image_file": "vintage-tshirt.jpg",
+          "active": true
+        }
+      ]
+    },
+    {
+      "name": "Hoodies",
+      "slug": "hoodies",
+      "description": "Cozy hoodies with custom designs",
+      "products": [
+        {
+          "name": "Premium Hoodie",
+          "description": "Comfortable fleece hoodie perfect for casual wear.",
+          "price": 1299.00,
+          "compare_at_price": null,
+          "sku": "HOODIE-001",
+          "material": "cotton-blend",
+          "product_type": "hoodie",
+          "vendor": "qikink",
+          "tags": ["hoodie", "warm", "custom"],
+          "variants": {
+            "sizes": ["S", "M", "L", "XL", "XXL"],
+            "colors": ["black", "grey", "navy"],
+            "price_variants": {
+              "S": 1299, "M": 1299, "L": 1329, "XL": 1359, "XXL": 1399
+            }
+          },
+          "image_file": "premium-hoodie.jpg",
+          "active": true
+        }
+      ]
+    },
+    {
+      "name": "Accessories",
+      "slug": "accessories",
+      "description": "Bags, mugs and other custom accessories",
+      "products": [
+        {
+          "name": "Custom Canvas Tote Bag",
+          "description": "Eco-friendly canvas tote bag with custom printing.",
+          "price": 399.00,
+          "compare_at_price": 499.00,
+          "sku": "BAG-001",
+          "material": "canvas",
+          "product_type": "tote-bag",
+          "vendor": "qikink",
+          "tags": ["eco-friendly", "tote", "custom"],
+          "variants": {
+            "colors": ["natural", "black"],
+            "price_variants": {
+              "natural": 399, "black": 429
+            }
+          },
+          "image_file": "canvas-tote.jpg",
+          "active": true
+        }
+      ]
+    }
+  ]
+}

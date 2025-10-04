@@ -1,103 +1,43 @@
 import Link from 'next/link'
+import styles from './home.module.css'
 
 export default function Home() {
   return (
-    <div style={{ padding: '3rem 2rem', maxWidth: '1200px', margin: '0 auto' }}>
+    <div className={styles.container}>
       <main>
-        <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
-          <h1 style={{
-            fontSize: '3rem',
-            fontWeight: '700',
-            marginBottom: '1rem',
-            color: 'var(--text-primary)'
-          }}>
-            Welcome to Winky-Cats Store! ✨
-          </h1>
-          <p style={{
-            fontSize: '1.2rem',
-            color: 'var(--text-secondary)',
-            maxWidth: '600px',
-            margin: '0 auto'
-          }}>
-            Your one-stop shop for custom print-on-demand apparel and accessories
+        <div className={styles.hero}>
+          <h1 className={styles.heroTitle}>Welcome to Winky-Cats Store!</h1>
+          <p className={styles.heroSubtitle}>
+            Your one-stop shop for custom apparel and accessories
           </p>
         </div>
 
-        <section style={{ marginBottom: '4rem' }}>
-          <h2 style={{
-            fontSize: '2rem',
-            fontWeight: '600',
-            marginBottom: '2rem',
-            textAlign: 'center',
-            color: 'var(--text-primary)'
-          }}>
-            Featured Categories
-          </h2>
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-            gap: '1.5rem'
-          }}>
-            <div style={{
-              background: 'var(--bg-card)',
-              border: '1px solid var(--border-light)',
-              borderRadius: '12px',
-              padding: '2rem',
-              textAlign: 'center',
-              transition: 'transform 0.2s ease'
-            }}>
-              <h3 style={{ fontSize: '1.5rem', marginBottom: '1rem', color: 'var(--accent-primary)' }}>
-                T-Shirts & Apparel
-              </h3>
-              <p style={{ color: 'var(--text-secondary)' }}>
+        <section className={styles.featuredSection}>
+          <h2 className={styles.sectionTitle}>Featured Categories</h2>
+          <div className={styles.categoriesGrid}>
+            <div className={styles.categoryCard}>
+              <h3 className={styles.categoryTitle}>T-Shirts & Apparel</h3>
+              <p className={styles.categoryDescription}>
                 Custom printed t-shirts, hoodies, and apparel for every style
               </p>
             </div>
-            <div style={{
-              background: 'var(--bg-card)',
-              border: '1px solid var(--border-light)',
-              borderRadius: '12px',
-              padding: '2rem',
-              textAlign: 'center',
-              transition: 'transform 0.2s ease'
-            }}>
-              <h3 style={{ fontSize: '1.5rem', marginBottom: '1rem', color: 'var(--accent-primary)' }}>
-                Accessories
-              </h3>
-              <p style={{ color: 'var(--text-secondary)' }}>
+            <div className={styles.categoryCard}>
+              <h3 className={styles.categoryTitle}>Accessories</h3>
+              <p className={styles.categoryDescription}>
                 Bags, mugs, and other custom accessories with your designs
               </p>
             </div>
-            <div style={{
-              background: 'var(--bg-card)',
-              border: '1px solid var(--border-light)',
-              borderRadius: '12px',
-              padding: '2rem',
-              textAlign: 'center',
-              transition: 'transform 0.2s ease'
-            }}>
-              <h3 style={{ fontSize: '1.5rem', marginBottom: '1rem', color: 'var(--accent-primary)' }}>
-                Custom Designs
-              </h3>
-              <p style={{ color: 'var(--text-secondary)' }}>
+            <div className={styles.categoryCard}>
+              <h3 className={styles.categoryTitle}>Custom Designs</h3>
+              <p className={styles.categoryDescription}>
                 Upload your artwork and create unique personalized products
               </p>
             </div>
           </div>
         </section>
 
-        <section style={{ textAlign: 'center' }}>
-          <Link href="/products" style={{
-            background: 'linear-gradient(135deg, var(--accent-primary), var(--accent-secondary))',
-            color: 'white',
-            padding: '1rem 2.5rem',
-            fontSize: '1.1rem',
-            fontWeight: '600',
-            borderRadius: '12px',
-            display: 'inline-block',
-            transition: 'transform 0.2s ease, box-shadow 0.2s ease',
-            boxShadow: '0 4px 12px rgba(167, 139, 250, 0.3)'
-          }}>
+        <section className={styles.ctaSection}>
+          <Link href="/products" className={styles.shopAllBtn}>
             Shop All Products
           </Link>
         </section>
