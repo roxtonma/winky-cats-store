@@ -2,13 +2,14 @@
 
 import { useProducts } from '@/hooks/useProducts'
 import { useCart } from '@/contexts/CartContext'
-import Image from 'next/image'
 import styles from './products.module.css'
 import { ProductSkeletonGrid } from '@/components/ProductSkeleton'
-import LoadingSpinner from '@/components/LoadingSpinner'
 import { useSearchParams } from 'next/navigation'
 import { useMemo, Suspense, useState } from 'react'
 import { FilterSidebar, FilterState } from '@/components/FilterSidebar'
+import { ProductImageCarousel } from '@/components/ProductImageCarousel'
+import { ImageLightbox } from '@/components/ImageLightbox'
+import { ProductVariantSelector } from '@/components/ProductVariantSelector'
 import type { Product } from '@/lib/supabase'
 
 function ProductsContent() {
@@ -21,11 +22,31 @@ function ProductsContent() {
   const { data: products = [], isLoading, error } = useProducts(apiUrl)
   const { addItem } = useCart()
 
-  // Track which images are loaded
-  const [loadedImages, setLoadedImages] = useState<Set<string>>(new Set())
+  // Lightbox state
+  const [lightboxOpen, setLightboxOpen] = useState(false)
+  const [lightboxImages, setLightboxImages] = useState<string[]>([])
+  const [lightboxIndex, setLightboxIndex] = useState(0)
+  const [lightboxProductName, setLightboxProductName] = useState('')
 
-  const handleImageLoad = (productId: string) => {
-    setLoadedImages(prev => new Set(prev).add(productId))
+  // Track current images for each product (for variant switching)
+  const [productImages, setProductImages] = useState<Record<string, string[]>>({})
+
+  const openLightbox = (images: string[], index: number, productName: string) => {
+    setLightboxImages(images)
+    setLightboxIndex(index)
+    setLightboxProductName(productName)
+    setLightboxOpen(true)
+  }
+
+  const handleVariantChange = (productId: string, newImages: string[]) => {
+    setProductImages(prev => ({
+      ...prev,
+      [productId]: newImages
+    }))
+  }
+
+  const getProductImages = (product: Product) => {
+    return productImages[product.id] || product.images || []
   }
 
   // Calculate max price and available tags from products
@@ -145,31 +166,32 @@ function ProductsContent() {
                 </p>
               </div>
               <div className={styles.productsGrid}>
-                {filteredProducts.map((product) => (
-                  <div key={product.id} className={styles.productCard}>
-                    {product.images && product.images.length > 0 && (
-                      <div className={styles.productImageWrapper}>
-                        {!loadedImages.has(product.id) && (
-                          <div className={styles.imageLoadingOverlay}>
-                            <LoadingSpinner />
-                          </div>
-                        )}
-                        <Image
-                          src={product.images[0]}
-                          alt={product.name}
-                          fill
-                          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                          style={{ objectFit: 'cover' }}
-                          onLoad={() => handleImageLoad(product.id)}
+                {filteredProducts.map((product) => {
+                  const currentImages = getProductImages(product)
+                  return (
+                    <div key={product.id} className={styles.productCard}>
+                      {currentImages.length > 0 && (
+                        <ProductImageCarousel
+                          images={currentImages}
+                          productName={product.name}
+                          productId={product.id}
+                          onImageClick={(index) => openLightbox(currentImages, index, product.name)}
                         />
-                      </div>
-                    )}
+                      )}
 
-                    <h3 className={styles.productName}>{product.name}</h3>
+                      <h3 className={styles.productName}>{product.name}</h3>
 
-                    {product.description && (
-                      <p className={styles.productDescription}>{product.description}</p>
-                    )}
+                      {product.description && (
+                        <p className={styles.productDescription}>{product.description}</p>
+                      )}
+
+                      {/* Variant Selector */}
+                      {product.variants && (
+                        <ProductVariantSelector
+                          variants={product.variants}
+                          onVariantChange={(newImages) => handleVariantChange(product.id, newImages)}
+                        />
+                      )}
 
                     <div className={styles.productFooter}>
                       <div className={styles.priceWrapper}>
@@ -203,13 +225,23 @@ function ProductsContent() {
                         }
                       </p>
                     )}
-                  </div>
-                ))}
+                    </div>
+                  )
+                })}
               </div>
             </>
           )}
         </main>
       </div>
+
+      {/* Image Lightbox */}
+      <ImageLightbox
+        images={lightboxImages}
+        initialIndex={lightboxIndex}
+        productName={lightboxProductName}
+        isOpen={lightboxOpen}
+        onClose={() => setLightboxOpen(false)}
+      />
     </div>
   )
 }

@@ -1,0 +1,254 @@
+.lightboxOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.95);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.closeButton {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: white;
+  transition: all 0.2s;
+  z-index: 10001;
+  backdrop-filter: blur(8px);
+}
+
+.closeButton:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: scale(1.1);
+}
+
+.closeButton:active {
+  transform: scale(0.95);
+}
+
+.lightboxContent {
+  position: relative;
+  width: 90vw;
+  height: 90vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Navigation Buttons */
+.navButton {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: white;
+  transition: all 0.2s;
+  z-index: 10000;
+  backdrop-filter: blur(8px);
+}
+
+.navButton:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateY(-50%) scale(1.1);
+}
+
+.navButton:active {
+  transform: translateY(-50%) scale(0.95);
+}
+
+.navButtonPrev {
+  left: 20px;
+}
+
+.navButtonNext {
+  right: 20px;
+}
+
+/* Image Wrapper */
+.imageWrapper {
+  position: relative;
+  width: 100%;
+  height: calc(100% - 120px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.loadingOverlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+}
+
+/* Bottom Bar */
+.bottomBar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+}
+
+.imageCounter {
+  color: white;
+  font-size: 0.875rem;
+  font-weight: 500;
+  background: rgba(0, 0, 0, 0.5);
+  padding: 6px 16px;
+  border-radius: 20px;
+  backdrop-filter: blur(8px);
+}
+
+/* Thumbnails */
+.thumbnailsContainer {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 8px;
+  max-width: 100%;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
+}
+
+.thumbnailsContainer::-webkit-scrollbar {
+  height: 6px;
+}
+
+.thumbnailsContainer::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.thumbnailsContainer::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 3px;
+}
+
+.thumbnailsContainer::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.thumbnail {
+  position: relative;
+  width: 80px;
+  height: 80px;
+  flex-shrink: 0;
+  border: 3px solid transparent;
+  border-radius: 8px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.2s;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 0;
+}
+
+.thumbnail:hover {
+  border-color: rgba(255, 255, 255, 0.5);
+  transform: scale(1.05);
+}
+
+.thumbnailActive {
+  border-color: white;
+  transform: scale(1.05);
+}
+
+/* Mobile Optimizations */
+@media (max-width: 768px) {
+  .closeButton {
+    top: 12px;
+    right: 12px;
+    width: 40px;
+    height: 40px;
+  }
+
+  .navButton {
+    width: 44px;
+    height: 44px;
+  }
+
+  .navButtonPrev {
+    left: 12px;
+  }
+
+  .navButtonNext {
+    right: 12px;
+  }
+
+  .lightboxContent {
+    width: 100vw;
+    height: 100vh;
+  }
+
+  .imageWrapper {
+    height: calc(100% - 140px);
+  }
+
+  .bottomBar {
+    padding: 12px;
+    gap: 12px;
+  }
+
+  .thumbnail {
+    width: 60px;
+    height: 60px;
+  }
+
+  .thumbnailsContainer {
+    gap: 8px;
+    padding: 4px;
+  }
+}
+
+@media (max-width: 480px) {
+  .thumbnail {
+    width: 50px;
+    height: 50px;
+  }
+
+  .navButton {
+    width: 40px;
+    height: 40px;
+  }
+
+  .navButton svg {
+    width: 24px;
+    height: 24px;
+  }
+}

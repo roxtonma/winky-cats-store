@@ -18,29 +18,65 @@ A simple online store built with Next.js and Supabase. Ready for Qikink integrat
 - URL: https://oaxmkxesjpwombjemuum.supabase.co
 - Tables: categories, products, orders, order_items with print-on-demand fields
 
-**Features Added**:
+**Major Features Added**:
 - Working shopping cart with localStorage persistence
 - Dark pastel theme with proper mobile responsiveness
 - 1-hour caching (L1: React Query, L2: Next.js API routes)
-- Bulk product upload script using official Supabase Python SDK
+- **Color variant selector** - Customers can switch between product colors with visual swatches
+- **Product image carousel** - Multiple images per product with navigation arrows
+- **Image lightbox** - Click images for full-screen view
+- **Enhanced product upload script** - Automatically uploads mockups to Supabase Storage CDN
+- **Filtering system** - Filter products by price, tags, and stock availability
 
 **Cart System**:
 - Add/remove items, quantity controls, cart icon with count
 - Stores in browser, persists between sessions
 - Free shipping over ₹1000
 
+**Product Variants**:
+- Each product can have multiple color options
+- Clicking a color swatch updates the product images
+- Color data stored with hex codes for accurate display
+- Supports 13+ standard colors (White, Black, Navy, Red, etc.)
+
 ## Adding Products
 
-### Method 1: Bulk Upload Script (Recommended)
+### Method 1: Upload from Mockup Directory (Recommended for POD)
 ```bash
+# Install dependencies
 pip install supabase python-dotenv
+
+# Add a product with mockups
+python scripts/upload_products.py append mockups/your-product "Product Name" 999 "Description" hoodies "tag1,tag2"
+
+# List all products
+python scripts/upload_products.py list
+
+# Delete a product
+python scripts/upload_products.py delete <product-id>
+
+# Update product fields
+python scripts/upload_products.py update <product-id> price=1299 tags="new,tags"
+```
+
+**How it works**:
+- Place mockup images in `mockups/product-name/` folder
+- Files must follow naming: `Front_1_c_1.jpg`, `Back_2_c_3.jpg` (view_number_c_colorId.jpg)
+- Script automatically:
+  - Uploads all images to Supabase Storage CDN
+  - Groups by color variants
+  - Adds size chart if present (name file `size_chart.png`)
+  - Creates product with proper variant data
+
+### Method 2: Bulk Upload Script
+```bash
 python scripts/upload_products.py sync
 ```
 - Edit `products.json` for product data
 - Add images to `images/` folder
 - Creates Supabase Storage bucket and uploads automatically
 
-### Method 2: Manual via Dashboard
+### Method 3: Manual via Dashboard
 - Supabase > Table Editor > products > Insert row
 - Or import CSV data directly
 

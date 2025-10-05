@@ -16,6 +16,13 @@ export type Category = {
   updated_at: string
 }
 
+export type ColorVariant = {
+  colorId: string
+  colorName: string
+  colorHex: string
+  images: string[]
+}
+
 export type Product = {
   id: string
   name: string
@@ -34,6 +41,9 @@ export type Product = {
   is_active: boolean
   weight?: number
   tags?: string[]
+  variants?: {
+    colors?: ColorVariant[]
+  }
   created_at: string
   updated_at: string
 }

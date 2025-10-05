@@ -12,6 +12,7 @@
 
 # testing
 /coverage
+src/app/variant-demo/
 
 # next.js
 /.next/
@@ -34,6 +35,9 @@ yarn-error.log*
 .env*
 env/
 venv/
+
+# mockup files (uploaded to Supabase Storage)
+mockups/
 
 # vercel
 .vercel

@@ -1,0 +1,128 @@
+.container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.mockupContainer {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1.3; /* Portrait aspect ratio for clothing */
+  min-height: 320px;
+  border-radius: 12px;
+  overflow: hidden;
+  background-color: #f3f4f6;
+}
+
+/* Color layer sits behind the mockup */
+.colorLayer {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  transition: background-color 0.3s ease;
+}
+
+/* Mockup layer with transparent PNG on top */
+.mockupWrapper {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Color Selection UI */
+.swatchesContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.colorLabel {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.colorName {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.swatches {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.swatch {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 2px solid #e5e7eb;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  position: relative;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.swatch:hover {
+  border-color: #9ca3af;
+  transform: scale(1.1);
+}
+
+.swatch:active {
+  transform: scale(0.95);
+}
+
+.swatchActive {
+  border-color: #6366f1;
+  border-width: 3px;
+  transform: scale(1.1);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+}
+
+.swatch svg {
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3));
+}
+
+/* Dark color contrast for checkmark */
+.swatch[style*="rgb(0, 0, 0)"] svg path,
+.swatch[style*="#000"] svg path,
+.swatch[style*="rgb(33, 33, 33)"] svg path {
+  stroke: white;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .mockupContainer {
+    min-height: 280px;
+  }
+
+  .swatch {
+    width: 36px;
+    height: 36px;
+  }
+}
+
+@media (max-width: 480px) {
+  .mockupContainer {
+    min-height: 240px;
+  }
+
+  .swatch {
+    width: 32px;
+    height: 32px;
+  }
+
+  .colorLabel {
+    font-size: 0.8125rem;
+  }
+}
