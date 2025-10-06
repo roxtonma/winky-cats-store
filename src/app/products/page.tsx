@@ -9,7 +9,6 @@ import { useMemo, Suspense, useState } from 'react'
 import { FilterSidebar, FilterState } from '@/components/FilterSidebar'
 import { ProductImageCarousel } from '@/components/ProductImageCarousel'
 import { ImageLightbox } from '@/components/ImageLightbox'
-import { ProductVariantSelector } from '@/components/ProductVariantSelector'
 import { ProductCustomizationModal } from '@/components/ProductCustomizationModal'
 import type { Product } from '@/lib/supabase'
 
@@ -41,13 +40,6 @@ function ProductsContent() {
     setLightboxIndex(index)
     setLightboxProductName(productName)
     setLightboxOpen(true)
-  }
-
-  const handleVariantChange = (productId: string, newImages: string[]) => {
-    setProductImages(prev => ({
-      ...prev,
-      [productId]: newImages
-    }))
   }
 
   const openCustomizationModal = (product: Product) => {
