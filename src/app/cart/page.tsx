@@ -41,7 +41,12 @@ export default function CartPage() {
                 )}
 
                 <div className={styles.cartItemInfo}>
-                  <h3 className={styles.cartItemName}>{item.name}</h3>
+                  <h3 className={styles.cartItemName}>
+                    {item.name}
+                    {item.variant && (item.variant.size || item.variant.colorName) &&
+                      ` (${[item.variant.size, item.variant.colorName].filter(Boolean).join(', ')})`
+                    }
+                  </h3>
                   <p className={styles.cartItemPrice}>₹{item.price}</p>
                 </div>
 

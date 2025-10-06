@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import styles from './FilterSidebar.module.css'
+import styles from './styles/FilterSidebar.module.css'
 
 export type FilterState = {
   priceRange: [number, number]

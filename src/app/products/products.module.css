@@ -99,6 +99,8 @@
   border-radius: 16px;
   padding: 1.5rem;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
+  display: flex;
+  flex-direction: column;
 }
 
 .productCard:hover {
@@ -126,6 +128,7 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 1rem;
+  margin-top: auto;
 }
 
 .priceWrapper {

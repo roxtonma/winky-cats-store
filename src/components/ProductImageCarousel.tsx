@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import Image from 'next/image'
-import styles from './ProductImageCarousel.module.css'
+import styles from './styles/ProductImageCarousel.module.css'
 import LoadingSpinner from './LoadingSpinner'
 
 type ProductImageCarouselProps = {
@@ -10,9 +10,10 @@ type ProductImageCarouselProps = {
   productName: string
   productId: string
   onImageClick: (index: number) => void
+  height?: string
 }
 
-export function ProductImageCarousel({ images, productName, productId, onImageClick }: ProductImageCarouselProps) {
+export function ProductImageCarousel({ images, productName, productId, onImageClick, height }: ProductImageCarouselProps) {
   const [currentIndex, setCurrentIndex] = useState(0)
   const [loadedImages, setLoadedImages] = useState<Set<number>>(new Set())
 
@@ -44,7 +45,7 @@ export function ProductImageCarousel({ images, productName, productId, onImageCl
   }
 
   return (
-    <div className={styles.carouselWrapper} data-product-id={productId}>
+    <div className={styles.carouselWrapper} data-product-id={productId} style={height ? { height } : undefined}>
       <div
         className={styles.imageContainer}
         onClick={() => onImageClick(currentIndex)}

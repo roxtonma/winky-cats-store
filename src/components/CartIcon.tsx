@@ -3,7 +3,7 @@
 import { useCart } from '@/contexts/CartContext'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
-import styles from './CartIcon.module.css'
+import styles from './styles/CartIcon.module.css'
 
 export default function CartIcon() {
   const { state } = useCart()

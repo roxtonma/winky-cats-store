@@ -43,6 +43,7 @@ export type Product = {
   tags?: string[]
   variants?: {
     colors?: ColorVariant[]
+    sizes?: string[]
   }
   created_at: string
   updated_at: string

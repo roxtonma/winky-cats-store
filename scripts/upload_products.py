@@ -468,6 +468,77 @@ def delete_product(product_id):
         print(f"[X] Error deleting product: {e}")
         return False
 
+def add_sizes(product_id, sizes_str):
+    """Add sizes to a product's variants"""
+    print(f"[+] Adding sizes to product ID: {product_id}")
+
+    # Parse sizes from comma-separated string
+    sizes = [s.strip() for s in sizes_str.split(',')]
+
+    try:
+        # Get current product data
+        response = supabase.table('products').select('variants').eq('id', product_id).execute()
+
+        if not response.data:
+            print(f"[X] Product not found")
+            return False
+
+        # Get current variants or create empty dict
+        variants = response.data[0].get('variants') or {}
+
+        # Add sizes
+        variants['sizes'] = sizes
+
+        # Update product
+        update_response = supabase.table('products').update({'variants': variants}).eq('id', product_id).execute()
+
+        if update_response.data:
+            print(f"[OK] Sizes added: {', '.join(sizes)}")
+            return True
+        else:
+            print(f"[X] Failed to update product")
+            return False
+
+    except Exception as e:
+        print(f"[X] Error adding sizes: {e}")
+        return False
+
+def remove_sizes(product_id):
+    """Remove sizes from a product's variants"""
+    print(f"[-] Removing sizes from product ID: {product_id}")
+
+    try:
+        # Get current product data
+        response = supabase.table('products').select('variants').eq('id', product_id).execute()
+
+        if not response.data:
+            print(f"[X] Product not found")
+            return False
+
+        # Get current variants
+        variants = response.data[0].get('variants') or {}
+
+        # Remove sizes if they exist
+        if 'sizes' in variants:
+            del variants['sizes']
+
+            # Update product
+            update_response = supabase.table('products').update({'variants': variants}).eq('id', product_id).execute()
+
+            if update_response.data:
+                print(f"[OK] Sizes removed from product")
+                return True
+            else:
+                print(f"[X] Failed to update product")
+                return False
+        else:
+            print(f"[!] Product has no sizes to remove")
+            return True
+
+    except Exception as e:
+        print(f"[X] Error removing sizes: {e}")
+        return False
+
 def main():
     if len(sys.argv) < 2:
         print("""
@@ -480,6 +551,8 @@ Usage:
   python scripts/upload_products.py append <mockup_dir> <name> <price> [description] [category] [tags]
   python scripts/upload_products.py update <product_id> <field>=<value> [<field>=<value> ...]
   python scripts/upload_products.py delete <product_id> - Delete a product
+  python scripts/upload_products.py add-sizes <product_id> <sizes> - Add sizes to a product
+  python scripts/upload_products.py remove-sizes <product_id> - Remove sizes from a product
 
 Examples:
   # Add new product from mockups
@@ -490,6 +563,12 @@ Examples:
 
   # Delete a product
   python scripts/upload_products.py delete 560ff9d5-1e62-4968-b700-2967fb7eb66c
+
+  # Add sizes to a product
+  python scripts/upload_products.py add-sizes 560ff9d5-1e62-4968-b700-2967fb7eb66c "S,M,L,XL,XXL"
+
+  # Remove sizes from a product
+  python scripts/upload_products.py remove-sizes 560ff9d5-1e62-4968-b700-2967fb7eb66c
 
   # Update product tags
   python scripts/upload_products.py update 5 tags="nature,wildlife,cool"
@@ -521,6 +600,22 @@ Setup:
 
         product_id = sys.argv[2]
         delete_product(product_id)
+    elif command == 'add-sizes':
+        if len(sys.argv) < 4:
+            print("[X] Usage: add-sizes <product_id> <sizes>")
+            print("    Example: add-sizes 123 'S,M,L,XL,XXL'")
+            return
+
+        product_id = sys.argv[2]
+        sizes_str = sys.argv[3]
+        add_sizes(product_id, sizes_str)
+    elif command == 'remove-sizes':
+        if len(sys.argv) < 3:
+            print("[X] Usage: remove-sizes <product_id>")
+            return
+
+        product_id = sys.argv[2]
+        remove_sizes(product_id)
     elif command == 'append':
         if len(sys.argv) < 5:
             print("[X] Usage: append <mockup_dir> <name> <price> [description] [category] [tags]")
@@ -557,7 +652,7 @@ Setup:
 
         update_product(product_id, **updates)
     else:
-        print("[X] Invalid command. Use 'sync', 'clean', 'list', 'delete', 'append', or 'update'")
+        print("[X] Invalid command. Use 'sync', 'clean', 'list', 'delete', 'add-sizes', 'remove-sizes', 'append', or 'update'")
 
 if __name__ == '__main__':
     main()

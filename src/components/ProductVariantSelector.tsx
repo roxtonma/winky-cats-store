@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import styles from './ProductVariantSelector.module.css'
+import styles from './styles/ProductVariantSelector.module.css'
 
 type ColorVariant = {
   colorId: string

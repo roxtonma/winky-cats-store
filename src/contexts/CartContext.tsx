@@ -10,6 +10,11 @@ export type CartItem = {
   quantity: number
   image?: string
   maxQuantity: number
+  variant?: {
+    size?: string
+    color?: string
+    colorName?: string
+  }
 }
 
 type CartState = {
@@ -37,12 +42,19 @@ const CartContext = createContext<{
 function cartReducer(state: CartState, action: CartAction): CartState {
   switch (action.type) {
     case 'ADD_ITEM': {
-      const existingItem = state.items.find(item => item.id === action.payload.id)
+      // Match items by both ID and variant (size + color)
+      const existingItem = state.items.find(item =>
+        item.id === action.payload.id &&
+        item.variant?.size === action.payload.variant?.size &&
+        item.variant?.colorName === action.payload.variant?.colorName
+      )
 
       if (existingItem) {
         const newQuantity = Math.min(existingItem.quantity + 1, existingItem.maxQuantity)
         const updatedItems = state.items.map(item =>
-          item.id === action.payload.id
+          item.id === action.payload.id &&
+          item.variant?.size === action.payload.variant?.size &&
+          item.variant?.colorName === action.payload.variant?.colorName
             ? { ...item, quantity: newQuantity }
             : item
         )
@@ -120,7 +132,19 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   const addItem = (item: Omit<CartItem, 'quantity'>) => {
     dispatch({ type: 'ADD_ITEM', payload: item });
-    toast.success(`${item.name} added to cart!`, {
+
+    // Build display name with variant info
+    let displayName = item.name;
+    if (item.variant) {
+      const variantParts = [];
+      if (item.variant.size) variantParts.push(item.variant.size);
+      if (item.variant.colorName) variantParts.push(item.variant.colorName);
+      if (variantParts.length > 0) {
+        displayName = `${item.name} (${variantParts.join(', ')})`;
+      }
+    }
+
+    toast.success(`${displayName} added to cart!`, {
       position: "bottom-right",
       autoClose: 2000,
     });

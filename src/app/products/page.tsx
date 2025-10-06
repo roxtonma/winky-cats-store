@@ -10,6 +10,7 @@ import { FilterSidebar, FilterState } from '@/components/FilterSidebar'
 import { ProductImageCarousel } from '@/components/ProductImageCarousel'
 import { ImageLightbox } from '@/components/ImageLightbox'
 import { ProductVariantSelector } from '@/components/ProductVariantSelector'
+import { ProductCustomizationModal } from '@/components/ProductCustomizationModal'
 import type { Product } from '@/lib/supabase'
 
 function ProductsContent() {
@@ -31,6 +32,10 @@ function ProductsContent() {
   // Track current images for each product (for variant switching)
   const [productImages, setProductImages] = useState<Record<string, string[]>>({})
 
+  // Customization modal state
+  const [customizationModalOpen, setCustomizationModalOpen] = useState(false)
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
+
   const openLightbox = (images: string[], index: number, productName: string) => {
     setLightboxImages(images)
     setLightboxIndex(index)
@@ -43,6 +48,26 @@ function ProductsContent() {
       ...prev,
       [productId]: newImages
     }))
+  }
+
+  const openCustomizationModal = (product: Product) => {
+    setSelectedProduct(product)
+    setCustomizationModalOpen(true)
+  }
+
+  const handleAddToCartFromModal = (product: Product, selectedVariant: any) => {
+    addItem({
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      image: selectedVariant.images?.[0] || product.images?.[0],
+      maxQuantity: product.inventory_quantity || 999,
+      variant: {
+        size: selectedVariant.size,
+        color: selectedVariant.colorId,
+        colorName: selectedVariant.colorName
+      }
+    })
   }
 
   const getProductImages = (product: Product) => {
@@ -185,14 +210,6 @@ function ProductsContent() {
                         <p className={styles.productDescription}>{product.description}</p>
                       )}
 
-                      {/* Variant Selector */}
-                      {product.variants && (
-                        <ProductVariantSelector
-                          variants={product.variants}
-                          onVariantChange={(newImages) => handleVariantChange(product.id, newImages)}
-                        />
-                      )}
-
                     <div className={styles.productFooter}>
                       <div className={styles.priceWrapper}>
                         <span className={styles.productPrice}>₹{product.price}</span>
@@ -202,18 +219,12 @@ function ProductsContent() {
                       </div>
 
                       <button
-                        onClick={() => addItem({
-                          id: product.id,
-                          name: product.name,
-                          price: product.price,
-                          image: product.images?.[0],
-                          maxQuantity: product.inventory_quantity || 999
-                        })}
+                        onClick={() => openCustomizationModal(product)}
                         disabled={product.inventory_quantity === 0}
                         className={styles.addToCartBtn}
-                        aria-label={`Add ${product.name} to cart`}
+                        aria-label={`View ${product.name} options`}
                       >
-                        {product.inventory_quantity === 0 ? 'Out of Stock' : 'Add to Cart'}
+                        {product.inventory_quantity === 0 ? 'Out of Stock' : 'Add to cart'}
                       </button>
                     </div>
 
@@ -241,6 +252,14 @@ function ProductsContent() {
         productName={lightboxProductName}
         isOpen={lightboxOpen}
         onClose={() => setLightboxOpen(false)}
+      />
+
+      {/* Product Customization Modal */}
+      <ProductCustomizationModal
+        product={selectedProduct}
+        isOpen={customizationModalOpen}
+        onClose={() => setCustomizationModalOpen(false)}
+        onAddToCart={handleAddToCartFromModal}
       />
     </div>
   )

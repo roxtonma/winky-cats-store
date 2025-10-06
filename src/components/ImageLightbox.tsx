@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Image from 'next/image'
-import styles from './ImageLightbox.module.css'
+import styles from './styles/ImageLightbox.module.css'
 import LoadingSpinner from './LoadingSpinner'
 
 type ImageLightboxProps = {
@@ -18,6 +18,9 @@ export function ImageLightbox({ images, initialIndex, productName, isOpen, onClo
   const [loadedImages, setLoadedImages] = useState<Set<number>>(new Set())
   const [touchStart, setTouchStart] = useState<number | null>(null)
   const [touchEnd, setTouchEnd] = useState<number | null>(null)
+  const [isDragging, setIsDragging] = useState(false)
+  const [dragOffset, setDragOffset] = useState(0)
+  const [isTransitioning, setIsTransitioning] = useState(false)
 
   // Reset index when modal opens
   useEffect(() => {
@@ -25,6 +28,14 @@ export function ImageLightbox({ images, initialIndex, productName, isOpen, onClo
       setCurrentIndex(initialIndex)
     }
   }, [isOpen, initialIndex])
+
+  // Reset transition state after image change
+  useEffect(() => {
+    if (isTransitioning) {
+      const timer = setTimeout(() => setIsTransitioning(false), 400)
+      return () => clearTimeout(timer)
+    }
+  }, [isTransitioning])
 
   // Prevent body scroll when lightbox is open
   useEffect(() => {
@@ -61,10 +72,12 @@ export function ImageLightbox({ images, initialIndex, productName, isOpen, onClo
   }
 
   const goToNext = () => {
+    setIsTransitioning(true)
     setCurrentIndex((prev) => (prev + 1) % images.length)
   }
 
   const goToPrev = () => {
+    setIsTransitioning(true)
     setCurrentIndex((prev) => (prev - 1 + images.length) % images.length)
   }
 
@@ -74,21 +87,42 @@ export function ImageLightbox({ images, initialIndex, productName, isOpen, onClo
   const onTouchStart = (e: React.TouchEvent) => {
     setTouchEnd(null)
     setTouchStart(e.targetTouches[0].clientX)
+    setIsDragging(true)
   }
 
   const onTouchMove = (e: React.TouchEvent) => {
-    setTouchEnd(e.targetTouches[0].clientX)
+    if (!touchStart) return
+
+    const currentTouch = e.targetTouches[0].clientX
+    const diff = currentTouch - touchStart
+
+    setTouchEnd(currentTouch)
+    setDragOffset(diff)
   }
 
   const onTouchEnd = () => {
-    if (!touchStart || !touchEnd) return
+    if (!touchStart || !touchEnd) {
+      setIsDragging(false)
+      setDragOffset(0)
+      return
+    }
 
     const distance = touchStart - touchEnd
     const isLeftSwipe = distance > minSwipeDistance
     const isRightSwipe = distance < -minSwipeDistance
 
-    if (isLeftSwipe) goToNext()
-    if (isRightSwipe) goToPrev()
+    if (isLeftSwipe || isRightSwipe) {
+      setIsTransitioning(true)
+      if (isLeftSwipe) {
+        setCurrentIndex((prev) => (prev + 1) % images.length)
+      } else {
+        setCurrentIndex((prev) => (prev - 1 + images.length) % images.length)
+      }
+    }
+
+    // Reset drag state
+    setIsDragging(false)
+    setDragOffset(0)
   }
 
   if (!isOpen) return null
@@ -96,9 +130,7 @@ export function ImageLightbox({ images, initialIndex, productName, isOpen, onClo
   return (
     <div className={styles.lightboxOverlay} onClick={onClose}>
       <button className={styles.closeButton} onClick={onClose} aria-label="Close lightbox">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-          <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-        </svg>
+        &times;
       </button>
 
       <div
@@ -116,8 +148,8 @@ export function ImageLightbox({ images, initialIndex, productName, isOpen, onClo
               className={`${styles.navButton} ${styles.navButtonPrev}`}
               aria-label="Previous image"
             >
-              <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
-                <path d="M15 18L9 12L15 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <path d="M15 18L9 12L15 6" stroke="#000000" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
             </button>
             <button
@@ -125,29 +157,84 @@ export function ImageLightbox({ images, initialIndex, productName, isOpen, onClo
               className={`${styles.navButton} ${styles.navButtonNext}`}
               aria-label="Next image"
             >
-              <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
-                <path d="M9 18L15 12L9 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <path d="M9 18L15 12L9 6" stroke="#000000" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
             </button>
           </>
         )}
 
         {/* Image Container */}
-        <div className={styles.imageWrapper}>
-          {!loadedImages.has(currentIndex) && (
-            <div className={styles.loadingOverlay}>
-              <LoadingSpinner />
+        <div className={styles.carouselWrapper}>
+          <div
+            className={styles.carouselTrack}
+            style={{
+              transform: `translateX(calc(-33.333% + ${dragOffset}px))`,
+              transition: (isDragging || !isTransitioning) ? 'none' : 'transform 0.4s cubic-bezier(0.4, 0, 0.2, 1)'
+            }}
+          >
+            {/* Previous Image */}
+            <div className={styles.carouselSlide}>
+              {images.length > 1 && (
+                <div className={styles.slideImageWrapper}>
+                  {!loadedImages.has((currentIndex - 1 + images.length) % images.length) && (
+                    <div className={styles.loadingOverlay}>
+                      <LoadingSpinner />
+                    </div>
+                  )}
+                  <Image
+                    src={images[(currentIndex - 1 + images.length) % images.length]}
+                    alt={`${productName} - Previous image`}
+                    fill
+                    sizes="100vw"
+                    style={{ objectFit: 'contain' }}
+                    onLoad={() => handleImageLoad((currentIndex - 1 + images.length) % images.length)}
+                  />
+                </div>
+              )}
             </div>
-          )}
-          <Image
-            src={images[currentIndex]}
-            alt={`${productName} - Image ${currentIndex + 1}`}
-            fill
-            sizes="100vw"
-            style={{ objectFit: 'contain' }}
-            onLoad={() => handleImageLoad(currentIndex)}
-            priority
-          />
+
+            {/* Current Image */}
+            <div className={styles.carouselSlide}>
+              <div className={styles.slideImageWrapper}>
+                {!loadedImages.has(currentIndex) && (
+                  <div className={styles.loadingOverlay}>
+                    <LoadingSpinner />
+                  </div>
+                )}
+                <Image
+                  src={images[currentIndex]}
+                  alt={`${productName} - Image ${currentIndex + 1}`}
+                  fill
+                  sizes="100vw"
+                  style={{ objectFit: 'contain' }}
+                  onLoad={() => handleImageLoad(currentIndex)}
+                  priority
+                />
+              </div>
+            </div>
+
+            {/* Next Image */}
+            <div className={styles.carouselSlide}>
+              {images.length > 1 && (
+                <div className={styles.slideImageWrapper}>
+                  {!loadedImages.has((currentIndex + 1) % images.length) && (
+                    <div className={styles.loadingOverlay}>
+                      <LoadingSpinner />
+                    </div>
+                  )}
+                  <Image
+                    src={images[(currentIndex + 1) % images.length]}
+                    alt={`${productName} - Next image`}
+                    fill
+                    sizes="100vw"
+                    style={{ objectFit: 'contain' }}
+                    onLoad={() => handleImageLoad((currentIndex + 1) % images.length)}
+                  />
+                </div>
+              )}
+            </div>
+          </div>
         </div>
 
         {/* Image Counter & Thumbnails */}

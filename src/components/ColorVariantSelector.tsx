@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import Image from 'next/image'
-import styles from './ColorVariantSelector.module.css'
+import styles from './styles/ColorVariantSelector.module.css'
 
 type ColorVariant = {
   name: string
