@@ -29,7 +29,7 @@ function ProductsContent() {
   const [lightboxProductName, setLightboxProductName] = useState('')
 
   // Track current images for each product (for variant switching)
-  const [productImages, setProductImages] = useState<Record<string, string[]>>({})
+  const [productImages] = useState<Record<string, string[]>>({})
 
   // Customization modal state
   const [customizationModalOpen, setCustomizationModalOpen] = useState(false)
@@ -47,7 +47,7 @@ function ProductsContent() {
     setCustomizationModalOpen(true)
   }
 
-  const handleAddToCartFromModal = (product: Product, selectedVariant: any) => {
+  const handleAddToCartFromModal = (product: Product, selectedVariant: { size?: string; colorId?: string; colorName?: string; images?: string[] }) => {
     addItem({
       id: product.id,
       name: product.name,
