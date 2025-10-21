@@ -106,7 +106,6 @@ def sync_products():
                     'price': product_data['price'],
                     'compare_at_price': product_data.get('compare_at_price'),
                     'sku': product_data['sku'],
-                    'inventory_quantity': 999,  # High number for POD
                     'category_id': category_id,
                     'images': [image_url] if image_url else [],
                     'is_active': product_data['active'],
@@ -211,13 +210,14 @@ def group_mockups_by_color(mockup_dir):
 
     return color_groups
 
-def upload_mockups_to_storage(mockup_dir, product_slug):
+def upload_mockups_to_storage(mockup_dir, product_slug, skip_existing=True):
     """Upload mockup files to Supabase Storage and return URLs"""
-    print(f"[UP] Uploading mockups to Supabase Storage...")
+    print(f"[UP] Checking mockups in Supabase Storage...")
 
     mockup_path = Path(mockup_dir)
     files = list(mockup_path.glob('*.*'))
     uploaded_urls = []
+    skipped_count = 0
 
     for file_path in files:
         filename = file_path.name
@@ -226,21 +226,40 @@ def upload_mockups_to_storage(mockup_dir, product_slug):
         if filename.endswith('.zip'):
             continue
 
-        try:
-            with open(file_path, 'rb') as f:
-                # Upload to: product-images/{product_slug}/{filename}
-                storage_path = f"{product_slug}/{filename}"
+        storage_path = f"{product_slug}/{filename}"
 
-                supabase.storage.from_("product-images").upload(
-                    path=storage_path,
-                    file=f,
-                    file_options={"cache-control": "3600", "upsert": "true"}
-                )
+        # Get public URL
+        public_url = supabase.storage.from_("product-images").get_public_url(storage_path)
+        if public_url.endswith('?'):
+            public_url = public_url[:-1]
 
-                # Get public URL and remove trailing '?' if present
-                public_url = supabase.storage.from_("product-images").get_public_url(storage_path)
-                if public_url.endswith('?'):
-                    public_url = public_url[:-1]
+        # Check if file already exists in storage
+        file_exists = False
+        if skip_existing:
+            try:
+                # Try to list the file - if it exists, this won't error
+                list_response = supabase.storage.from_("product-images").list(product_slug)
+                if list_response:
+                    file_exists = any(f.get('name') == filename for f in list_response)
+            except:
+                file_exists = False
+
+        if file_exists:
+            # File already exists, just add its URL
+            uploaded_urls.append({
+                'filename': filename,
+                'url': public_url
+            })
+            skipped_count += 1
+        else:
+            # Upload new file
+            try:
+                with open(file_path, 'rb') as f:
+                    supabase.storage.from_("product-images").upload(
+                        path=storage_path,
+                        file=f,
+                        file_options={"cache-control": "3600", "upsert": "true"}
+                    )
 
                 uploaded_urls.append({
                     'filename': filename,
@@ -248,8 +267,11 @@ def upload_mockups_to_storage(mockup_dir, product_slug):
                 })
                 print(f"   [OK] Uploaded: {filename}")
 
-        except Exception as e:
-            print(f"   [!]  Failed to upload {filename}: {e}")
+            except Exception as e:
+                print(f"   [!]  Failed to upload {filename}: {e}")
+
+    if skipped_count > 0:
+        print(f"   [SKIP] {skipped_count} file(s) already in storage")
 
     return uploaded_urls
 
@@ -365,7 +387,6 @@ def append_product_from_mockups(mockup_dir, name, description, price, category='
         'price': price,
         'images': images,
         'tags': tags or [],
-        'inventory_quantity': 999,  # Default high stock
         'is_active': True,
         'variants': {'colors': variants}  # Store color variants
     }
@@ -539,15 +560,234 @@ def remove_sizes(product_id):
         print(f"[X] Error removing sizes: {e}")
         return False
 
+def sync_from_config():
+    """Sync products from products-config.json - simplified workflow"""
+    print("[RUN] Starting product sync from products-config.json...\n")
+
+    # Read config file
+    config_path = Path('products-config.json')
+    if not config_path.exists():
+        print("[X] products-config.json not found in root directory")
+        print("    Create it with categories and products")
+        return
+
+    with open(config_path, 'r') as f:
+        config = json.load(f)
+
+    categories = config.get('categories', {})
+
+    if not categories:
+        print("[X] No categories found in config")
+        return
+
+    # Count total products
+    total_products = sum(len(cat_data.get('products', [])) for cat_data in categories.values())
+    print(f"[INFO] Found {len(categories)} category(ies) with {total_products} product(s)\n")
+
+    # Color mapping (Qikink color IDs)
+    COLOR_MAP = {
+        '1': {'name': 'White', 'hex': '#FFFFFF'},
+        '3': {'name': 'Black', 'hex': '#000000'},
+        '4': {'name': 'Grey', 'hex': '#6b7280'},
+        '9': {'name': 'Navy', 'hex': '#1e3a8a'},
+        '10': {'name': 'Red', 'hex': '#dc2626'},
+        '25': {'name': 'Maroon', 'hex': '#7f1d1d'},
+        '41': {'name': 'Olive Green', 'hex': '#6b7c3e'},
+        '43': {'name': 'Yellow', 'hex': '#eab308'},
+        '45': {'name': 'Pink', 'hex': '#ec4899'},
+        '49': {'name': 'Lavender', 'hex': '#c4b5fd'},
+        '52': {'name': 'Coral', 'hex': '#ff7f7f'},
+        '53': {'name': 'Mint', 'hex': '#98d8c8'},
+        '54': {'name': 'Baby Blue', 'hex': '#a7c7e7'},
+    }
+
+    for category_slug, category_data in categories.items():
+        print(f"[CAT] Processing category: {category_data.get('name', category_slug)}")
+
+        # Get or create category in database
+        category_id = None
+        try:
+            # Try to get existing category
+            category_response = supabase.table('categories').select('id').eq('slug', category_slug).execute()
+            if category_response.data and len(category_response.data) > 0:
+                category_id = category_response.data[0]['id']
+            else:
+                # Create category if it doesn't exist
+                new_category = supabase.table('categories').insert({
+                    'name': category_data.get('name', category_slug.title()),
+                    'slug': category_slug,
+                    'description': category_data.get('description', f'{category_slug} products')
+                }).execute()
+                if new_category.data:
+                    category_id = new_category.data[0]['id']
+                    print(f"   [+] Created category in database")
+        except Exception as e:
+            print(f"   [!] Category error: {e}")
+            continue
+
+        # Get defaults for this category
+        defaults = category_data.get('defaults', {})
+        products = category_data.get('products', [])
+
+        if not products:
+            print(f"   [SKIP] No products in this category\n")
+            continue
+
+        # Process products in this category
+        for product_config in products:
+            # Skip inactive products
+            if not product_config.get('active', True):
+                print(f"   [SKIP] {product_config['name']} (inactive)")
+                continue
+
+            print(f"   [+] Processing: {product_config['name']}")
+
+            # Merge defaults with product-specific config
+            product_data = {**defaults, **product_config}
+
+            # Get required fields
+            name = product_data['name']
+            sku = product_data['sku']
+            mockup_folder = product_data['mockup_folder']
+
+            # Create product slug from SKU
+            product_slug = sku.lower()
+
+            # Upload mockups
+            mockup_dir = Path('mockups') / mockup_folder
+            uploaded_files = upload_mockups_to_storage(str(mockup_dir), product_slug)
+
+            if not uploaded_files:
+                print(f"      [X] No mockups uploaded, skipping product\n")
+                continue
+
+        # Group mockups by color
+        mockups = []
+        size_chart_url = None
+        default_image_url = None
+
+        for item in uploaded_files:
+            filename = item['filename']
+            url = item['url']
+
+            # Check for default image
+            if filename.lower() == 'default.jpg':
+                default_image_url = url
+                continue
+
+            # Check for size chart
+            if 'size_chart' in filename.lower():
+                size_chart_url = url
+                continue
+
+            # Parse mockup filename
+            metadata = parse_mockup_filename(filename)
+            if metadata:
+                mockups.append({
+                    'url': url,
+                    'view': metadata['view'],
+                    'view_number': metadata['view_number'],
+                    'color_id': metadata['color_id']
+                })
+
+        # Group by color
+        color_groups = {}
+        for mockup in mockups:
+            color_id = mockup['color_id']
+            if color_id not in color_groups:
+                color_groups[color_id] = []
+            color_groups[color_id].append(mockup)
+
+        # Sort images within each color group
+        for color_id in color_groups:
+            color_groups[color_id].sort(key=lambda x: (
+                0 if x['view'].lower() == 'front' else 1 if x['view'].lower() == 'back' else 2,
+                x['view_number']
+            ))
+
+            # Add size chart at the end if it exists
+            if size_chart_url:
+                color_groups[color_id].append({
+                    'url': size_chart_url,
+                    'view': 'SizeChart',
+                    'view_number': 999
+                })
+
+        if not color_groups:
+            print(f"   [X] No valid color variants found, skipping product\n")
+            continue
+
+        print(f"   [OK] Found {len(color_groups)} color variant(s)")
+
+        # Get images for main product (first color)
+        first_color = sorted(color_groups.keys())[0]
+        images = [img['url'] for img in color_groups[first_color]]
+
+        # Build color variants
+        color_variants = []
+        for color_id in sorted(color_groups.keys()):
+            color_info = COLOR_MAP.get(color_id, {'name': f'Color {color_id}', 'hex': '#cccccc'})
+            color_variants.append({
+                'colorId': color_id,
+                'colorName': color_info['name'],
+                'colorHex': color_info['hex'],
+                'images': [img['url'] for img in color_groups[color_id]]
+            })
+
+        # Merge variants
+        variants_config = product_data.get('variants', {})
+        final_variants = {
+            'colors': color_variants,
+            'sizes': variants_config.get('sizes', []),
+            'price_by_size': variants_config.get('price_by_size', {})
+        }
+
+        # Prepare product payload for Supabase
+        product_payload = {
+            'name': name,
+            'description': product_data.get('description', ''),
+            'price': product_data.get('base_price'),
+            'compare_at_price': product_data.get('compare_at_price'),
+            'sku': sku,
+            'category_id': category_id,
+            'images': images,
+            'is_active': True,
+            'vendor': product_data.get('vendor'),
+            'product_type': product_data.get('product_type'),
+            'material': product_data.get('material'),
+            'variants': final_variants,
+            'tags': product_data.get('tags', [])
+        }
+
+        # Upsert product to Supabase
+        try:
+            response = supabase.table('products').upsert(product_payload, on_conflict='sku').execute()
+
+            if response.data:
+                print(f"   [OK] Synced successfully!")
+                print(f"   - Images: {len(images)}")
+                print(f"   - Colors: {len(color_variants)}")
+                print(f"   - Sizes: {len(final_variants.get('sizes', []))}")
+            else:
+                print(f"   [X] Failed to sync product")
+
+        except Exception as e:
+            print(f"   [X] Error syncing product: {e}")
+
+        print()  # Empty line between products
+
+    print("[DONE] Product sync completed!")
+
 def main():
     if len(sys.argv) < 2:
         print("""
 [+] Product Management Script
 
 Usage:
-  python scripts/upload_products.py sync   - Upload/update products from products.json
-  python scripts/upload_products.py clean  - Remove products not in products.json
-  python scripts/upload_products.py list   - List all products with IDs
+  python scripts/upload_products.py sync-config - Sync products from products-config.json (RECOMMENDED)
+  python scripts/upload_products.py sync        - Upload/update products from products.json
+  python scripts/upload_products.py clean       - Remove products not in products.json
+  python scripts/upload_products.py list        - List all products with IDs
   python scripts/upload_products.py append <mockup_dir> <name> <price> [description] [category] [tags]
   python scripts/upload_products.py update <product_id> <field>=<value> [<field>=<value> ...]
   python scripts/upload_products.py delete <product_id> - Delete a product
@@ -555,6 +795,9 @@ Usage:
   python scripts/upload_products.py remove-sizes <product_id> - Remove sizes from a product
 
 Examples:
+  # Sync from products-config.json (simple workflow)
+  python scripts/upload_products.py sync-config
+
   # Add new product from mockups
   python scripts/upload_products.py append mockups/hoodie_fox "Fox Spirit Hoodie" 1299 "Mystical fox design" hoodies "animals,mystical"
 
@@ -587,7 +830,9 @@ Setup:
 
     command = sys.argv[1]
 
-    if command == 'sync':
+    if command == 'sync-config':
+        sync_from_config()
+    elif command == 'sync':
         sync_products()
     elif command == 'clean':
         clean_products()
@@ -643,7 +888,7 @@ Setup:
                 field, value = arg.split('=', 1)
 
                 # Convert numeric fields
-                if field == 'price' or field == 'compare_at_price' or field == 'inventory_quantity':
+                if field == 'price' or field == 'compare_at_price':
                     value = int(value)
 
                 updates[field] = value

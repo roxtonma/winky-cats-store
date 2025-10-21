@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import styles from './styles/ProductCustomizationModal.module.css'
 import { ProductVariantSelector } from './ProductVariantSelector'
 import { ProductImageCarousel } from './ProductImageCarousel'
+import { TryOnModal } from './TryOnModal'
 import type { Product } from '@/lib/supabase'
 
 type ProductCustomizationModalProps = {
@@ -28,6 +29,7 @@ export function ProductCustomizationModal({
 }: ProductCustomizationModalProps) {
   const [selectedVariant, setSelectedVariant] = useState<SelectedVariant>({})
   const [currentImages, setCurrentImages] = useState<string[]>([])
+  const [isTryOnModalOpen, setIsTryOnModalOpen] = useState(false)
 
   // Initialize defaults when modal opens with a new product
   useEffect(() => {
@@ -152,16 +154,38 @@ export function ProductCustomizationModal({
               </p>
             )}
 
-            {/* Add to Cart Button */}
-            <button
-              onClick={handleAddToCart}
-              disabled={product.inventory_quantity === 0}
-              className={styles.addToCartBtn}
-            >
-              {product.inventory_quantity === 0 ? 'Out of Stock' : 'Add to Cart'}
-            </button>
+            {/* Action Buttons */}
+            <div className={styles.actionButtons}>
+              <button
+                onClick={() => setIsTryOnModalOpen(true)}
+                className={styles.tryOnBtn}
+              >
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  <circle cx="12" cy="13" r="4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+                Try On
+              </button>
+
+              <button
+                onClick={handleAddToCart}
+                disabled={product.inventory_quantity === 0}
+                className={styles.addToCartBtn}
+              >
+                {product.inventory_quantity === 0 ? 'Out of Stock' : 'Add to Cart'}
+              </button>
+            </div>
           </div>
         </div>
+
+        {/* Try On Modal */}
+        <TryOnModal
+          isOpen={isTryOnModalOpen}
+          onClose={() => setIsTryOnModalOpen(false)}
+          productName={product.name}
+          productImages={currentImages}
+          selectedColor={selectedVariant.colorName}
+        />
       </div>
     </div>
   )

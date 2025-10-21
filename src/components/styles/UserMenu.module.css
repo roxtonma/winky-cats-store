@@ -1,0 +1,161 @@
+.container {
+  position: relative;
+}
+
+.trigger {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  transition: background-color 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+.trigger:hover {
+  background-color: var(--bg-secondary);
+}
+
+.userIcon {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 0.875rem;
+}
+
+.dropdown {
+  position: absolute;
+  top: calc(100% + 0.5rem);
+  right: 0;
+  background: var(--bg-card);
+  border: 1px solid var(--border-light);
+  border-radius: 0.75rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  min-width: 240px;
+  z-index: 1000;
+  overflow: hidden;
+  animation: slideDown 0.2s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.userInfo {
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid var(--border-light);
+  background: var(--bg-secondary);
+}
+
+.userName {
+  font-weight: 600;
+  font-size: 0.95rem;
+  margin-bottom: 0.25rem;
+  color: var(--text-primary);
+}
+
+.userEmail {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+.menuItems {
+  padding: 0.5rem;
+}
+
+.menuItem {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-decoration: none;
+  color: var(--text-primary);
+  font-size: 0.875rem;
+  font-family: inherit;
+  font-weight: 400;
+  background: none;
+  border: none;
+  width: 100%;
+  text-align: left;
+}
+
+.menuItem:hover {
+  background-color: var(--bg-secondary);
+  color: var(--accent-primary);
+  text-decoration: none;
+}
+
+.menuIcon {
+  font-size: 1.125rem;
+  width: 20px;
+  text-align: center;
+}
+
+.authButtons {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.loginButton {
+  padding: 0;
+  font-weight: 500;
+  cursor: pointer;
+  transition: color 0.2s;
+  text-decoration: none;
+  display: inline-block;
+  background: none;
+  color: var(--text-secondary);
+  border: none;
+  font-size: inherit;
+}
+
+.loginButton:hover {
+  color: var(--accent-primary);
+  text-decoration: none;
+}
+
+.skeleton {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: linear-gradient(90deg, var(--border-light) 25%, var(--bg-secondary) 50%, var(--border-light) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+@media (max-width: 768px) {
+  .dropdown {
+    right: -1rem;
+    left: -1rem;
+    min-width: auto;
+  }
+}

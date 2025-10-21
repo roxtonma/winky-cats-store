@@ -30,7 +30,7 @@ export default function Home() {
             <Link href="/products" className={styles.categoryCard}>
               <h3 className={styles.categoryTitle}>Custom Designs</h3>
               <p className={styles.categoryDescription}>
-                Upload your artwork and create unique personalized products
+                Want something to your liking? Let us know your taste!
               </p>
             </Link>
           </div>

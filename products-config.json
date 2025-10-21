@@ -1,0 +1,77 @@
+{
+  "categories": {
+    "hoodies": {
+      "name": "Hoodies",
+      "description": "Cozy hoodies with custom designs",
+      "defaults": {
+        "vendor": "qikink",
+        "material": "cotton",
+        "product_type": "hoodie",
+        "compare_at_price": null,
+        "variants": {
+          "sizes": ["XS", "S", "M", "L", "XL", "XXL", "3XL"],
+          "price_by_size": {
+            "XS": 999,
+            "S": 999,
+            "M": 999,
+            "L": 999,
+            "XL": 999,
+            "XXL": 999,
+            "3XL": 1099
+          }
+        }
+      },
+      "products": [
+        {
+          "name": "Comfy fox Hoodie",
+          "description": "Comfy fox sleeping under the moonlight besides a lamp.",
+          "sku": "HOODIE-FOX-001",
+          "base_price": 999,
+          "mockup_folder": "hoodie_fox",
+          "tags": ["animals", "hoodie", "fox"],
+          "active": true
+        }
+      ]
+    },
+    "t-shirts": {
+      "name": "T-Shirts",
+      "description": "Custom printed t-shirts for every style",
+      "defaults": {
+        "vendor": "qikink",
+        "material": "cotton",
+        "product_type": "t-shirt",
+        "compare_at_price": null,
+        "variants": {
+          "sizes": ["XS", "S", "M", "L", "XL", "XXL", "3XL"],
+          "price_by_size": {
+            "XS": 499,
+            "S": 499,
+            "M": 499,
+            "L": 499,
+            "XL": 499,
+            "XXL": 499,
+            "3XL": 599
+          }
+        }
+      },
+      "products": []
+    },
+    "accessories": {
+      "name": "Accessories",
+      "description": "Bags, mugs and other custom accessories",
+      "defaults": {
+        "vendor": "qikink",
+        "material": "canvas",
+        "product_type": "accessory",
+        "compare_at_price": null,
+        "variants": {
+          "sizes": ["One Size"],
+          "price_by_size": {
+            "One Size": 399
+          }
+        }
+      },
+      "products": []
+    }
+  }
+}

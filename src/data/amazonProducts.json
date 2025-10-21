@@ -1,0 +1,73 @@
+{
+  "associateId": "dealsloveus-21",
+  "lastUpdated": "2025-10-11",
+  "products": [
+    {
+      "id": "amz-001",
+      "asin": "B0FCMKSP7V",
+      "name": "OnePlus 13 Snapdragon 8 Elite",
+      "description": "OnePlus flagship smartphone with Snapdragon 8 Elite processor",
+      "category": "electronics",
+      "imageUrl": "https://m.media-amazon.com/images/I/61OtOTTpzxL._SX679_.jpg",
+      "affiliateLink": "",
+      "estimatedPrice": "₹54,999",
+      "marketplace": "amazon.in",
+      "tags": ["Electronics", "smartphone", "oneplus", "flagship", "android"]
+    },
+    {
+      "id": "amz-002",
+      "asin": "B08L5VYN7W",
+      "name": "Premium Cat Food - Grain Free",
+      "description": "High-protein, grain-free cat food made with real chicken and natural ingredients",
+      "category": "cat-food",
+      "imageUrl": "https://m.media-amazon.com/images/I/placeholder.jpg",
+      "affiliateLink": "",
+      "estimatedPrice": "$29.99",
+      "tags": ["food", "grain-free", "nutrition"]
+    },
+    {
+      "id": "amz-003",
+      "asin": "B07TWNPYP7",
+      "name": "Self-Cleaning Cat Litter Box",
+      "description": "Automatic self-cleaning litter box with smart sensors and odor control",
+      "category": "cat-care",
+      "imageUrl": "https://m.media-amazon.com/images/I/placeholder.jpg",
+      "affiliateLink": "",
+      "estimatedPrice": "$149.99",
+      "tags": ["litter-box", "automatic", "hygiene"]
+    },
+    {
+      "id": "amz-004",
+      "asin": "B09KMXTF6F",
+      "name": "Cat Tree Tower with Scratching Posts",
+      "description": "Multi-level cat tree with sisal scratching posts, perches, and cozy condos",
+      "category": "cat-furniture",
+      "imageUrl": "https://m.media-amazon.com/images/I/placeholder.jpg",
+      "affiliateLink": "",
+      "estimatedPrice": "$79.99",
+      "tags": ["furniture", "scratching", "climbing"]
+    },
+    {
+      "id": "amz-005",
+      "asin": "B08QZ7W5VN",
+      "name": "Comfortable Cat Collar with Bell",
+      "description": "Adjustable breakaway collar with safety bell and cute designs",
+      "category": "cat-accessories",
+      "imageUrl": "https://m.media-amazon.com/images/I/placeholder.jpg",
+      "affiliateLink": "",
+      "estimatedPrice": "$8.99",
+      "tags": ["accessories", "collar", "safety"]
+    },
+    {
+      "id": "amz-006",
+      "asin": "B0CHLQ9YSF",
+      "name": "Cat Grooming Brush Kit",
+      "description": "Professional grooming kit with slicker brush and deshedding tool for all coat types",
+      "category": "cat-care",
+      "imageUrl": "https://m.media-amazon.com/images/I/placeholder.jpg",
+      "affiliateLink": "",
+      "estimatedPrice": "$19.99",
+      "tags": ["grooming", "brush", "care"]
+    }
+  ]
+}

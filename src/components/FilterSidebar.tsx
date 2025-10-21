@@ -7,6 +7,7 @@ export type FilterState = {
   priceRange: [number, number]
   inStock: boolean
   selectedTags: string[]
+  selectedCategory?: string | null
 }
 
 type FilterSidebarProps = {
@@ -16,9 +17,10 @@ type FilterSidebarProps = {
   maxPrice: number
   isMobileOpen?: boolean
   onMobileClose?: () => void
+  categories?: Array<{ id: string; name: string; slug: string }>
 }
 
-export function FilterSidebar({ filters, onFilterChange, availableTags, maxPrice, isMobileOpen, onMobileClose }: FilterSidebarProps) {
+export function FilterSidebar({ filters, onFilterChange, availableTags, maxPrice, isMobileOpen, onMobileClose, categories = [] }: FilterSidebarProps) {
   const [localPriceRange, setLocalPriceRange] = useState(filters.priceRange)
 
   // Update local price when filters change externally
@@ -47,11 +49,16 @@ export function FilterSidebar({ filters, onFilterChange, availableTags, maxPrice
     onFilterChange({ ...filters, selectedTags: newTags })
   }
 
+  const handleCategoryChange = (categorySlug: string | null) => {
+    onFilterChange({ ...filters, selectedCategory: categorySlug })
+  }
+
   const handleClearFilters = () => {
     onFilterChange({
       priceRange: [0, maxPrice],
       inStock: false,
-      selectedTags: []
+      selectedTags: [],
+      selectedCategory: null
     })
   }
 
@@ -59,7 +66,8 @@ export function FilterSidebar({ filters, onFilterChange, availableTags, maxPrice
     filters.inStock ||
     filters.selectedTags.length > 0 ||
     filters.priceRange[0] > 0 ||
-    filters.priceRange[1] < maxPrice
+    filters.priceRange[1] < maxPrice ||
+    filters.selectedCategory !== null
 
   // Close mobile drawer on escape key
   useEffect(() => {
@@ -103,6 +111,30 @@ export function FilterSidebar({ filters, onFilterChange, availableTags, maxPrice
             )}
           </div>
         </div>
+
+      {/* Categories */}
+      {categories.length > 0 && (
+        <div className={styles.filterSection}>
+          <h3 className={styles.filterTitle}>Categories</h3>
+          <div className={styles.categoriesList}>
+            <button
+              className={`${styles.categoryChip} ${filters.selectedCategory === null ? styles.active : ''}`}
+              onClick={() => handleCategoryChange(null)}
+            >
+              All Products
+            </button>
+            {categories.map((category) => (
+              <button
+                key={category.id}
+                className={`${styles.categoryChip} ${filters.selectedCategory === category.slug ? styles.active : ''}`}
+                onClick={() => handleCategoryChange(category.slug)}
+              >
+                {category.name}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Price Range */}
       <div className={styles.filterSection}>

@@ -4,23 +4,44 @@ import { useProducts } from '@/hooks/useProducts'
 import { useCart } from '@/contexts/CartContext'
 import styles from './products.module.css'
 import { ProductSkeletonGrid } from '@/components/ProductSkeleton'
-import { useSearchParams } from 'next/navigation'
-import { useMemo, Suspense, useState } from 'react'
+import { useSearchParams, useRouter } from 'next/navigation'
+import { useMemo, Suspense, useState, useEffect, useRef, lazy } from 'react'
 import { FilterSidebar, FilterState } from '@/components/FilterSidebar'
 import { ProductImageCarousel } from '@/components/ProductImageCarousel'
-import { ImageLightbox } from '@/components/ImageLightbox'
-import { ProductCustomizationModal } from '@/components/ProductCustomizationModal'
+import { useCategories } from '@/hooks/useCategories'
 import type { Product } from '@/lib/supabase'
+
+// Lazy load heavy components
+const ImageLightbox = lazy(() => import('@/components/ImageLightbox').then(mod => ({ default: mod.ImageLightbox })))
+const ProductCustomizationModal = lazy(() => import('@/components/ProductCustomizationModal').then(mod => ({ default: mod.ProductCustomizationModal })))
 
 function ProductsContent() {
   const searchParams = useSearchParams()
+  const router = useRouter()
   const categoryFilter = searchParams.get('category')
-
-  // Build API URL with category filter
-  const apiUrl = categoryFilter ? `/api/products?category=${categoryFilter}` : '/api/products'
-
-  const { data: products = [], isLoading, error } = useProducts(apiUrl)
   const { addItem } = useCart()
+
+  // Fetch categories
+  const { data: categories = [] } = useCategories()
+
+  // Filter state - initialize first
+  const [filters, setFilters] = useState<FilterState>({
+    priceRange: [0, 10000],
+    inStock: false,
+    selectedTags: [],
+    selectedCategory: categoryFilter
+  })
+
+  // Update filter state when URL category changes
+  useEffect(() => {
+    setFilters(prev => ({
+      ...prev,
+      selectedCategory: categoryFilter
+    }))
+  }, [categoryFilter])
+
+  // Mobile filter drawer state
+  const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false)
 
   // Lightbox state
   const [lightboxOpen, setLightboxOpen] = useState(false)
@@ -34,6 +55,83 @@ function ProductsContent() {
   // Customization modal state
   const [customizationModalOpen, setCustomizationModalOpen] = useState(false)
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
+
+  // Handle filter changes - update URL when category changes
+  const handleFilterChange = (newFilters: FilterState) => {
+    setFilters(newFilters)
+
+    // Update URL when category changes
+    if (newFilters.selectedCategory !== filters.selectedCategory) {
+      const params = new URLSearchParams(searchParams.toString())
+      if (newFilters.selectedCategory) {
+        params.set('category', newFilters.selectedCategory)
+      } else {
+        params.delete('category')
+      }
+      router.push(`/products?${params.toString()}`)
+    }
+  }
+
+  // Use products hook with pagination and server-side filtering
+  const {
+    data,
+    isLoading,
+    error,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage
+  } = useProducts({
+    category: filters.selectedCategory || undefined,
+    minPrice: filters.priceRange[0],
+    maxPrice: filters.priceRange[1],
+    inStock: filters.inStock,
+    tags: filters.selectedTags,
+    limit: 20
+  })
+
+  // Flatten all pages into a single products array
+  const products = useMemo(() => {
+    return data?.pages.flatMap(page => page.products) || []
+  }, [data])
+
+  // Get total count from first page
+  const totalCount = data?.pages[0]?.pagination.total || 0
+
+  // Calculate max price and available tags - now we need to fetch separately or use initial data
+  // For now, we'll set a high default and update based on actual data
+  const { maxPrice, availableTags } = useMemo(() => {
+    if (!products.length) return { maxPrice: 10000, availableTags: [] }
+
+    const max = Math.max(...products.map((p: Product) => p.price))
+    const tagsSet = new Set<string>()
+    products.forEach((p: Product) => {
+      p.tags?.forEach(tag => tagsSet.add(tag))
+    })
+
+    return {
+      maxPrice: Math.ceil(max / 100) * 100, // Round up to nearest 100
+      availableTags: Array.from(tagsSet).sort()
+    }
+  }, [products])
+
+  // Infinite scroll observer
+  const loadMoreRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (!loadMoreRef.current || !hasNextPage || isFetchingNextPage) return
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          fetchNextPage()
+        }
+      },
+      { threshold: 0.1 }
+    )
+
+    observer.observe(loadMoreRef.current)
+    return () => observer.disconnect()
+  }, [hasNextPage, isFetchingNextPage, fetchNextPage])
 
   const openLightbox = (images: string[], index: number, productName: string) => {
     setLightboxImages(images)
@@ -66,64 +164,6 @@ function ProductsContent() {
     return productImages[product.id] || product.images || []
   }
 
-  // Calculate max price and available tags from products
-  const { maxPrice, availableTags } = useMemo(() => {
-    if (!products.length) return { maxPrice: 1000, availableTags: [] }
-
-    const max = Math.max(...products.map((p: Product) => p.price))
-    const tagsSet = new Set<string>()
-    products.forEach((p: Product) => {
-      p.tags?.forEach(tag => tagsSet.add(tag))
-    })
-
-    return {
-      maxPrice: Math.ceil(max / 100) * 100, // Round up to nearest 100
-      availableTags: Array.from(tagsSet).sort()
-    }
-  }, [products])
-
-  // Filter state
-  const [filters, setFilters] = useState<FilterState>({
-    priceRange: [0, maxPrice],
-    inStock: false,
-    selectedTags: []
-  })
-
-  // Mobile filter drawer state
-  const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false)
-
-  // Update price range when maxPrice changes
-  useMemo(() => {
-    setFilters(prev => ({
-      ...prev,
-      priceRange: [prev.priceRange[0], maxPrice]
-    }))
-  }, [maxPrice])
-
-  // Apply filters to products
-  const filteredProducts = useMemo(() => {
-    return products.filter((product: Product) => {
-      // Price filter
-      if (product.price < filters.priceRange[0] || product.price > filters.priceRange[1]) {
-        return false
-      }
-
-      // Stock filter
-      if (filters.inStock && product.inventory_quantity === 0) {
-        return false
-      }
-
-      // Tags filter
-      if (filters.selectedTags.length > 0) {
-        const productTags = product.tags || []
-        const hasMatchingTag = filters.selectedTags.some(tag => productTags.includes(tag))
-        if (!hasMatchingTag) return false
-      }
-
-      return true
-    })
-  }, [products, filters])
-
   if (error) return (
     <div className={styles.container}>
       <div className={styles.error}>
@@ -134,9 +174,8 @@ function ProductsContent() {
   )
 
   // Get category display name
-  const categoryName = categoryFilter
-    ? categoryFilter.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')
-    : null
+  const currentCategory = categories.find(cat => cat.slug === filters.selectedCategory)
+  const categoryName = currentCategory?.name || null
 
   return (
     <div className={styles.container}>
@@ -148,20 +187,35 @@ function ProductsContent() {
         <aside className={styles.filterSection}>
           <FilterSidebar
             filters={filters}
-            onFilterChange={setFilters}
+            onFilterChange={handleFilterChange}
             availableTags={availableTags}
             maxPrice={maxPrice}
             isMobileOpen={isMobileFilterOpen}
             onMobileClose={() => setIsMobileFilterOpen(false)}
+            categories={categories}
           />
         </aside>
 
         <main className={styles.productsSection}>
+          {/* Category Badge */}
+          {categoryName && (
+            <div className={styles.categoryBadge}>
+              <span className={styles.badgeText}>{categoryName}</span>
+              <button
+                className={styles.clearCategoryBtn}
+                onClick={() => handleFilterChange({ ...filters, selectedCategory: null })}
+                aria-label="Clear category filter"
+              >
+                ✕
+              </button>
+            </div>
+          )}
+
           {isLoading ? (
             <div className={styles.productsGrid}>
               <ProductSkeletonGrid count={6} />
             </div>
-          ) : filteredProducts.length === 0 ? (
+          ) : products.length === 0 ? (
             <div className={styles.emptyState}>
               <p>No products found{categoryName ? ` in ${categoryName}` : ''} matching your filters.</p>
               <p>Try adjusting your filters to see more products.</p>
@@ -179,11 +233,11 @@ function ProductsContent() {
                   Filters
                 </button>
                 <p className={styles.resultCount}>
-                  Showing {filteredProducts.length} of {products.length} products
+                  Showing {products.length} of {totalCount} products
                 </p>
               </div>
               <div className={styles.productsGrid}>
-                {filteredProducts.map((product) => {
+                {products.map((product) => {
                   const currentImages = getProductImages(product)
                   return (
                     <div key={product.id} className={styles.productCard}>
@@ -196,7 +250,13 @@ function ProductsContent() {
                         />
                       )}
 
-                      <h3 className={styles.productName}>{product.name}</h3>
+                      <h3
+                        className={styles.productName}
+                        onClick={() => openCustomizationModal(product)}
+                        style={{ cursor: 'pointer' }}
+                      >
+                        {product.name}
+                      </h3>
 
                       {product.description && (
                         <p className={styles.productDescription}>{product.description}</p>
@@ -232,27 +292,48 @@ function ProductsContent() {
                   )
                 })}
               </div>
+
+              {/* Infinite scroll trigger */}
+              {hasNextPage && (
+                <div ref={loadMoreRef} className={styles.loadMore}>
+                  {isFetchingNextPage ? (
+                    <ProductSkeletonGrid count={3} />
+                  ) : (
+                    <button onClick={() => fetchNextPage()} className={styles.loadMoreBtn}>
+                      Load More
+                    </button>
+                  )}
+                </div>
+              )}
             </>
           )}
         </main>
       </div>
 
-      {/* Image Lightbox */}
-      <ImageLightbox
-        images={lightboxImages}
-        initialIndex={lightboxIndex}
-        productName={lightboxProductName}
-        isOpen={lightboxOpen}
-        onClose={() => setLightboxOpen(false)}
-      />
+      {/* Image Lightbox - lazy loaded */}
+      {lightboxOpen && (
+        <Suspense fallback={<div>Loading...</div>}>
+          <ImageLightbox
+            images={lightboxImages}
+            initialIndex={lightboxIndex}
+            productName={lightboxProductName}
+            isOpen={lightboxOpen}
+            onClose={() => setLightboxOpen(false)}
+          />
+        </Suspense>
+      )}
 
-      {/* Product Customization Modal */}
-      <ProductCustomizationModal
-        product={selectedProduct}
-        isOpen={customizationModalOpen}
-        onClose={() => setCustomizationModalOpen(false)}
-        onAddToCart={handleAddToCartFromModal}
-      />
+      {/* Product Customization Modal - lazy loaded */}
+      {customizationModalOpen && (
+        <Suspense fallback={<div>Loading...</div>}>
+          <ProductCustomizationModal
+            product={selectedProduct}
+            isOpen={customizationModalOpen}
+            onClose={() => setCustomizationModalOpen(false)}
+            onAddToCart={handleAddToCartFromModal}
+          />
+        </Suspense>
+      )}
     </div>
   )
 }

@@ -227,6 +227,41 @@
   background: #fee2e2;
 }
 
+.actionButtons {
+  display: flex;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.tryOnBtn {
+  background: transparent;
+  color: var(--text-primary, #000000);
+  border: 2px solid var(--text-primary, #000000);
+  padding: 14px 24px;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.tryOnBtn:hover {
+  background: #FF1493;
+  border-color: #FF1493;
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 20, 147, 0.3);
+}
+
+.tryOnBtn:active {
+  transform: translateY(0);
+}
+
 .addToCartBtn {
   background: var(--text-primary, #000000);
   color: white;
@@ -237,8 +272,7 @@
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s;
-  width: 100%;
-  margin-top: 8px;
+  flex: 2;
 }
 
 .addToCartBtn:hover:not(:disabled) {
@@ -290,6 +324,16 @@
   .modal {
     max-height: 95vh;
     border-radius: 16px 16px 0 0;
+  }
+
+  .actionButtons {
+    flex-direction: column;
+  }
+
+  .tryOnBtn,
+  .addToCartBtn {
+    flex: 1;
+    width: 100%;
   }
 }
 

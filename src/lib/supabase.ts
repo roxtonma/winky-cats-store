@@ -1,9 +1,9 @@
-import { createClient } from '@supabase/supabase-js'
+import { createBrowserClient } from '@supabase/ssr'
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey)
+export const supabase = createBrowserClient(supabaseUrl, supabaseAnonKey)
 
 // Types for our database
 export type Category = {
@@ -55,6 +55,7 @@ export type Order = {
   customer_email: string
   customer_name: string
   customer_phone?: string
+  user_id?: string
   status: string
   total_amount: number
   shipping_address?: Record<string, unknown>
@@ -72,4 +73,43 @@ export type OrderItem = {
   unit_price: number
   total_price: number
   created_at: string
+}
+
+export type TryOnUsage = {
+  id: string
+  identifier: string
+  identifier_type: 'ip' | 'phone'
+  product_id?: string
+  user_id?: string
+  attempt_count: number
+  last_attempt_at: string
+  created_at: string
+}
+
+export type UserProfile = {
+  id: string
+  user_id: string
+  phone_number: string
+  name: string
+  email?: string
+  has_purchased: boolean
+  created_at: string
+  updated_at: string
+}
+
+export type UserAddress = {
+  id: string
+  user_id: string
+  label?: string
+  full_name: string
+  phone_number: string
+  address_line1: string
+  address_line2?: string
+  city: string
+  state: string
+  postal_code: string
+  country: string
+  is_default: boolean
+  created_at: string
+  updated_at: string
 }

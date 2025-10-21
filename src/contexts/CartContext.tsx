@@ -25,8 +25,8 @@ type CartState = {
 
 type CartAction =
   | { type: 'ADD_ITEM'; payload: Omit<CartItem, 'quantity'> }
-  | { type: 'REMOVE_ITEM'; payload: string }
-  | { type: 'UPDATE_QUANTITY'; payload: { id: string; quantity: number } }
+  | { type: 'REMOVE_ITEM'; payload: { id: string; variant?: { size?: string; colorName?: string } } }
+  | { type: 'UPDATE_QUANTITY'; payload: { id: string; variant?: { size?: string; colorName?: string }; quantity: number } }
   | { type: 'CLEAR_CART' }
   | { type: 'LOAD_CART'; payload: CartItem[] }
 
@@ -34,8 +34,8 @@ const CartContext = createContext<{
   state: CartState
   dispatch: React.Dispatch<CartAction>
   addItem: (item: Omit<CartItem, 'quantity'>) => void
-  removeItem: (id: string) => void
-  updateQuantity: (id: string, quantity: number) => void
+  removeItem: (id: string, variant?: { size?: string; colorName?: string }) => void
+  updateQuantity: (id: string, variant: { size?: string; colorName?: string } | undefined, quantity: number) => void
   clearCart: () => void
 } | null>(null)
 
@@ -66,21 +66,48 @@ function cartReducer(state: CartState, action: CartAction): CartState {
     }
 
     case 'REMOVE_ITEM': {
-      const updatedItems = state.items.filter(item => item.id !== action.payload)
+      // Remove item matching both ID and variant (if provided)
+      const updatedItems = state.items.filter(item => {
+        if (item.id !== action.payload.id) return true
+
+        // If no variant in payload, only match by ID
+        if (!action.payload.variant) {
+          return item.variant !== undefined
+        }
+
+        // Match by variant (size and colorName)
+        return !(
+          item.variant?.size === action.payload.variant.size &&
+          item.variant?.colorName === action.payload.variant.colorName
+        )
+      })
       return calculateTotals({ ...state, items: updatedItems })
     }
 
     case 'UPDATE_QUANTITY': {
-      const { id, quantity } = action.payload
+      const { id, variant, quantity } = action.payload
       if (quantity <= 0) {
-        return cartReducer(state, { type: 'REMOVE_ITEM', payload: id })
+        return cartReducer(state, { type: 'REMOVE_ITEM', payload: { id, variant } })
       }
 
-      const updatedItems = state.items.map(item =>
-        item.id === id
-          ? { ...item, quantity: Math.min(quantity, item.maxQuantity) }
-          : item
-      )
+      // Update quantity matching both ID and variant
+      const updatedItems = state.items.map(item => {
+        if (item.id !== id) return item
+
+        // Match by variant if provided
+        if (variant) {
+          if (
+            item.variant?.size === variant.size &&
+            item.variant?.colorName === variant.colorName
+          ) {
+            return { ...item, quantity: Math.min(quantity, item.maxQuantity) }
+          }
+          return item
+        }
+
+        // No variant matching, update by ID only
+        return { ...item, quantity: Math.min(quantity, item.maxQuantity) }
+      })
       return calculateTotals({ ...state, items: updatedItems })
     }
 
@@ -150,21 +177,39 @@ export function CartProvider({ children }: { children: ReactNode }) {
     });
   };
 
-  const removeItem = (id: string) => {
-    const item = state.items.find(i => i.id === id);
-    dispatch({ type: 'REMOVE_ITEM', payload: id });
+  const removeItem = (id: string, variant?: { size?: string; colorName?: string }) => {
+    const item = state.items.find(i => {
+      if (i.id !== id) return false
+      if (!variant) return !i.variant
+      return i.variant?.size === variant.size && i.variant?.colorName === variant.colorName
+    });
+    dispatch({ type: 'REMOVE_ITEM', payload: { id, variant } });
     if (item) {
-      toast.info(`${item.name} removed from cart`, {
+      // Build display name with variant info
+      let displayName = item.name;
+      if (item.variant) {
+        const variantParts = [];
+        if (item.variant.size) variantParts.push(item.variant.size);
+        if (item.variant.colorName) variantParts.push(item.variant.colorName);
+        if (variantParts.length > 0) {
+          displayName = `${item.name} (${variantParts.join(', ')})`;
+        }
+      }
+      toast.info(`${displayName} removed from cart`, {
         position: "bottom-right",
         autoClose: 2000,
       });
     }
   };
 
-  const updateQuantity = (id: string, quantity: number) => {
-    const item = state.items.find(i => i.id === id);
+  const updateQuantity = (id: string, variant: { size?: string; colorName?: string } | undefined, quantity: number) => {
+    const item = state.items.find(i => {
+      if (i.id !== id) return false
+      if (!variant) return !i.variant
+      return i.variant?.size === variant.size && i.variant?.colorName === variant.colorName
+    });
     const oldQuantity = item?.quantity || 0;
-    dispatch({ type: 'UPDATE_QUANTITY', payload: { id, quantity } });
+    dispatch({ type: 'UPDATE_QUANTITY', payload: { id, variant, quantity } });
 
     if (item && quantity > 0) {
       if (quantity > oldQuantity) {

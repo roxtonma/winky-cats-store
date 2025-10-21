@@ -30,6 +30,7 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   line-height: 1.6;
+  padding-top: 80px; /* Add padding to compensate for fixed navbar */
 }
 
 * {
@@ -173,5 +174,10 @@ input:focus, textarea:focus, select:focus {
   /* Mobile button sizes */
   button {
     min-height: 44px; /* iOS touch target */
+  }
+
+  /* Adjust body padding for mobile navbar */
+  body {
+    padding-top: 70px;
   }
 }

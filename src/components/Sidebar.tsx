@@ -1,0 +1,176 @@
+'use client';
+
+import { useState, useEffect } from 'react';
+import Link from 'next/link';
+import CartIcon from '@/components/CartIcon';
+import { UserMenu } from '@/components/UserMenu';
+import { useAuth } from '@/contexts/AuthContext';
+import styles from './styles/Sidebar.module.css';
+
+export default function Sidebar() {
+  const [isOpen, setIsOpen] = useState(false);
+  const [isNavVisible, setIsNavVisible] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
+  const { user, userProfile } = useAuth();
+
+  const toggleSidebar = () => {
+    setIsOpen(!isOpen);
+  };
+
+  const closeSidebar = () => {
+    setIsOpen(false);
+  };
+
+  const getInitials = (name: string) => {
+    return name
+      .split(' ')
+      .map(word => word[0])
+      .join('')
+      .toUpperCase()
+      .slice(0, 2);
+  };
+
+  // Handle scroll to show/hide navbar
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      const scrollThreshold = 10; // Minimum scroll distance to trigger hide/show
+
+      if (Math.abs(currentScrollY - lastScrollY) < scrollThreshold) {
+        return; // Don't update if scroll change is too small
+      }
+
+      if (currentScrollY < 50) {
+        // Always show navbar when near the top
+        setIsNavVisible(true);
+      } else if (currentScrollY > lastScrollY) {
+        // Scrolling down - hide navbar
+        setIsNavVisible(false);
+      } else {
+        // Scrolling up - show navbar
+        setIsNavVisible(true);
+      }
+
+      setLastScrollY(currentScrollY);
+    };
+
+    // Throttle scroll events for better performance
+    let ticking = false;
+    const scrollListener = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          handleScroll();
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+
+    window.addEventListener('scroll', scrollListener);
+
+    return () => {
+      window.removeEventListener('scroll', scrollListener);
+    };
+  }, [lastScrollY]);
+
+  return (
+    <>
+      <nav className={`${styles.nav} ${isNavVisible ? styles.navVisible : styles.navHidden}`}>
+        <div className={styles.navContainer}>
+          {/* Mobile: Hamburger button */}
+          <button
+            className={styles.hamburger}
+            onClick={toggleSidebar}
+            aria-label="Toggle menu"
+            aria-expanded={isOpen}
+          >
+            <span className={`${styles.hamburgerLine} ${isOpen ? styles.open : ''}`}></span>
+            <span className={`${styles.hamburgerLine} ${isOpen ? styles.open : ''}`}></span>
+            <span className={`${styles.hamburgerLine} ${isOpen ? styles.open : ''}`}></span>
+          </button>
+
+          {/* Logo */}
+          <h1 className={styles.logoContainer}>
+            <Link href="/" className={styles.logo}>
+              Winky Cats
+            </Link>
+          </h1>
+
+          {/* Desktop: Right-aligned nav, auth and cart */}
+          <div className={styles.rightNavLinks}>
+            <Link href="/products" className={styles.navLink}>
+              Our Products
+            </Link>
+            <Link href="/associates" className={styles.navLink}>
+              Affiliate Program
+            </Link>
+            <UserMenu />
+            <CartIcon />
+          </div>
+
+          {/* Mobile: Cart icon only */}
+          <div className={styles.mobileCartIcon}>
+            <CartIcon />
+          </div>
+        </div>
+      </nav>
+
+      {/* Mobile: Overlay */}
+      {isOpen && (
+        <div
+          className={styles.overlay}
+          onClick={closeSidebar}
+          aria-hidden="true"
+        />
+      )}
+
+      {/* Mobile: Sidebar */}
+      <aside className={`${styles.sidebar} ${isOpen ? styles.sidebarOpen : ''}`}>
+        <div className={styles.sidebarHeader}>
+          <Link
+            href={user ? "/account" : "/login"}
+            className={styles.profileHeader}
+            onClick={closeSidebar}
+          >
+            <div className={styles.profileIcon}>
+              {user && userProfile ? getInitials(userProfile.name) : 'U'}
+            </div>
+            <span className={styles.profileHint}>My Profile</span>
+          </Link>
+          <button
+            className={styles.closeButton}
+            onClick={closeSidebar}
+            aria-label="Close menu"
+          >
+            ×
+          </button>
+        </div>
+
+        <nav className={styles.sidebarNav}>
+          <Link
+            href="/"
+            className={styles.sidebarLink}
+            onClick={closeSidebar}
+          >
+            Home
+          </Link>
+
+          <Link
+            href="/products"
+            className={styles.sidebarLink}
+            onClick={closeSidebar}
+          >
+            Our Products
+          </Link>
+          <Link
+            href="/associates"
+            className={styles.sidebarLink}
+            onClick={closeSidebar}
+          >
+            Affiliate Program
+          </Link>
+        </nav>
+      </aside>
+    </>
+  );
+}

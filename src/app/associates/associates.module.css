@@ -1,0 +1,266 @@
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 32px 20px;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.title {
+  font-size: 36px;
+  font-weight: 700;
+  margin: 0 0 12px 0;
+  color: #1a1a1a;
+}
+
+.subtitle {
+  font-size: 18px;
+  color: #666;
+  margin: 0;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.filterBar {
+  margin-bottom: 24px;
+  padding: 20px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.filterGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.filterGroup + .filterGroup {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid #e0e0e0;
+}
+
+.filterLabel {
+  font-weight: 600;
+  font-size: 14px;
+  color: #333;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.categoryButtons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.categoryButton {
+  padding: 10px 18px;
+  border: 2px solid #e0e0e0;
+  background: white;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  color: #333;
+}
+
+.categoryButton:hover {
+  border-color: #FF69B4;
+  background: #ffe0f0;
+}
+
+.categoryButton.active {
+  background: #FF69B4;
+  border-color: #FF69B4;
+  color: white;
+}
+
+.tagFilterHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.clearTagsButton {
+  background: none;
+  border: none;
+  color: #FF69B4;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: background 0.2s;
+}
+
+.clearTagsButton:hover {
+  background: #ffe0f0;
+}
+
+.tagSearchWrapper {
+  position: relative;
+  margin-bottom: 12px;
+}
+
+.tagSearchInput {
+  width: 100%;
+  padding: 10px 36px 10px 12px;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.tagSearchInput:focus {
+  border-color: #FF69B4;
+}
+
+.tagSearchInput::placeholder {
+  color: #999;
+}
+
+.clearSearchButton {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  font-size: 24px;
+  color: #999;
+  cursor: pointer;
+  padding: 4px 8px;
+  line-height: 1;
+  transition: color 0.2s;
+}
+
+.clearSearchButton:hover {
+  color: #FF69B4;
+}
+
+.tagFilters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.tagButton {
+  padding: 8px 16px;
+  border: 2px solid #e0e0e0;
+  background: white;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  color: #333;
+}
+
+.tagButton:hover {
+  border-color: #FF69B4;
+  background: #ffe0f0;
+}
+
+.tagButton.active {
+  background: #FF69B4;
+  border-color: #FF69B4;
+  color: white;
+}
+
+.noTagsFound {
+  margin: 12px 0 0 0;
+  font-size: 14px;
+  color: #999;
+  font-style: italic;
+}
+
+.tagHint {
+  margin: 12px 0 0 0;
+  font-size: 13px;
+  color: #999;
+}
+
+.resultsInfo {
+  margin-bottom: 20px;
+}
+
+.resultCount {
+  font-size: 14px;
+  color: #666;
+  margin: 0;
+}
+
+.productsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 24px;
+  margin-bottom: 40px;
+}
+
+.emptyState {
+  text-align: center;
+  padding: 60px 20px;
+  color: #666;
+}
+
+.emptyState p {
+  margin: 0;
+  font-size: 18px;
+}
+
+@media (max-width: 1024px) {
+  .productsGrid {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 24px 16px;
+  }
+
+  .title {
+    font-size: 28px;
+  }
+
+  .subtitle {
+    font-size: 16px;
+  }
+
+  .filterBar {
+    padding: 16px;
+  }
+
+  .categoryButtons {
+    gap: 6px;
+  }
+
+  .categoryButton {
+    padding: 8px 14px;
+    font-size: 13px;
+  }
+
+  .productsGrid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .title {
+    font-size: 24px;
+  }
+
+  .subtitle {
+    font-size: 14px;
+  }
+}
