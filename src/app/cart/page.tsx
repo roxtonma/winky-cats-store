@@ -128,9 +128,7 @@ export default function CartPage() {
     if (!formData.name.trim()) {
       newErrors.name = 'Name is required'
     }
-    if (!formData.email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      newErrors.email = 'Valid email is required'
-    }
+    // Email validation removed - using userProfile email (locked field)
     if (!formData.phone.trim() || !/^\d{10}$/.test(formData.phone)) {
       newErrors.phone = 'Valid 10-digit phone number is required'
     }
@@ -146,7 +144,7 @@ export default function CartPage() {
 
   const customerInfo: CustomerInfo = {
     name: formData.name,
-    email: formData.email,
+    email: userProfile?.email || user?.email || '',
     phone: formData.phone,
   }
 
@@ -361,16 +359,18 @@ export default function CartPage() {
                         type="email"
                         id="email"
                         name="email"
-                        value={formData.email}
-                        onChange={handleInputChange}
+                        value={userProfile?.email || ''}
+                        disabled
                         required
-                        style={{ borderColor: formErrors.email ? '#ff4444' : undefined }}
+                        className={styles.inputDisabled}
                       />
-                      {formErrors.email && (
-                        <span style={{ color: '#ff4444', fontSize: '0.85rem', marginTop: '4px' }}>
-                          {formErrors.email}
-                        </span>
-                      )}
+                      <span className={styles.emailHelperText}>
+                        Email from your account.{' '}
+                        <Link href="/account/profile" className={styles.emailChangeLink}>
+                          Change in Profile
+                        </Link>{' '}
+                        if needed.
+                      </span>
                     </div>
 
                     <div className={styles.formGroup}>

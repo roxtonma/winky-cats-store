@@ -1,6 +1,6 @@
 'use client'
 
-import { createContext, useContext, useReducer, ReactNode, useEffect } from 'react'
+import { createContext, useContext, useReducer, ReactNode, useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
 
 export type CartItem = {
@@ -37,6 +37,7 @@ const CartContext = createContext<{
   removeItem: (id: string, variant?: { size?: string; colorName?: string }) => void
   updateQuantity: (id: string, variant: { size?: string; colorName?: string } | undefined, quantity: number) => void
   clearCart: () => void
+  loading: boolean
 } | null>(null)
 
 function cartReducer(state: CartState, action: CartAction): CartState {
@@ -138,6 +139,7 @@ const initialState: CartState = {
 
 export function CartProvider({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(cartReducer, initialState)
+  const [loading, setLoading] = useState(true)
 
   // Load cart from localStorage on mount
   useEffect(() => {
@@ -150,6 +152,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
         console.error('Error loading cart from localStorage:', error)
       }
     }
+    setLoading(false)
   }, [])
 
   // Save cart to localStorage whenever it changes
@@ -237,7 +240,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
       addItem,
       removeItem,
       updateQuantity,
-      clearCart
+      clearCart,
+      loading
     }}>
       {children}
     </CartContext.Provider>

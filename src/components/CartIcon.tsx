@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react'
 import styles from './styles/CartIcon.module.css'
 
 export default function CartIcon() {
-  const { state } = useCart()
+  const { state, loading } = useCart()
   const { totalItems } = state
   const [isCartUpdated, setIsCartUpdated] = useState(false)
 
@@ -17,6 +17,31 @@ export default function CartIcon() {
       return () => clearTimeout(timer)
     }
   }, [totalItems])
+
+  // Show skeleton while loading to prevent FOUC
+  if (loading) {
+    return (
+      <div className={styles.cartLink} aria-label="Loading cart">
+        <div className={styles.iconWrapper}>
+          <svg
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <circle cx="8" cy="21" r="1" />
+            <circle cx="19" cy="21" r="1" />
+            <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57L23.1 4H5.12" />
+          </svg>
+        </div>
+        <span>Cart</span>
+      </div>
+    )
+  }
 
   return (
     <Link href="/cart" className={styles.cartLink} aria-label="View shopping cart">

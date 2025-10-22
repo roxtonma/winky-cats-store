@@ -79,6 +79,39 @@
   margin-top: 0.25rem;
 }
 
+.successMessage {
+  background: #c6f6d5;
+  color: #22543d;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  margin-bottom: 1rem;
+  border: 1px solid #9ae6b4;
+}
+
+.forgotPasswordLink {
+  align-self: flex-end;
+  background: none;
+  border: none;
+  color: #FF69B4;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 0.25rem 0;
+  margin-top: 0.25rem;
+  transition: color 0.2s;
+}
+
+.forgotPasswordLink:hover {
+  color: #FF1493;
+  text-decoration: underline;
+}
+
+.forgotPasswordLink:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 .button {
   padding: 0.875rem 1.5rem;
   background: linear-gradient(135deg, #FF69B4 0%, #FF1493 100%);
@@ -109,24 +142,17 @@
   color: #a0aec0;
   font-size: 0.875rem;
   position: relative;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
 }
 
 .divider::before,
 .divider::after {
   content: '';
-  position: absolute;
-  top: 50%;
-  width: 40%;
+  flex: 1;
   height: 1px;
   background: #e2e8f0;
-}
-
-.divider::before {
-  left: 0;
-}
-
-.divider::after {
-  right: 0;
 }
 
 .link {

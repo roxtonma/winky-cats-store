@@ -26,7 +26,7 @@
           "name": "Comfy fox Hoodie",
           "description": "Comfy fox sleeping under the moonlight besides a lamp.",
           "sku": "HOODIE-FOX-001",
-          "base_price": 999,
+          "base_price": 1,
           "mockup_folder": "hoodie_fox",
           "tags": ["animals", "hoodie", "fox"],
           "active": true

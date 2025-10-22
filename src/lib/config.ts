@@ -11,7 +11,7 @@ export const config = {
    */
   shipping: {
     freeShippingThreshold: 1000, // Free shipping for orders above ₹1000
-    defaultShippingCost: 100, // Default shipping cost in ₹
+    defaultShippingCost: 0, // Default shipping cost in ₹
   },
 
   /**
