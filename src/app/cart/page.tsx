@@ -19,7 +19,7 @@ export default function CartPage() {
   const { user, userProfile, loading: authLoading } = useAuth()
   const router = useRouter()
 
-  const shipping = totalAmount > config.shipping.freeShippingThreshold ? 0 : config.shipping.defaultShippingCost
+  const shipping: number = totalAmount > config.shipping.freeShippingThreshold ? 0 : config.shipping.defaultShippingCost
   const total = totalAmount + shipping
 
   const [showCheckoutForm, setShowCheckoutForm] = useState(false)
