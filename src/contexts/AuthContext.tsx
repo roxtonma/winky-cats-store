@@ -110,7 +110,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     // Race between fetch and timeout
     try {
       await Promise.race([fetchPromise(), timeoutPromise])
-    } catch (error) {
+    } catch {
       console.warn('[AuthContext] Profile fetch failed or timed out (2s) - assuming no profile exists')
       // Fail fast - don't retry, just assume no profile
       setUserProfile(null)
@@ -221,7 +221,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const signInWithGoogle = async () => {
     console.log('[AuthContext] signInWithGoogle called')
     try {
-      const { data, error } = await supabase.auth.signInWithOAuth({
+      const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
           redirectTo: `${window.location.origin}/auth/callback`,

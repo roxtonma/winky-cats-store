@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { useAuth } from '@/contexts/AuthContext'
@@ -14,23 +14,14 @@ export default function AddressesPage() {
   const [addresses, setAddresses] = useState<UserAddress[]>([])
   const [loading, setLoading] = useState(true)
 
-  useEffect(() => {
-    if (!authLoading && !user) {
-      router.push('/login')
-      return
-    }
+  const fetchAddresses = useCallback(async () => {
+    if (!user) return
 
-    if (user) {
-      fetchAddresses()
-    }
-  }, [user, authLoading, router])
-
-  const fetchAddresses = async () => {
     try {
       const { data, error } = await supabase
         .from('user_addresses')
         .select('*')
-        .eq('user_id', user!.id)
+        .eq('user_id', user.id)
         .order('is_default', { ascending: false })
         .order('created_at', { ascending: false })
 
@@ -42,7 +33,18 @@ export default function AddressesPage() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [user])
+
+  useEffect(() => {
+    if (!authLoading && !user) {
+      router.push('/login')
+      return
+    }
+
+    if (user) {
+      fetchAddresses()
+    }
+  }, [user, authLoading, router, fetchAddresses])
 
   if (authLoading || loading) {
     return (

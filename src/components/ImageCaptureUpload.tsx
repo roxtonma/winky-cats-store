@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useRef } from 'react'
+import Image from 'next/image'
 import styles from './styles/ImageCaptureUpload.module.css'
 
 type ImageCaptureUploadProps = {
@@ -155,7 +156,14 @@ export function ImageCaptureUpload({ onImageSelected }: ImageCaptureUploadProps)
         {previewUrl && (
           <div className={styles.preview}>
             <h4>Preview:</h4>
-            <img src={previewUrl} alt="Preview" className={styles.previewImage} />
+            <Image
+              src={previewUrl}
+              alt="Preview"
+              width={400}
+              height={400}
+              className={styles.previewImage}
+              unoptimized
+            />
           </div>
         )}
       </div>

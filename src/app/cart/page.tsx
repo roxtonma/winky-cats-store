@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useCart } from '@/contexts/CartContext'
 import { useAuth } from '@/contexts/AuthContext'
 import { useRouter } from 'next/navigation'
@@ -9,14 +9,13 @@ import Image from 'next/image'
 import RazorpayCheckout from '@/components/RazorpayCheckout'
 import type { CustomerInfo, ShippingAddress } from '@/types/order'
 import { config } from '@/lib/config'
-import { validateShippingForm, type ShippingFormErrors } from '@/lib/validation'
 import { supabase, UserAddress } from '@/lib/supabase'
 import styles from './cart.module.css'
 
 export default function CartPage() {
   const { state, updateQuantity, removeItem } = useCart()
   const { items: cartItems, totalAmount } = state
-  const { user, userProfile, loading: authLoading } = useAuth()
+  const { user, userProfile } = useAuth()
   const router = useRouter()
 
   const shipping: number = totalAmount > config.shipping.freeShippingThreshold ? 0 : config.shipping.defaultShippingCost
@@ -33,14 +32,7 @@ export default function CartPage() {
   })
   const [formErrors, setFormErrors] = useState<{ name?: string; email?: string; phone?: string }>({})
 
-  // Load saved addresses when checkout form is shown
-  useEffect(() => {
-    if (user && showCheckoutForm) {
-      loadSavedAddresses()
-    }
-  }, [user, showCheckoutForm])
-
-  const loadSavedAddresses = async () => {
+  const loadSavedAddresses = useCallback(async () => {
     if (!user) return
 
     try {
@@ -65,7 +57,14 @@ export default function CartPage() {
     } catch (error) {
       console.error('Error loading addresses:', error)
     }
-  }
+  }, [user])
+
+  // Load saved addresses when checkout form is shown
+  useEffect(() => {
+    if (user && showCheckoutForm) {
+      loadSavedAddresses()
+    }
+  }, [user, showCheckoutForm, loadSavedAddresses])
 
   // Pre-fill form with user profile data if available
   useEffect(() => {

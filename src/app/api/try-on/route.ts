@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
 import * as fal from '@fal-ai/serverless-client'
-import { createClient } from '@supabase/supabase-js'
 import { checkTryOnLimit, recordTryOnAttempt, getClientIp } from '@/lib/rateLimiter'
 import { rateLimitError, validationError, externalApiError, internalError, logError } from '@/lib/errors'
 

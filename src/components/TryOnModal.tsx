@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import NextImage from 'next/image'
 import { useAuth } from '@/contexts/AuthContext'
 import styles from './styles/TryOnModal.module.css'
 import { ImageCaptureUpload } from './ImageCaptureUpload'
@@ -239,7 +240,13 @@ export function TryOnModal({
               <div className={styles.resultImages}>
                 {results.images.map((image, index) => (
                   <div key={index} className={styles.resultImage}>
-                    <img src={image.url} alt={`Try-on result ${index + 1}`} />
+                    <NextImage
+                      src={image.url}
+                      alt={`Try-on result ${index + 1}`}
+                      width={400}
+                      height={600}
+                      unoptimized
+                    />
                     <button
                       onClick={() => downloadImage(image.url, index)}
                       className={styles.downloadBtn}
