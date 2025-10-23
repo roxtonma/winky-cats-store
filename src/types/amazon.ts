@@ -7,7 +7,7 @@ export interface AmazonProduct {
   name: string
   description: string
   category: string
-  imageUrl: string
+  images: string[] // Product images for carousel display (at least one required)
   affiliateLink: string // Full Amazon Associates tracking link (can be empty, will be generated)
   estimatedPrice?: string // Optional, as Amazon prices change frequently
   tags?: string[] // For filtering/categorization

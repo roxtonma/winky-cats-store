@@ -1,253 +1,130 @@
-.card {
-  background: white;
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  transition: transform 0.2s, box-shadow 0.2s;
+/* Amazon Product Card - Matches Our Products styling */
+
+.productCard {
+  background: var(--bg-card);
+  border: 1px solid var(--border-light);
+  border-radius: 16px;
+  padding: 1.5rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
   display: flex;
   flex-direction: column;
-  height: 100%;
 }
 
-.card:hover {
+.productCard:hover {
   transform: translateY(-4px);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
 }
 
-.imageWrapper {
-  position: relative;
-  width: 100%;
-  padding-top: 75%;
-  background: #f5f5f5;
-  overflow: hidden;
-}
-
-.image {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.externalBadge {
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  background: rgba(255, 255, 255, 0.95);
-  padding: 6px 10px;
-  border-radius: 6px;
-  font-size: 12px;
+.productName {
+  font-size: 1.25rem;
   font-weight: 600;
-  color: #333;
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 0.75rem;
+  color: var(--text-primary);
+  cursor: default;
 }
 
-.externalBadge svg {
-  width: 14px;
-  height: 14px;
-}
-
-.content {
-  padding: 16px;
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-}
-
-.name {
-  font-size: 18px;
-  font-weight: 600;
-  margin: 0 0 8px 0;
-  color: #1a1a1a;
-  line-height: 1.3;
-}
-
-.description {
-  font-size: 14px;
-  color: #666;
-  margin: 0 0 16px 0;
+.productDescription {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  margin-bottom: 1.5rem;
   line-height: 1.5;
-  flex: 1;
 }
 
-/* Uncomment these styles when you enable tag display on cards */
-/* .tags {
+.productFooter {
   display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin-bottom: 12px;
-}
-
-.tag {
-  font-size: 11px;
-  padding: 4px 8px;
-  background: #f0f0f0;
-  color: #666;
-  border-radius: 4px;
-  text-transform: lowercase;
-} */
-
-.footer {
-  display: flex;
-  align-items: center;
   justify-content: space-between;
-  gap: 12px;
+  align-items: center;
+  margin-bottom: 0;
   margin-top: auto;
 }
 
-.price {
-  font-size: 20px;
-  font-weight: 700;
-  color: #1a1a1a;
+.priceWrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
 }
 
-.button {
-  background: linear-gradient(135deg, #FF69B4, #FF1493);
+.productPrice {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--accent-primary);
+}
+
+.viewOnAmazonBtn {
+  background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
   color: white;
   border: none;
-  padding: 10px 16px;
+  padding: 0.75rem 1.25rem;
   border-radius: 8px;
-  font-weight: 600;
   cursor: pointer;
-  transition: transform 0.2s, box-shadow 0.2s;
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+  min-height: 44px;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
   text-decoration: none;
   display: flex;
   align-items: center;
   gap: 6px;
-  font-size: 14px;
   white-space: nowrap;
-  box-shadow: 0 2px 8px rgba(255, 105, 180, 0.3);
 }
 
-.button:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(255, 105, 180, 0.4);
+.viewOnAmazonBtn:hover {
+  transform: translateY(-2px);
   color: white;
 }
 
-.buttonIcon {
-  width: 16px;
-  height: 16px;
+.viewOnAmazonBtn:focus-visible {
+  outline: 3px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+
+.viewOnAmazonBtn svg {
   flex-shrink: 0;
 }
 
-/* Lightbox Styles */
-.lightbox {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.9);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 9999;
-  padding: 20px;
-  animation: fadeIn 0.2s ease;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-.lightboxContent {
-  position: relative;
-  max-width: 900px;
-  max-height: 90vh;
-  background: white;
-  border-radius: 12px;
-  padding: 20px;
-  animation: scaleIn 0.2s ease;
-}
-
-@keyframes scaleIn {
-  from {
-    transform: scale(0.9);
-    opacity: 0;
-  }
-  to {
-    transform: scale(1);
-    opacity: 1;
-  }
-}
-
-.lightboxClose {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  background: rgba(0, 0, 0, 0.5);
-  color: white;
-  border: none;
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  font-size: 28px;
-  line-height: 1;
-  cursor: pointer;
-  transition: background 0.2s;
-  z-index: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.lightboxClose:hover {
-  background: rgba(0, 0, 0, 0.7);
-}
-
-.lightboxImage {
-  max-height: 70vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-  border-radius: 8px;
-}
-
-.lightboxCaption {
-  margin-top: 16px;
-  text-align: center;
-  font-size: 16px;
-  font-weight: 600;
-  color: #333;
-}
-
 @media (max-width: 768px) {
-  .footer {
-    flex-direction: column;
-    align-items: stretch;
+  .productCard {
+    padding: 1.25rem;
   }
 
-  .button {
+  .productName {
+    font-size: 1.1rem;
+  }
+
+  .productPrice {
+    font-size: 1.3rem;
+  }
+
+  .viewOnAmazonBtn {
+    padding: 0.625rem 1rem;
+    font-size: 0.85rem;
+  }
+
+  .productFooter {
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+
+  .viewOnAmazonBtn {
     width: 100%;
     justify-content: center;
   }
+}
 
-  .price {
-    text-align: center;
+@media (max-width: 480px) {
+  .productCard {
+    padding: 1rem;
   }
 
-  .lightbox {
-    padding: 10px;
+  .productDescription {
+    font-size: 0.875rem;
   }
 
-  .lightboxContent {
-    padding: 15px;
-    max-width: 100%;
-  }
-
-  .lightboxImage {
-    max-height: 60vh;
+  .priceWrapper {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.25rem;
   }
 }

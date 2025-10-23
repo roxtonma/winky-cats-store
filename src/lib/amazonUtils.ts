@@ -63,11 +63,12 @@ export function detectAmazonMarketplace(url: string): string {
  * Format matches Amazon's linkId pattern (32-character hex string)
  * @param asin - Amazon Standard Identification Number
  * @param associateId - Your Amazon Associate ID
- * @returns Unique link identifier
+ * @returns Unique link identifier (deterministic for SSR compatibility)
  */
 function generateLinkId(asin: string, associateId: string): string {
-  // Create a deterministic but unique ID based on ASIN and associate ID
-  const combined = `${asin}-${associateId}-${Date.now()}`
+  // Create a deterministic ID based on ASIN and associate ID
+  // NOTE: Removed Date.now() to avoid hydration mismatch between server and client
+  const combined = `${asin}-${associateId}`
   let hash = 0
   for (let i = 0; i < combined.length; i++) {
     const char = combined.charCodeAt(i)

@@ -8,7 +8,11 @@
       "name": "OnePlus 13 Snapdragon 8 Elite",
       "description": "OnePlus flagship smartphone with Snapdragon 8 Elite processor",
       "category": "electronics",
-      "imageUrl": "https://m.media-amazon.com/images/I/61OtOTTpzxL._SX679_.jpg",
+      "images": [
+        "https://m.media-amazon.com/images/I/61OtOTTpzxL._SX679_.jpg",
+        "https://m.media-amazon.com/images/I/61OtOTTpzxL._SX679_.jpg",
+        "https://m.media-amazon.com/images/I/61OtOTTpzxL._SX679_.jpg"
+      ],
       "affiliateLink": "",
       "estimatedPrice": "₹54,999",
       "marketplace": "amazon.in",
@@ -20,7 +24,7 @@
       "name": "Premium Cat Food - Grain Free",
       "description": "High-protein, grain-free cat food made with real chicken and natural ingredients",
       "category": "cat-food",
-      "imageUrl": "https://m.media-amazon.com/images/I/placeholder.jpg",
+      "images": ["https://m.media-amazon.com/images/I/placeholder.jpg"],
       "affiliateLink": "",
       "estimatedPrice": "$29.99",
       "tags": ["food", "grain-free", "nutrition"]
@@ -31,7 +35,7 @@
       "name": "Self-Cleaning Cat Litter Box",
       "description": "Automatic self-cleaning litter box with smart sensors and odor control",
       "category": "cat-care",
-      "imageUrl": "https://m.media-amazon.com/images/I/placeholder.jpg",
+      "images": ["https://m.media-amazon.com/images/I/placeholder.jpg"],
       "affiliateLink": "",
       "estimatedPrice": "$149.99",
       "tags": ["litter-box", "automatic", "hygiene"]
@@ -42,7 +46,7 @@
       "name": "Cat Tree Tower with Scratching Posts",
       "description": "Multi-level cat tree with sisal scratching posts, perches, and cozy condos",
       "category": "cat-furniture",
-      "imageUrl": "https://m.media-amazon.com/images/I/placeholder.jpg",
+      "images": ["https://m.media-amazon.com/images/I/placeholder.jpg"],
       "affiliateLink": "",
       "estimatedPrice": "$79.99",
       "tags": ["furniture", "scratching", "climbing"]
@@ -53,7 +57,7 @@
       "name": "Comfortable Cat Collar with Bell",
       "description": "Adjustable breakaway collar with safety bell and cute designs",
       "category": "cat-accessories",
-      "imageUrl": "https://m.media-amazon.com/images/I/placeholder.jpg",
+      "images": ["https://m.media-amazon.com/images/I/placeholder.jpg"],
       "affiliateLink": "",
       "estimatedPrice": "$8.99",
       "tags": ["accessories", "collar", "safety"]
@@ -64,7 +68,7 @@
       "name": "Cat Grooming Brush Kit",
       "description": "Professional grooming kit with slicker brush and deshedding tool for all coat types",
       "category": "cat-care",
-      "imageUrl": "https://m.media-amazon.com/images/I/placeholder.jpg",
+      "images": ["https://m.media-amazon.com/images/I/placeholder.jpg"],
       "affiliateLink": "",
       "estimatedPrice": "$19.99",
       "tags": ["grooming", "brush", "care"]
