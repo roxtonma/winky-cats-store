@@ -131,18 +131,20 @@ export function buildAffiliateLink(
  * Enhances products with dynamically generated affiliate links
  * @param products - Array of Amazon products
  * @param associateId - Your Amazon Associate ID
+ * @param defaultMarketplace - Default marketplace to use if product doesn't specify one
  * @returns Products with updated affiliate links
  */
 export function enhanceProductsWithAffiliateLinks(
   products: AmazonProduct[],
-  associateId: string
+  associateId: string,
+  defaultMarketplace: string = 'amazon.com'
 ): AmazonProduct[] {
   return products.map(product => ({
     ...product,
     affiliateLink: buildAffiliateLink(
       product.asin,
       associateId,
-      product.marketplace || 'amazon.com'
+      product.marketplace || defaultMarketplace
     )
   }))
 }

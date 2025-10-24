@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import styles from './styles/ProductImageCarousel.module.css'
 import LoadingSpinner from './LoadingSpinner'
@@ -16,10 +16,37 @@ type ProductImageCarouselProps = {
 export function ProductImageCarousel({ images, productName, productId, onImageClick, height }: ProductImageCarouselProps) {
   const [currentIndex, setCurrentIndex] = useState(0)
   const [loadedImages, setLoadedImages] = useState<Set<number>>(new Set())
+  const [isLoading, setIsLoading] = useState(true)
 
   const handleImageLoad = (index: number) => {
-    setLoadedImages(prev => new Set(prev).add(index))
+    setLoadedImages(prev => {
+      const newSet = new Set(prev)
+      newSet.add(index)
+      return newSet
+    })
+    setIsLoading(false)
   }
+
+  // Check if image is already loaded from cache
+  useEffect(() => {
+    // If we've already loaded this image, don't show spinner
+    if (loadedImages.has(currentIndex)) {
+      setIsLoading(false)
+      return
+    }
+
+    // Show spinner for new images
+    setIsLoading(true)
+
+    // If image is already in cache, it might not trigger onLoad
+    // So we check after a brief moment and assume it's loaded
+    const timer = setTimeout(() => {
+      handleImageLoad(currentIndex)
+    }, 100)
+
+    return () => clearTimeout(timer)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentIndex])
 
   const goToNext = (e: React.MouseEvent) => {
     e.stopPropagation()
@@ -53,18 +80,20 @@ export function ProductImageCarousel({ images, productName, productId, onImageCl
         tabIndex={0}
         aria-label={`View full size image of ${productName}`}
       >
-        {!loadedImages.has(currentIndex) && (
+        {isLoading && (
           <div className={styles.imageLoadingOverlay}>
             <LoadingSpinner />
           </div>
         )}
         <Image
+          key={`${productId}-${currentIndex}`}
           src={images[currentIndex]}
           alt={`${productName} - Image ${currentIndex + 1}`}
           fill
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           style={{ objectFit: 'cover' }}
           onLoad={() => handleImageLoad(currentIndex)}
+          onError={() => handleImageLoad(currentIndex)}
           priority={currentIndex === 0}
         />
 

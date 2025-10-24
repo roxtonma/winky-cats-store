@@ -1,6 +1,8 @@
 {
   "associateId": "dealsloveus-21",
   "lastUpdated": "2025-10-11",
+  "defaultCurrency": "₹",
+  "defaultMarketplace": "amazon.in",
   "products": [
     {
       "id": "amz-001",
@@ -10,68 +12,47 @@
       "category": "electronics",
       "images": [
         "https://m.media-amazon.com/images/I/61OtOTTpzxL._SX679_.jpg",
-        "https://m.media-amazon.com/images/I/61OtOTTpzxL._SX679_.jpg",
-        "https://m.media-amazon.com/images/I/61OtOTTpzxL._SX679_.jpg"
+        "https://m.media-amazon.com/images/I/51b3Qdn4pCL._SX569_.jpg",
+        "https://m.media-amazon.com/images/I/71+3R0i8woL._SX569_.jpg"
       ],
       "affiliateLink": "",
-      "estimatedPrice": "₹54,999",
-      "marketplace": "amazon.in",
-      "tags": ["Electronics", "smartphone", "oneplus", "flagship", "android"]
+      "price": 31999,
+      "originalPrice": 34999,
+      "featured": true,
+      "tags": ["electronics", "smartphone", "android"]
     },
     {
       "id": "amz-002",
-      "asin": "B08L5VYN7W",
-      "name": "Premium Cat Food - Grain Free",
-      "description": "High-protein, grain-free cat food made with real chicken and natural ingredients",
-      "category": "cat-food",
-      "images": ["https://m.media-amazon.com/images/I/placeholder.jpg"],
+      "asin": "B08JVY8LGG",
+      "name": "URBN 10000 mAh Ultra Compact 22.5W Super Fast Charging Pocket Power Bank",
+      "description": "The Power bank comes with speed up to 22.5 Watt for all Quick charge and Power Deliver compatible devices. Unlike regular power banks, charge your devices and the Urbn Power Bank, both at super-fast speed. Make sure the cable is 22.5 Watt compatible to ensure max speed.",
+      "category": "electronics",
+      "images": [
+        "https://m.media-amazon.com/images/I/71dLPSU-4dL._SX679_.jpg",
+        "https://m.media-amazon.com/images/I/71PVxc0F0nL._SX425_.jpg",
+        "https://m.media-amazon.com/images/I/717cE0-lMGL._SX425_.jpg"
+      ],
       "affiliateLink": "",
-      "estimatedPrice": "$29.99",
-      "tags": ["food", "grain-free", "nutrition"]
+      "price": 849,
+      "originalPrice": 2999,
+      "featured": true,
+      "tags": ["electronics", "power-bank"]
     },
     {
       "id": "amz-003",
-      "asin": "B07TWNPYP7",
-      "name": "Self-Cleaning Cat Litter Box",
-      "description": "Automatic self-cleaning litter box with smart sensors and odor control",
-      "category": "cat-care",
-      "images": ["https://m.media-amazon.com/images/I/placeholder.jpg"],
+      "asin": "B097TCZMR5",
+      "name": "HP 150 Wired Mouse",
+      "description": "Elegant ergonomic design gives you all-day comfort so you can get it all done. It feels so natural, you'll forget you're holding it.",
+      "category": "electronics",
+      "images": [
+        "https://m.media-amazon.com/images/I/61asXhwB2OL._SX522_.jpg",
+        "https://m.media-amazon.com/images/I/61anZX96uDL._SY355_.jpg",
+        "https://m.media-amazon.com/images/I/71PZasQU3WL._SY355_.jpg"
+        ],
       "affiliateLink": "",
-      "estimatedPrice": "$149.99",
-      "tags": ["litter-box", "automatic", "hygiene"]
-    },
-    {
-      "id": "amz-004",
-      "asin": "B09KMXTF6F",
-      "name": "Cat Tree Tower with Scratching Posts",
-      "description": "Multi-level cat tree with sisal scratching posts, perches, and cozy condos",
-      "category": "cat-furniture",
-      "images": ["https://m.media-amazon.com/images/I/placeholder.jpg"],
-      "affiliateLink": "",
-      "estimatedPrice": "$79.99",
-      "tags": ["furniture", "scratching", "climbing"]
-    },
-    {
-      "id": "amz-005",
-      "asin": "B08QZ7W5VN",
-      "name": "Comfortable Cat Collar with Bell",
-      "description": "Adjustable breakaway collar with safety bell and cute designs",
-      "category": "cat-accessories",
-      "images": ["https://m.media-amazon.com/images/I/placeholder.jpg"],
-      "affiliateLink": "",
-      "estimatedPrice": "$8.99",
-      "tags": ["accessories", "collar", "safety"]
-    },
-    {
-      "id": "amz-006",
-      "asin": "B0CHLQ9YSF",
-      "name": "Cat Grooming Brush Kit",
-      "description": "Professional grooming kit with slicker brush and deshedding tool for all coat types",
-      "category": "cat-care",
-      "images": ["https://m.media-amazon.com/images/I/placeholder.jpg"],
-      "affiliateLink": "",
-      "estimatedPrice": "$19.99",
-      "tags": ["grooming", "brush", "care"]
+      "price": 399,
+      "originalPrice": 649,
+      "tags": ["electronics", "mouse"]
     }
   ]
 }

@@ -13,7 +13,8 @@ export default function AssociatesPage() {
   const products = useMemo(() =>
     enhanceProductsWithAffiliateLinks(
       amazonData.products as AmazonProduct[],
-      amazonData.associateId
+      amazonData.associateId,
+      amazonData.defaultMarketplace
     ),
     []
   )
@@ -21,6 +22,8 @@ export default function AssociatesPage() {
   const [selectedCategory, setSelectedCategory] = useState<AmazonProductCategory | 'all'>('all')
   const [selectedTags, setSelectedTags] = useState<string[]>([])
   const [tagSearchQuery, setTagSearchQuery] = useState('')
+  const [productSearchQuery, setProductSearchQuery] = useState('')
+  const [sortBy, setSortBy] = useState<'featured' | 'price-asc' | 'price-desc' | 'discount' | 'name'>('featured')
 
   // Get unique categories from products
   const categories = useMemo(() => {
@@ -90,24 +93,72 @@ export default function AssociatesPage() {
       .map(({ tag }) => tag)
   }, [allTags, tagSearchQuery])
 
-  // Filter products by category and tags
+  // Filter products by search, category, and tags
   const filteredProducts = useMemo(() => {
-    return products.filter(product => {
-      // Category filter
-      if (selectedCategory !== 'all' && product.category !== selectedCategory) {
-        return false
-      }
+    let filtered = products
 
-      // Tags filter
-      if (selectedTags.length > 0) {
+    // Product search filter
+    if (productSearchQuery.trim()) {
+      const query = productSearchQuery.trim()
+      filtered = filtered
+        .map(product => {
+          const nameScore = fuzzyMatch(product.name, query)
+          const descScore = fuzzyMatch(product.description, query) * 0.5 // Description has lower weight
+          const totalScore = nameScore + descScore
+          return { product, score: totalScore }
+        })
+        .filter(({ score }) => score > 0)
+        .sort((a, b) => b.score - a.score)
+        .map(({ product }) => product)
+    }
+
+    // Category filter
+    if (selectedCategory !== 'all') {
+      filtered = filtered.filter(product => product.category === selectedCategory)
+    }
+
+    // Tags filter
+    if (selectedTags.length > 0) {
+      filtered = filtered.filter(product => {
         const productTags = product.tags || []
-        const hasMatchingTag = selectedTags.some(tag => productTags.includes(tag))
-        if (!hasMatchingTag) return false
-      }
+        return selectedTags.some(tag => productTags.includes(tag))
+      })
+    }
 
-      return true
-    })
-  }, [products, selectedCategory, selectedTags])
+    return filtered
+  }, [products, productSearchQuery, selectedCategory, selectedTags])
+
+  // Sort products
+  const sortedProducts = useMemo(() => {
+    const sorted = [...filteredProducts]
+
+    switch (sortBy) {
+      case 'price-asc':
+        return sorted.sort((a, b) => (a.price || 0) - (b.price || 0))
+      case 'price-desc':
+        return sorted.sort((a, b) => (b.price || 0) - (a.price || 0))
+      case 'discount':
+        return sorted.sort((a, b) => {
+          const discountA = a.originalPrice && a.price
+            ? ((a.originalPrice - a.price) / a.originalPrice) * 100
+            : 0
+          const discountB = b.originalPrice && b.price
+            ? ((b.originalPrice - b.price) / b.originalPrice) * 100
+            : 0
+          return discountB - discountA
+        })
+      case 'name':
+        return sorted.sort((a, b) => a.name.localeCompare(b.name))
+      case 'featured':
+      default:
+        // Featured products first, then regular products
+        return sorted.sort((a, b) => {
+          if (a.featured && !b.featured) return -1
+          if (!a.featured && b.featured) return 1
+          return 0 // Maintain original order within each group
+        })
+    }
+  }, [filteredProducts, sortBy])
 
   // Toggle tag selection
   const toggleTag = (tag: string) => {
@@ -143,6 +194,57 @@ export default function AssociatesPage() {
       <AmazonDisclosure />
 
       <div className={styles.filterBar}>
+        {/* Search Row - Product and Tag Search Side by Side */}
+        <div className={styles.filterGroup}>
+          <div className={styles.searchRow}>
+            <div className={styles.searchWrapper}>
+              <label className={styles.filterLabel}>Search Products:</label>
+              <div className={styles.inputWrapper}>
+                <input
+                  type="text"
+                  placeholder="Search products..."
+                  value={productSearchQuery}
+                  onChange={(e) => setProductSearchQuery(e.target.value)}
+                  className={styles.productSearchInput}
+                />
+                {productSearchQuery && (
+                  <button
+                    className={styles.clearSearchButton}
+                    onClick={() => setProductSearchQuery('')}
+                    aria-label="Clear search"
+                  >
+                    ×
+                  </button>
+                )}
+              </div>
+            </div>
+
+            {allTags.length > 0 && (
+              <div className={styles.tagSearchWrapper}>
+                <label className={styles.filterLabel}>Search Tags:</label>
+                <div className={styles.inputWrapper}>
+                  <input
+                    type="text"
+                    placeholder="Search tags..."
+                    value={tagSearchQuery}
+                    onChange={(e) => setTagSearchQuery(e.target.value)}
+                    className={styles.tagSearchInput}
+                  />
+                  {tagSearchQuery && (
+                    <button
+                      className={styles.clearSearchButton}
+                      onClick={() => setTagSearchQuery('')}
+                      aria-label="Clear search"
+                    >
+                      ×
+                    </button>
+                  )}
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+
         <div className={styles.filterGroup}>
           <label className={styles.filterLabel}>Category:</label>
           <div className={styles.categoryButtons}>
@@ -178,26 +280,6 @@ export default function AssociatesPage() {
               )}
             </div>
 
-            {/* Tag Search Bar */}
-            <div className={styles.tagSearchWrapper}>
-              <input
-                type="text"
-                placeholder="Search tags..."
-                value={tagSearchQuery}
-                onChange={(e) => setTagSearchQuery(e.target.value)}
-                className={styles.tagSearchInput}
-              />
-              {tagSearchQuery && (
-                <button
-                  className={styles.clearSearchButton}
-                  onClick={() => setTagSearchQuery('')}
-                  aria-label="Clear search"
-                >
-                  ×
-                </button>
-              )}
-            </div>
-
             {/* Display search results or top tags */}
             <div className={styles.tagFilters}>
               {(tagSearchQuery ? searchedTags : topTags).map(tag => (
@@ -226,18 +308,37 @@ export default function AssociatesPage() {
 
       <div className={styles.resultsInfo}>
         <p className={styles.resultCount}>
-          Showing {filteredProducts.length} {filteredProducts.length === 1 ? 'product' : 'products'}
+          Showing {sortedProducts.length} {sortedProducts.length === 1 ? 'product' : 'products'}
         </p>
+
+        <div className={styles.sortWrapper}>
+          <label className={styles.sortLabel}>Sort by:</label>
+          <select
+            value={sortBy}
+            onChange={(e) => setSortBy(e.target.value as typeof sortBy)}
+            className={styles.sortSelect}
+          >
+            <option value="featured">Featured</option>
+            <option value="price-asc">Price: Low to High</option>
+            <option value="price-desc">Price: High to Low</option>
+            <option value="discount">Highest Discount</option>
+            <option value="name">Name: A-Z</option>
+          </select>
+        </div>
       </div>
 
-      {filteredProducts.length === 0 ? (
+      {sortedProducts.length === 0 ? (
         <div className={styles.emptyState}>
           <p>No products found in this category.</p>
         </div>
       ) : (
         <div className={styles.productsGrid}>
-          {filteredProducts.map(product => (
-            <AmazonProductCard key={product.id} product={product} />
+          {sortedProducts.map(product => (
+            <AmazonProductCard
+              key={product.id}
+              product={product}
+              defaultCurrency={amazonData.defaultCurrency}
+            />
           ))}
         </div>
       )}

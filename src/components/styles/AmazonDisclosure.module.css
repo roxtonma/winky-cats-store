@@ -12,7 +12,6 @@
 .icon {
   color: #ff1493;
   flex-shrink: 0;
-  margin-top: 2px;
 }
 
 .text {
@@ -20,14 +19,17 @@
   font-size: 14px;
   line-height: 1.5;
   color: #8b0051;
+  padding-top: 1px;
 }
 
 @media (max-width: 768px) {
   .disclosure {
     padding: 12px;
+    align-items: center;
   }
 
   .text {
     font-size: 13px;
+    padding-top: 0;
   }
 }

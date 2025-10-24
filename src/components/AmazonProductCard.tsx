@@ -8,9 +8,10 @@ import styles from './styles/AmazonProductCard.module.css'
 
 interface AmazonProductCardProps {
   product: AmazonProduct
+  defaultCurrency?: string
 }
 
-export function AmazonProductCard({ product }: AmazonProductCardProps) {
+export function AmazonProductCard({ product, defaultCurrency = '₹' }: AmazonProductCardProps) {
   const [lightboxOpen, setLightboxOpen] = useState(false)
   const [lightboxIndex, setLightboxIndex] = useState(0)
 
@@ -18,6 +19,21 @@ export function AmazonProductCard({ product }: AmazonProductCardProps) {
     setLightboxIndex(index)
     setLightboxOpen(true)
   }
+
+  // Format price with Indian number system (commas)
+  const formatPrice = (price: number) => {
+    return price.toLocaleString('en-IN')
+  }
+
+  // Calculate discount percentage
+  const calculateDiscount = () => {
+    if (!product.originalPrice || !product.price) return null
+    const discount = Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)
+    return discount > 0 ? discount : null
+  }
+
+  const discount = calculateDiscount()
+  const currency = product.currency || defaultCurrency
 
   return (
     <>
@@ -39,9 +55,25 @@ export function AmazonProductCard({ product }: AmazonProductCardProps) {
 
         <div className={styles.productFooter}>
           <div className={styles.priceWrapper}>
-            {product.estimatedPrice && (
+            {product.price ? (
+              <div className={styles.priceContainer}>
+                {product.originalPrice && (
+                  <div className={styles.originalPriceRow}>
+                    <span className={styles.originalPrice}>
+                      {currency}{formatPrice(product.originalPrice)}
+                    </span>
+                    {discount && (
+                      <span className={styles.discountBadge}>-{discount}%</span>
+                    )}
+                  </div>
+                )}
+                <span className={styles.productPrice}>
+                  {currency}{formatPrice(product.price)}
+                </span>
+              </div>
+            ) : product.estimatedPrice ? (
               <span className={styles.productPrice}>{product.estimatedPrice}</span>
-            )}
+            ) : null}
           </div>
 
           <a

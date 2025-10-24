@@ -22,7 +22,7 @@ https://www.amazon.in/OnePlus-Snapdragon-Stable-Flagship-Powered/dp/B0FCMKSP7V?p
   "name": "OnePlus 13 Snapdragon 8 Elite",
   "description": "Flagship smartphone with Snapdragon 8 Elite",
   "category": "electronics",
-  "imageUrl": "https://m.media-amazon.com/images/I/61OtOTTpzxL._SX679_.jpg",
+  "images": ["https://m.media-amazon.com/images/I/61OtOTTpzxL._SX679_.jpg"],
   "affiliateLink": "",
   "estimatedPrice": "₹54,999",
   "marketplace": "amazon.in",
