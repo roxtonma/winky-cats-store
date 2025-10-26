@@ -28,6 +28,23 @@
   gap: 2rem;
 }
 
+/* Logo Section - dedicated space on the left */
+.logoSection {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  min-width: 250px; /* Increased to accommodate larger logo */
+}
+
+/* Navigation Section - takes remaining space */
+.navSection {
+  flex: 1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 2rem;
+}
+
 /* Desktop: Hide hamburger */
 .hamburger {
   display: none;
@@ -53,21 +70,15 @@
   transform: translateY(-6px) rotate(-45deg);
 }
 
-.logoContainer {
-  margin: 0;
-}
-
 .logo {
-  font-size: 1.5rem;
-  font-weight: 600;
-  color: var(--text-primary);
+  display: inline-flex;
+  align-items: center;
   text-decoration: none;
-  transition: color 0.2s ease;
+  transition: opacity 0.2s ease;
   white-space: nowrap;
 }
 
 .logo:hover {
-  color: var(--accent-primary);
   text-decoration: none;
 }
 
@@ -75,6 +86,32 @@
   outline: 3px solid var(--focus-ring);
   outline-offset: 2px;
   border-radius: 4px;
+}
+
+/* Text logo */
+.logoText {
+  display: inline;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  transition: color 0.2s ease;
+}
+
+.logoText:hover {
+  color: var(--accent-primary);
+}
+
+/* Text-only mode (to revert to text logo) */
+.logo.textOnly .logoSvg {
+  display: none;
+}
+
+.logo.textOnly .logoText {
+  display: inline;
+}
+
+.logo.textOnly:hover .logoText {
+  color: var(--accent-primary);
 }
 
 /* Desktop: Right-aligned nav, auth and cart */
@@ -341,15 +378,47 @@
     border-radius: 4px;
   }
 
-  /* Mobile: Center logo */
-  .logoContainer {
+  /* Mobile: Position logo in center */
+  .logoSection {
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
+    z-index: 102;
+    min-width: unset; /* Remove desktop 250px width */
+    width: auto; /* Let it size to content (44px) */
   }
 
-  .logo {
-    font-size: 1.5rem;
+  /* Mobile: navSection spans full width with space-between */
+  .navSection {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  /* Mobile: Scale down logo - passed as prop to Logo component */
+  .mobileLogo {
+    height: 2.75rem !important; /* 44px - matches cart icon container height */
+    width: 2.75rem !important; /* 44px square container for proper centering */
+  }
+
+  /* Mobile: Make SVG smaller than container so it can be centered */
+  .mobileLogo .logoImage {
+    height: 65% !important; /* ~28px centered in 44px container */
+    width: auto !important;
+    margin: 0 auto;
+    display: block;
+  }
+
+  /* Center logo and SVG in all nested containers */
+  .logoSection .logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .logoSection .logoSvg {
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   /* Mobile: Hide desktop navigation */

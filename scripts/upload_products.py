@@ -580,9 +580,16 @@ def sync_from_config():
         print("[X] No categories found in config")
         return
 
-    # Count total products
-    total_products = sum(len(cat_data.get('products', [])) for cat_data in categories.values())
-    print(f"[INFO] Found {len(categories)} category(ies) with {total_products} product(s)\n")
+    # Count total products (only active categories)
+    active_categories = {slug: data for slug, data in categories.items() if data.get('active', True)}
+    total_products = sum(len(cat_data.get('products', [])) for cat_data in active_categories.values())
+    inactive_count = len(categories) - len(active_categories)
+
+    print(f"[INFO] Found {len(active_categories)} active category(ies) with {total_products} product(s)")
+    if inactive_count > 0:
+        print(f"[INFO] Skipping {inactive_count} inactive category(ies)\n")
+    else:
+        print()
 
     # Color mapping (Qikink color IDs)
     COLOR_MAP = {
@@ -602,27 +609,42 @@ def sync_from_config():
     }
 
     for category_slug, category_data in categories.items():
-        print(f"[CAT] Processing category: {category_data.get('name', category_slug)}")
+        is_active = category_data.get('active', True)
 
-        # Get or create category in database
+        print(f"[CAT] Processing category: {category_data.get('name', category_slug)} (active={is_active})")
+
+        # Always update/create category in database with current active status
         category_id = None
         try:
             # Try to get existing category
             category_response = supabase.table('categories').select('id').eq('slug', category_slug).execute()
             if category_response.data and len(category_response.data) > 0:
                 category_id = category_response.data[0]['id']
+                # Update category with current active status
+                supabase.table('categories').update({
+                    'name': category_data.get('name', category_slug.title()),
+                    'description': category_data.get('description', f'{category_slug} products'),
+                    'is_active': is_active
+                }).eq('id', category_id).execute()
+                print(f"   [UPD] Updated category in database (is_active={is_active})")
             else:
                 # Create category if it doesn't exist
                 new_category = supabase.table('categories').insert({
                     'name': category_data.get('name', category_slug.title()),
                     'slug': category_slug,
-                    'description': category_data.get('description', f'{category_slug} products')
+                    'description': category_data.get('description', f'{category_slug} products'),
+                    'is_active': is_active
                 }).execute()
                 if new_category.data:
                     category_id = new_category.data[0]['id']
-                    print(f"   [+] Created category in database")
+                    print(f"   [+] Created category in database (is_active={is_active})")
         except Exception as e:
             print(f"   [!] Category error: {e}")
+            continue
+
+        # Skip product processing for inactive categories
+        if not is_active:
+            print(f"   [SKIP] Skipping products for inactive category\n")
             continue
 
         # Get defaults for this category

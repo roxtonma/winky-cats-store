@@ -49,6 +49,25 @@ export type Product = {
   updated_at: string
 }
 
+export type OrderItem = {
+  id: string
+  order_id: string
+  product_id: string
+  quantity: number
+  unit_price: number
+  total_price: number
+  variant_size?: string
+  variant_color?: string
+  variant_color_name?: string
+  variant_image?: string
+  created_at: string
+  products?: {
+    id: string
+    name: string
+    images?: string[]
+  }
+}
+
 export type Order = {
   id: string
   order_number: string
@@ -63,16 +82,7 @@ export type Order = {
   notes?: string
   created_at: string
   updated_at: string
-}
-
-export type OrderItem = {
-  id: string
-  order_id: string
-  product_id: string
-  quantity: number
-  unit_price: number
-  total_price: number
-  created_at: string
+  order_items?: OrderItem[]
 }
 
 export type TryOnUsage = {

@@ -26,7 +26,16 @@ export async function GET(request: NextRequest) {
 
     // Filter by category slug if provided
     if (categorySlug) {
-      query = query.eq('categories.slug', categorySlug)
+      // First, get the category ID from the slug
+      const { data: category } = await supabase
+        .from('categories')
+        .select('id')
+        .eq('slug', categorySlug)
+        .single()
+
+      if (category) {
+        query = query.eq('category_id', category.id)
+      }
     }
 
     // Price range filter

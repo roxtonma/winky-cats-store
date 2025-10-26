@@ -6,6 +6,7 @@ export async function GET() {
     const { data: categories, error } = await supabase
       .from('categories')
       .select('*')
+      .eq('is_active', true) // Only return active categories
       .order('name', { ascending: true })
 
     if (error) throw error

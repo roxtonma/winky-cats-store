@@ -69,7 +69,7 @@ export async function POST(request: NextRequest) {
     // Build the prompt
     // Default prompt if no custom prompt provided
     const colorText = selectedColor ? ` in ${selectedColor} color` : ''
-    const defaultPrompt = `Person wearing the ${productName}${colorText}. Show the clothing fitting naturally on the person. Maintain realistic proportions and lighting.`
+    const defaultPrompt = `Make the person wear the ${productName}${colorText}. Show the clothing fitting naturally on the person. Maintain the consistency by keeping the exact position of the clothing's design.`
     const prompt = customPrompt || defaultPrompt
 
     console.log('Starting Fal AI try-on with prompt:', prompt)

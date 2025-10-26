@@ -76,13 +76,17 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Insert order items
+    // Insert order items with variant information
     const orderItems = items.map((item) => ({
       order_id: order.id,
       product_id: item.id,
       quantity: item.quantity,
       unit_price: item.price,
       total_price: item.price * item.quantity,
+      variant_size: item.variant?.size || null,
+      variant_color: item.variant?.color || null,
+      variant_color_name: item.variant?.colorName || null,
+      variant_image: item.image || null,
     }))
 
     const { error: itemsError } = await supabase

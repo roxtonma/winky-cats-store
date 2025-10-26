@@ -54,6 +54,7 @@
   }
 
   .iconWrapper {
+    position: relative; /* Badge needs this to anchor properly */
     min-width: 44px;
     min-height: 44px;
     display: flex;
@@ -65,8 +66,8 @@
   .badge {
     display: flex !important;
     position: absolute;
-    top: -6px;
-    right: -6px;
+    top: 4px; /* Attach to SVG, not container: 10px padding - 6px overlap */
+    right: 4px; /* Attach to SVG, not container: 10px padding - 6px overlap */
     width: 18px;
     height: 18px;
     font-size: 0.7rem;

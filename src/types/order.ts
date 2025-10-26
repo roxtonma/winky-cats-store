@@ -11,6 +11,15 @@ export type ShippingAddress = {
   country: string
 }
 
+// Database shipping address format (snake_case from Supabase)
+export type DbShippingAddress = {
+  address_line1: string
+  address_line2?: string
+  city: string
+  state: string
+  postal_code: string
+}
+
 export type CustomerInfo = {
   name: string
   email: string
@@ -77,9 +86,23 @@ export interface RazorpaySuccessResponse {
   razorpay_signature: string
 }
 
+export interface RazorpayErrorResponse {
+  error: {
+    code: string
+    description: string
+    source: string
+    step: string
+    reason: string
+    metadata: {
+      order_id: string
+      payment_id: string
+    }
+  }
+}
+
 export interface RazorpayInstance {
   open: () => void
-  on: (event: string, handler: (response: unknown) => void) => void
+  on: (event: string, handler: (response: RazorpayErrorResponse) => void) => void
 }
 
 declare global {

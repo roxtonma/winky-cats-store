@@ -1,5 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // Image optimization
   images: {
     remotePatterns: [
       {
@@ -25,15 +26,32 @@ const nextConfig = {
         hostname: 'm.media-amazon.com',
         port: '',
         pathname: '/**',
-      },
-      {
-        protocol: 'https',
-        hostname: 'placehold.co',
-        port: '',
-        pathname: '/**',
-      },
+      }
     ],
   },
+
+  // Production optimizations
+  compiler: {
+    removeConsole: process.env.NODE_ENV === 'production' ? {
+      exclude: ['error', 'warn'],
+    } : false,
+  },
+
+  // Optimize package imports to reduce bundle size
+  experimental: {
+    optimizePackageImports: ['react-toastify', '@tanstack/react-query'],
+  },
+
+  // Production-specific configurations
+  productionBrowserSourceMaps: false, // Disable source maps in production for smaller builds
 }
 
-module.exports = nextConfig
+// Bundle analyzer setup (only in analyze mode)
+if (process.env.ANALYZE === 'true') {
+  const withBundleAnalyzer = require('@next/bundle-analyzer')({
+    enabled: true,
+  })
+  module.exports = withBundleAnalyzer(nextConfig)
+} else {
+  module.exports = nextConfig
+}

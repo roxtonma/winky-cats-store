@@ -4,8 +4,15 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import CartIcon from '@/components/CartIcon';
 import { UserMenu } from '@/components/UserMenu';
+import { Logo } from '@/components/Logo';
 import { useAuth } from '@/contexts/AuthContext';
 import styles from './styles/Sidebar.module.css';
+
+// ============================================
+// LOGO CONFIGURATION
+// ============================================
+// Set to true to use SVG logo, false to use text "Winky Cats"
+const USE_SVG_LOGO = false;
 
 export default function Sidebar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -77,40 +84,47 @@ export default function Sidebar() {
     <>
       <nav className={`${styles.nav} ${isNavVisible ? styles.navVisible : styles.navHidden}`}>
         <div className={styles.navContainer}>
-          {/* Mobile: Hamburger button */}
-          <button
-            className={styles.hamburger}
-            onClick={toggleSidebar}
-            aria-label="Toggle menu"
-            aria-expanded={isOpen}
-          >
-            <span className={`${styles.hamburgerLine} ${isOpen ? styles.open : ''}`}></span>
-            <span className={`${styles.hamburgerLine} ${isOpen ? styles.open : ''}`}></span>
-            <span className={`${styles.hamburgerLine} ${isOpen ? styles.open : ''}`}></span>
-          </button>
-
-          {/* Logo */}
-          <h1 className={styles.logoContainer}>
+          {/* Left: Logo Section */}
+          <div className={styles.logoSection}>
             <Link href="/" className={styles.logo}>
-              Winky Cats
+              {USE_SVG_LOGO ? (
+                <Logo className={styles.mobileLogo} />
+              ) : (
+                <span className={styles.logoText}>Winky Cats</span>
+              )}
             </Link>
-          </h1>
-
-          {/* Desktop: Right-aligned nav, auth and cart */}
-          <div className={styles.rightNavLinks}>
-            <Link href="/products" className={styles.navLink}>
-              Our Products
-            </Link>
-            <Link href="/associates" className={styles.navLink}>
-              Affiliate Program
-            </Link>
-            <UserMenu />
-            <CartIcon />
           </div>
 
-          {/* Mobile: Cart icon only */}
-          <div className={styles.mobileCartIcon}>
-            <CartIcon />
+          {/* Right: Navigation Section */}
+          <div className={styles.navSection}>
+            {/* Mobile: Hamburger button */}
+            <button
+              className={styles.hamburger}
+              onClick={toggleSidebar}
+              aria-label="Toggle menu"
+              aria-expanded={isOpen}
+            >
+              <span className={`${styles.hamburgerLine} ${isOpen ? styles.open : ''}`}></span>
+              <span className={`${styles.hamburgerLine} ${isOpen ? styles.open : ''}`}></span>
+              <span className={`${styles.hamburgerLine} ${isOpen ? styles.open : ''}`}></span>
+            </button>
+
+            {/* Desktop: Right-aligned nav, auth and cart */}
+            <div className={styles.rightNavLinks}>
+              <Link href="/products" className={styles.navLink}>
+                Our Products
+              </Link>
+              <Link href="/associates" className={styles.navLink}>
+                Affiliate Products
+              </Link>
+              <UserMenu />
+              <CartIcon />
+            </div>
+
+            {/* Mobile: Cart icon only */}
+            <div className={styles.mobileCartIcon}>
+              <CartIcon />
+            </div>
           </div>
         </div>
       </nav>
@@ -167,7 +181,7 @@ export default function Sidebar() {
             className={styles.sidebarLink}
             onClick={closeSidebar}
           >
-            Affiliate Program
+            Affiliate Products
           </Link>
         </nav>
       </aside>
