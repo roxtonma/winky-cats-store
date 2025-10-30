@@ -8,6 +8,7 @@ import QueryProvider from "@/providers/QueryProvider";
 import { CartProvider } from "@/contexts/CartContext";
 import { AuthProvider } from "@/contexts/AuthContext";
 import Sidebar from "@/components/Sidebar";
+import Footer from "@/components/Footer";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -38,6 +39,7 @@ export default function RootLayout({
               <ToastContainer />
               <Sidebar />
               {children}
+              <Footer />
             </CartProvider>
           </AuthProvider>
         </QueryProvider>

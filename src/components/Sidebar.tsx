@@ -183,6 +183,40 @@ export default function Sidebar() {
           >
             Affiliate Products
           </Link>
+
+          <div className={styles.divider}></div>
+
+          <div className={styles.sidebarSection}>
+            <span className={styles.sectionLabel}>Help & Policies</span>
+            <Link
+              href="/contact"
+              className={styles.sidebarLink}
+              onClick={closeSidebar}
+            >
+              Contact Us
+            </Link>
+            <Link
+              href="/shipping-returns"
+              className={styles.sidebarLink}
+              onClick={closeSidebar}
+            >
+              Shipping & Returns
+            </Link>
+            <Link
+              href="/terms"
+              className={styles.sidebarLink}
+              onClick={closeSidebar}
+            >
+              Terms & Conditions
+            </Link>
+            <Link
+              href="/privacy"
+              className={styles.sidebarLink}
+              onClick={closeSidebar}
+            >
+              Privacy Policy
+            </Link>
+          </div>
         </nav>
       </aside>
     </>
