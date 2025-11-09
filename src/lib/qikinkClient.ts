@@ -1,4 +1,4 @@
-import { QikinkOrderRequest, QikinkOrderResponse, QikinkErrorResponse } from '@/types/qikink'
+import { QikinkOrderRequest, QikinkOrderResponse } from '@/types/qikink'
 
 export class QikinkAPIError extends Error {
   constructor(
@@ -130,10 +130,10 @@ export class QikinkClient {
       body: responseText
     })
 
-    let data: any
+    let data: unknown
     try {
       data = JSON.parse(responseText)
-    } catch (e) {
+    } catch {
       throw new QikinkAPIError(
         `Invalid JSON response from Qikink API: ${responseText}`,
         response.status
@@ -141,17 +141,26 @@ export class QikinkClient {
     }
 
     if (!response.ok) {
+      const errorData = data as { message?: string; errors?: unknown }
       console.error('Qikink API Error Details:', {
         status: response.status,
-        message: data.message,
-        errors: data.errors,
+        message: errorData.message,
+        errors: errorData.errors,
         fullResponse: data
       })
 
+      // Type guard to safely narrow the type
+      const errors =
+        errorData.errors &&
+        typeof errorData.errors === 'object' &&
+        !Array.isArray(errorData.errors)
+          ? (errorData.errors as Record<string, string[]>)
+          : undefined
+
       throw new QikinkAPIError(
-        data.message || 'Qikink API request failed',
+        errorData.message || 'Qikink API request failed',
         response.status,
-        data.errors
+        errors
       )
     }
 

@@ -14,7 +14,7 @@ export default function AboutPage() {
 
         <div className={styles.intro}>
           <p>
-            Welcome to Winky Cats, we aren't sure what we are yet but we know what we want to be.<br></br>
+            Welcome to Winky Cats, we aren&apos;t sure what we are yet but we know what we want to be.<br></br>
             A project based around a community.
           </p>
         </div>
@@ -25,12 +25,11 @@ export default function AboutPage() {
             <p>
               We wanted to work on this project with one goal in mind, just starting something.
               With most of our time occupied with work day in and day out, we hardly find the time to do anything we like.
-              There's a lot more that we are yet to explore and with this project, we hope to fulfill some of the things.
+              There&apos;s a lot more that we are yet to explore and with this project, we hope to fulfill some of the things.
               <br></br>
               We like to draw, we like to write, we like to game.
               And we would like to share some of our moments with you in the hopes that you share the same with us.
-            </p>
-          </section>
+            </p>          </section>
 
           <section className={styles.section}>
             <h2 className={styles.sectionTitle}>Our Mission</h2>

@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import styles from './styles/Footer.module.css';
 
 export default function Footer() {
@@ -76,32 +77,39 @@ export default function Footer() {
           <h4 className={styles.paymentTitle}>Trusted Partners</h4>
           <div className={styles.partnerLogos}>
             <a href="https://razorpay.com/" target="_blank" rel="noopener noreferrer" className={styles.partnerBadge}>
-              <img
-                referrerPolicy="origin"
+              <Image
                 src="https://badges.razorpay.com/badge-light.png"
-                style={{ height: '45px', width: '113px' }}
                 alt="Razorpay"
+                width={113}
+                height={45}
+                referrerPolicy="origin"
               />
             </a>
             <a href="https://www.delhivery.com/" target="_blank" rel="noopener noreferrer" className={styles.partnerBadge}>
-              <img
+              <Image
                 src="https://logo.clearbit.com/delhivery.com"
-                style={{ height: '45px', width: 'auto' }}
                 alt="Delhivery"
+                width={113}
+                height={45}
+                style={{ width: 'auto', height: '45px', objectFit: 'contain' }}
               />
             </a>
             <a href="https://www.bluedart.com/" target="_blank" rel="noopener noreferrer" className={styles.partnerBadge}>
-              <img
+              <Image
                 src="https://logo.clearbit.com/bluedart.com"
-                style={{ height: '45px', width: 'auto' }}
                 alt="Blue Dart"
+                width={113}
+                height={45}
+                style={{ width: 'auto', height: '45px', objectFit: 'contain' }}
               />
             </a>
             <a href="https://ekartlogistics.com/" target="_blank" rel="noopener noreferrer" className={styles.partnerBadge}>
-              <img
+              <Image
                 src="https://logo.clearbit.com/ekartlogistics.com"
-                style={{ height: '45px', width: 'auto' }}
                 alt="Ekart"
+                width={113}
+                height={45}
+                style={{ width: 'auto', height: '45px', objectFit: 'contain' }}
               />
             </a>
           </div>

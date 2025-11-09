@@ -26,6 +26,18 @@ const nextConfig = {
         hostname: 'm.media-amazon.com',
         port: '',
         pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'badges.razorpay.com',
+        port: '',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'logo.clearbit.com',
+        port: '',
+        pathname: '/**',
       }
     ],
   },

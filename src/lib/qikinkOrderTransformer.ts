@@ -40,7 +40,7 @@ export interface DbProduct {
   vendor_product_id?: string
   design_url?: string
   images: string[]
-  print_areas?: any
+  print_areas?: unknown
   qikink_product_type?: string // Maps to Qikink product catalog
   qikink_gender?: string // Gender filter for Qikink SKU lookup
 }

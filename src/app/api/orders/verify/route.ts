@@ -6,7 +6,6 @@ import { VerifyPaymentRequest, VerifyPaymentResponse } from '@/types/order'
 import { checkRateLimit, getClientIp } from '@/lib/rateLimiter'
 import { config } from '@/lib/config'
 import { rateLimitError, paymentError, databaseError, internalError, logError } from '@/lib/errors'
-import OrderConfirmationEmail from '@/emails/OrderConfirmation'
 
 // Use service role key for server-side operations
 const supabase = createClient(
@@ -89,7 +88,7 @@ export async function POST(request: NextRequest) {
         }))
 
         // Transform shipping address to match email component's expected format (camelCase)
-        const shippingAddr = order.shipping_address as any
+        const shippingAddr = order.shipping_address as Record<string, string | undefined>
         const formattedShippingAddress = {
           name: order.customer_name,
           addressLine1: shippingAddr.address_line1 || shippingAddr.addressLine1 || '',
@@ -136,7 +135,7 @@ export async function POST(request: NextRequest) {
     if (process.env.SLACK_WEBHOOK_NORMAL_ORDERS) {
       try {
         const itemsText = orderItems && orderItems.length > 0
-          ? orderItems.map((item: any) => {
+          ? orderItems.map((item: { product?: { name?: string }, variant_size?: string, variant_color_name?: string, quantity: number, unit_price: number }) => {
               const productName = item.product?.name || 'Product'
               const size = item.variant_size ? ` (${item.variant_size})` : ''
               const color = item.variant_color_name ? `, ${item.variant_color_name}` : ''

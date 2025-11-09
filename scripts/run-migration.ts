@@ -84,7 +84,7 @@ async function runMigration(migrationPath: string) {
 
       console.log('\n⚠️  Migration completed with errors. Please check the output above.');
       console.log('💡 You may need to run the migration manually in your Supabase SQL editor.');
-      console.log(`   URL: ${SUPABASE_URL.replace('//', '//app.')}/project/_/sql/new`);
+      console.log(`   URL: ${SUPABASE_URL!.replace('//', '//app.')}/project/_/sql/new`);
       process.exit(1);
     }
 
@@ -97,7 +97,7 @@ async function runMigration(migrationPath: string) {
   } catch (error) {
     console.error('💥 Fatal error:', error);
     console.log('\n💡 Please run the migration manually in your Supabase SQL editor:');
-    console.log(`   URL: ${SUPABASE_URL.replace('//', '//app.')}/project/_/sql/new`);
+    console.log(`   URL: ${SUPABASE_URL!.replace('//', '//app.')}/project/_/sql/new`);
     console.log('\nCopy and paste the contents of:');
     console.log(`   ${fullPath}`);
     process.exit(1);

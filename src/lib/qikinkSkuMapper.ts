@@ -242,7 +242,7 @@ export async function getAvailableProductTypes(): Promise<string[]> {
     }
 
     // Get unique product types
-    const uniqueTypes = Array.from(new Set((data || []).map((row: any) => row.product_type)));
+    const uniqueTypes = Array.from(new Set((data || []).map((row: { product_type: string }) => row.product_type)));
     return uniqueTypes;
   } catch (error) {
     console.error('Exception in getAvailableProductTypes:', error);
@@ -272,7 +272,7 @@ export async function getAvailableColors(productType: string, gender?: string): 
     }
 
     // Get unique colors
-    const uniqueColors = Array.from(new Set((data || []).map((row: any) => row.color_name)));
+    const uniqueColors = Array.from(new Set((data || []).map((row: { color_name: string }) => row.color_name)));
     return uniqueColors;
   } catch (error) {
     console.error('Exception in getAvailableColors:', error);
@@ -310,7 +310,7 @@ export async function getAvailableSizes(
     }
 
     // Get unique sizes
-    const uniqueSizes = Array.from(new Set((data || []).map((row: any) => row.size)));
+    const uniqueSizes = Array.from(new Set((data || []).map((row: { size: string }) => row.size)));
     return uniqueSizes;
   } catch (error) {
     console.error('Exception in getAvailableSizes:', error);

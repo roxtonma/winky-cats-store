@@ -3,7 +3,6 @@
 import { useState, useEffect, useMemo } from 'react'
 import Link from 'next/link'
 import { Product } from '@/lib/supabase'
-import { AmazonProduct } from '@/types/amazon'
 import { HorizontalScrollCards } from '@/components/HorizontalScrollCards'
 import { ScrollReveal } from '@/components/ScrollReveal'
 import { TrustBar } from '@/components/TrustBar'
@@ -144,7 +143,7 @@ export default function Home() {
               </div>
               <div>
                 <p className={styles.categoryDescription}>
-                  Dear Diary, this one's for you
+                  Dear Diary, this one&apos;s for you
                 </p>
               </div>
             </Link>
