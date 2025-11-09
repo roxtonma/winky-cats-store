@@ -9,6 +9,7 @@ import { useMemo, Suspense, useState, useEffect, useRef, lazy } from 'react'
 import { FilterSidebar, FilterState } from '@/components/FilterSidebar'
 import { ProductImageCarousel } from '@/components/ProductImageCarousel'
 import { useCategories } from '@/hooks/useCategories'
+import { ScrollReveal } from '@/components/ScrollReveal'
 import type { Product } from '@/lib/supabase'
 
 // Lazy load heavy components
@@ -179,22 +180,26 @@ function ProductsContent() {
 
   return (
     <div className={styles.container}>
-      <h1 className={styles.title}>
-        {categoryName ? `${categoryName}` : 'Our Products'}
-      </h1>
+      <ScrollReveal delay={0.1}>
+        <h1 className={styles.title}>
+          {categoryName ? `${categoryName}` : 'Our Products'}
+        </h1>
+      </ScrollReveal>
 
       <div className={styles.contentWrapper}>
-        <aside className={styles.filterSection}>
-          <FilterSidebar
-            filters={filters}
-            onFilterChange={handleFilterChange}
-            availableTags={availableTags}
-            maxPrice={maxPrice}
-            isMobileOpen={isMobileFilterOpen}
-            onMobileClose={() => setIsMobileFilterOpen(false)}
-            categories={categories}
-          />
-        </aside>
+        <ScrollReveal delay={0.15}>
+          <aside className={styles.filterSection}>
+            <FilterSidebar
+              filters={filters}
+              onFilterChange={handleFilterChange}
+              availableTags={availableTags}
+              maxPrice={maxPrice}
+              isMobileOpen={isMobileFilterOpen}
+              onMobileClose={() => setIsMobileFilterOpen(false)}
+              categories={categories}
+            />
+          </aside>
+        </ScrollReveal>
 
         <main className={styles.productsSection}>
           {/* Category Badge */}
@@ -236,8 +241,9 @@ function ProductsContent() {
                   Showing {products.length} of {totalCount} products
                 </p>
               </div>
-              <div className={styles.productsGrid}>
-                {products.map((product) => {
+              <ScrollReveal delay={0.2}>
+                <div className={styles.productsGrid}>
+                  {products.map((product) => {
                   const currentImages = getProductImages(product)
                   return (
                     <div key={product.id} className={styles.productCard}>
@@ -247,6 +253,7 @@ function ProductsContent() {
                           productName={product.name}
                           productId={product.id}
                           onImageClick={(index) => openLightbox(currentImages, index, product.name)}
+                          height="400px"
                         />
                       )}
 
@@ -290,8 +297,9 @@ function ProductsContent() {
                     )}
                     </div>
                   )
-                })}
-              </div>
+                  })}
+                </div>
+              </ScrollReveal>
 
               {/* Infinite scroll trigger */}
               {hasNextPage && (

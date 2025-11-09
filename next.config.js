@@ -40,6 +40,7 @@ const nextConfig = {
   // Optimize package imports to reduce bundle size
   experimental: {
     optimizePackageImports: ['react-toastify', '@tanstack/react-query'],
+    serverExternalPackages: ['resend'], // Prevent bundling Resend to avoid optional peer dependency issues
   },
 
   // Production-specific configurations

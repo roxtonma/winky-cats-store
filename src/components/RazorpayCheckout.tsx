@@ -18,6 +18,9 @@ interface RazorpayCheckoutProps {
   shippingAddress: ShippingAddress
   totalAmount: number
   shippingCost: number
+  discountCode?: string
+  discountAmount?: number
+  discountType?: string
   onSuccess: (orderNumber: string) => void
   onError?: (error: string) => void
   isFormValid?: () => boolean
@@ -28,6 +31,9 @@ export default function RazorpayCheckout({
   shippingAddress,
   totalAmount,
   shippingCost,
+  discountCode,
+  discountAmount,
+  discountType,
   onSuccess,
   onError,
   isFormValid,
@@ -96,6 +102,9 @@ export default function RazorpayCheckout({
         items: state.items,
         totalAmount,
         shippingCost,
+        discountCode,
+        discountAmount,
+        discountType,
         userId: user?.id, // Include user ID if logged in
       }
 

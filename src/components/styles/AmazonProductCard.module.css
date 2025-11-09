@@ -76,7 +76,7 @@
 
 /* Discount badge - shown next to original price on all screen sizes */
 .discountBadge {
-  background: #ff4444;
+  background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
   color: white;
   padding: 0.25rem 0.45rem;
   border-radius: 4px;

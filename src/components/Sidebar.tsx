@@ -114,6 +114,9 @@ export default function Sidebar() {
               <Link href="/products" className={styles.navLink}>
                 Our Products
               </Link>
+              <Link href="/customize" className={styles.navLink}>
+                Custom Design
+              </Link>
               <Link href="/associates" className={styles.navLink}>
                 Affiliate Products
               </Link>
@@ -175,6 +178,13 @@ export default function Sidebar() {
             onClick={closeSidebar}
           >
             Our Products
+          </Link>
+          <Link
+            href="/customize"
+            className={styles.sidebarLink}
+            onClick={closeSidebar}
+          >
+            Custom Design
           </Link>
           <Link
             href="/associates"

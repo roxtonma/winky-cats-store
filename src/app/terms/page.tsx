@@ -17,9 +17,6 @@ export default function TermsPage() {
             Welcome to Winky Cats Store. By accessing our website and making a purchase,
             you agree to be bound by these terms and conditions.
           </p>
-          <p className={styles.effectiveDate}>
-            Effective Date: {new Date().toLocaleDateString('en-IN', { year: 'numeric', month: 'long', day: 'numeric' })}
-          </p>
         </div>
 
         <div className={styles.sections}>
@@ -37,8 +34,7 @@ export default function TermsPage() {
             <div className={styles.subsection}>
               <h3>Eligibility</h3>
               <p>
-                You must be at least 18 years old to make a purchase on our website. By placing
-                an order, you confirm that you are of legal age to enter into a binding contract.
+                You represent and warrant that if you are an individual, you are of legal age to form a binding contract, or that if you are registering on behalf of an entity, that you are authorized to enter into, and bind the entity to, these Terms of Use and register for the Service. The Service is not available to individuals who are younger than 13 years old and in no event, to individuals who are not competent to contract as per the laws applicable in their jurisdiction. If you are a minor, you agree to access the Service only under the supervision of your parent or guardian. We may, in its sole discretion, refuse to offer the Service to any person or entity and change its eligibility criteria at any time.
               </p>
             </div>
 

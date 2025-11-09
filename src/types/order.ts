@@ -33,6 +33,9 @@ export type CreateOrderRequest = {
   items: CartItem[]
   totalAmount: number
   shippingCost: number
+  discountCode?: string
+  discountAmount?: number
+  discountType?: string
   notes?: string
   userId?: string
 }

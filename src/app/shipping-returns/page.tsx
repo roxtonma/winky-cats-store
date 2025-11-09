@@ -103,8 +103,8 @@ export default function ShippingReturnsPage() {
               <h3>How to Initiate a Return</h3>
               <ol className={styles.orderedList}>
                 <li>Contact us at <a href="mailto:hello@winkycats.in" className={styles.link}>hello@winkycats.in</a> within 7 days of delivery</li>
-                <li>Include your order number and reason for return</li>
-                <li>Our team will review and provide return instructions</li>
+                <li>Include your order number and reason for return along with any images of the products for reference</li>
+                <li>We will review and provide return instructions</li>
                 <li>Pack the item securely with original tags and invoice</li>
                 <li>Ship the item to the provided return address</li>
               </ol>

@@ -10,9 +10,9 @@ export default function Footer() {
         <div className={styles.grid}>
           {/* About Section */}
           <div className={styles.section}>
-            <h3 className={styles.sectionTitle}>Winky Cats Store</h3>
+            <h3 className={styles.sectionTitle}>Winky Cats</h3>
             <p className={styles.description}>
-              Your one-stop shop for custom apparel and unique designs. Quality products with a personal touch.
+              We aim to bring you a better online shopping experience. Grow with us.
             </p>
           </div>
 
@@ -27,26 +27,32 @@ export default function Footer() {
                 <Link href="/products" className={styles.link}>Our Products</Link>
               </li>
               <li>
+                <Link href="/customize" className={styles.link}>Custom Design</Link>
+              </li>
+              <li>
                 <Link href="/associates" className={styles.link}>Affiliate Products</Link>
               </li>
               <li>
                 <Link href="/account" className={styles.link}>My Account</Link>
               </li>
+              <li>
+                <Link href="/account/orders" className={styles.link}>My Orders</Link>
+              </li>
             </ul>
           </div>
 
-          {/* Customer Service */}
+          {/* About Us */}
           <div className={styles.section}>
-            <h3 className={styles.sectionTitle}>Customer Service</h3>
+            <h3 className={styles.sectionTitle}>About Us</h3>
             <ul className={styles.linkList}>
+              <li>
+                <Link href="/about" className={styles.link}>About Us</Link>
+              </li>
               <li>
                 <Link href="/contact" className={styles.link}>Contact Us</Link>
               </li>
               <li>
                 <Link href="/shipping-returns" className={styles.link}>Shipping & Returns</Link>
-              </li>
-              <li>
-                <Link href="/account/orders" className={styles.link}>Track Order</Link>
               </li>
             </ul>
           </div>
@@ -65,20 +71,50 @@ export default function Footer() {
           </div>
         </div>
 
+        {/* Trusted Partners */}
+        <div className={styles.paymentSection}>
+          <h4 className={styles.paymentTitle}>Trusted Partners</h4>
+          <div className={styles.partnerLogos}>
+            <a href="https://razorpay.com/" target="_blank" rel="noopener noreferrer" className={styles.partnerBadge}>
+              <img
+                referrerPolicy="origin"
+                src="https://badges.razorpay.com/badge-light.png"
+                style={{ height: '45px', width: '113px' }}
+                alt="Razorpay"
+              />
+            </a>
+            <a href="https://www.delhivery.com/" target="_blank" rel="noopener noreferrer" className={styles.partnerBadge}>
+              <img
+                src="https://logo.clearbit.com/delhivery.com"
+                style={{ height: '45px', width: 'auto' }}
+                alt="Delhivery"
+              />
+            </a>
+            <a href="https://www.bluedart.com/" target="_blank" rel="noopener noreferrer" className={styles.partnerBadge}>
+              <img
+                src="https://logo.clearbit.com/bluedart.com"
+                style={{ height: '45px', width: 'auto' }}
+                alt="Blue Dart"
+              />
+            </a>
+            <a href="https://ekartlogistics.com/" target="_blank" rel="noopener noreferrer" className={styles.partnerBadge}>
+              <img
+                src="https://logo.clearbit.com/ekartlogistics.com"
+                style={{ height: '45px', width: 'auto' }}
+                alt="Ekart"
+              />
+            </a>
+          </div>
+        </div>
+
         {/* Bottom Bar */}
         <div className={styles.bottomBar}>
           <p className={styles.copyright}>
             © {currentYear} Winky Cats Store. All rights reserved.
           </p>
           <div className={styles.socialLinks}>
-            <a href="#" className={styles.socialLink} aria-label="Instagram">
+            <a href="https://www.instagram.com/winky.cats" className={styles.socialLink} aria-label="Instagram">
               <span>Instagram</span>
-            </a>
-            <a href="#" className={styles.socialLink} aria-label="Facebook">
-              <span>Facebook</span>
-            </a>
-            <a href="#" className={styles.socialLink} aria-label="Twitter">
-              <span>Twitter</span>
             </a>
           </div>
         </div>

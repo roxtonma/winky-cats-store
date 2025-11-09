@@ -109,6 +109,58 @@ export function ProductCustomizationModal({
               )}
             </div>
 
+            {/* Product Details Section */}
+            {(product.fabric_details || product.fit_info || product.care_instructions) && (
+              <div className={styles.productDetails}>
+                <h3 className={styles.detailsTitle}>Product Details</h3>
+
+                {product.fabric_details && (
+                  <div className={styles.detailItem}>
+                    <div className={styles.detailIcon}>
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                        <path d="M2 17L12 22L22 17" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                        <path d="M2 12L12 17L22 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                      </svg>
+                    </div>
+                    <div className={styles.detailContent}>
+                      <span className={styles.detailLabel}>Fabric</span>
+                      <span className={styles.detailValue}>{product.fabric_details}</span>
+                    </div>
+                  </div>
+                )}
+
+                {product.fit_info && (
+                  <div className={styles.detailItem}>
+                    <div className={styles.detailIcon}>
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M20.38 3.46L16 2a4 4 0 01-8 0L3.62 3.46a2 2 0 00-1.34 2.23l.58 3.47a1 1 0 00.99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 002-2V10h2.15a1 1 0 00.99-.84l.58-3.47a2 2 0 00-1.34-2.23z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                      </svg>
+                    </div>
+                    <div className={styles.detailContent}>
+                      <span className={styles.detailLabel}>Fit</span>
+                      <span className={styles.detailValue}>{product.fit_info}</span>
+                    </div>
+                  </div>
+                )}
+
+                {product.care_instructions && (
+                  <div className={styles.detailItem}>
+                    <div className={styles.detailIcon}>
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                        <path d="M12 16V12M12 8H12.01" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                      </svg>
+                    </div>
+                    <div className={styles.detailContent}>
+                      <span className={styles.detailLabel}>Care</span>
+                      <span className={styles.detailValue}>{product.care_instructions}</span>
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+
             {/* Variants Section */}
             {hasVariants && (
               <div className={styles.variantsSection}>

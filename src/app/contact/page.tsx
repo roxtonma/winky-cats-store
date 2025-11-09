@@ -52,7 +52,7 @@ export default function ContactPage() {
             <h2 className={styles.sectionTitle}>Follow Us</h2>
             <p>Stay connected with us on social media for updates and new product launches:</p>
             <div className={styles.socialLinks}>
-              <p>Instagram: @winkycats</p>
+              <p>Instagram: <a href="https://www.instagram.com/winky.cats/" target="_blank">@winkycats</a></p>
             </div>
           </section>
 
