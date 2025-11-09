@@ -1,26 +1,39 @@
 :root {
-  /* Playful and vibrant palette */
-  --bg-primary: #FDFDFD;
-  --bg-secondary: #F5F5F5;
+  /* Modern and sophisticated palette */
+  --bg-primary: #FAFAFA;
+  --bg-secondary: #F5F5F7;
   --bg-card: #FFFFFF;
-  --text-primary: #333333;
-  --text-secondary: #666666;
-  --text-muted: #999999;
-  --accent-primary: #FF69B4;
-  --accent-secondary: #FF1493;
-  --border: #E0E0E0;
-  --border-light: #F5F5F5;
-  --success: #7CFC00;
-  --warning: #FFD700;
-  --error: #FA8072;
-  --focus-ring: #FF69B4;
+  --text-primary: #1F1F1F;
+  --text-secondary: #6B6B6B;
+  --text-muted: #9E9E9E;
+
+  /* Refreshed pink theme - softer and more modern */
+  --accent-primary: #FF6B9D;
+  --accent-secondary: #FF1F7F;
+  --accent-light: #FFE5F0;
+  --accent-gradient: linear-gradient(135deg, #FF6B9D 0%, #FF1F7F 100%);
+
+  /* Borders and shadows */
+  --border: #E5E5E5;
+  --border-light: #F0F0F0;
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
+
+  /* Status colors */
+  --success: #10B981;
+  --warning: #F59E0B;
+  --error: #EF4444;
+
+  /* Focus and interaction */
+  --focus-ring: #FF6B9D;
   --focus-ring-offset: #FFFFFF;
 }
 
 html,
 body {
-  max-width: 100vw;
-  overflow-x: hidden;
+  max-width: 100%;
+  overflow-x: clip;
 }
 
 body {
@@ -87,9 +100,9 @@ html {
 /* Button base styles */
 button {
   border: none;
-  border-radius: 8px;
+  border-radius: 12px;
   padding: 0.75rem 1.5rem;
-  font-weight: 500;
+  font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease;
   font-size: 0.95rem;
@@ -97,6 +110,7 @@ button {
 
 button:disabled {
   cursor: not-allowed;
+  opacity: 0.5;
 }
 
 button:focus-visible {
@@ -104,13 +118,23 @@ button:focus-visible {
   outline-offset: 2px;
 }
 
+button:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
 /* Card styles */
 .card {
   background: var(--bg-card);
   border: 1px solid var(--border-light);
-  border-radius: 12px;
+  border-radius: 16px;
   padding: 1.5rem;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow-sm);
+  transition: all 0.3s ease;
+}
+
+.card:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
 }
 
 /* Input styles */
@@ -176,8 +200,9 @@ input:focus, textarea:focus, select:focus {
     min-height: 44px; /* iOS touch target */
   }
 
-  /* Adjust body padding for mobile navbar */
+  /* Adjust body padding for mobile navbar and bottom nav */
   body {
     padding-top: 70px;
+    padding-bottom: 65px; /* Space for bottom navigation */
   }
 }

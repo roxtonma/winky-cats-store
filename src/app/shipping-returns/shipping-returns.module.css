@@ -1,0 +1,171 @@
+.container {
+  min-height: calc(100vh - 80px);
+  padding: 2rem 1rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.content {
+  background: white;
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.intro {
+  text-align: center;
+  font-size: 1.1rem;
+  color: #666;
+  margin-bottom: 3rem;
+  max-width: 700px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.sections {
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+}
+
+.section {
+  border-bottom: 1px solid #eee;
+  padding-bottom: 2rem;
+}
+
+.section:last-child {
+  border-bottom: none;
+}
+
+.sectionTitle {
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: #FF69B4;
+  margin-bottom: 1.5rem;
+}
+
+.subsection {
+  margin-bottom: 2rem;
+}
+
+.subsection h3 {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 0.75rem;
+}
+
+.subsection p {
+  font-size: 1rem;
+  color: #666;
+  line-height: 1.8;
+  margin-bottom: 1rem;
+}
+
+.subsection ul,
+.subsection ol {
+  margin-left: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.subsection ul li,
+.subsection ol li {
+  font-size: 1rem;
+  color: #666;
+  line-height: 1.8;
+  margin-bottom: 0.5rem;
+}
+
+.subsection strong {
+  color: #333;
+  font-weight: 600;
+}
+
+.orderedList {
+  counter-reset: item;
+  list-style: none;
+  margin-left: 0;
+  padding-left: 0;
+}
+
+.orderedList li {
+  counter-increment: item;
+  margin-bottom: 1rem;
+  padding-left: 2.5rem;
+  position: relative;
+}
+
+.orderedList li::before {
+  content: counter(item) ".";
+  position: absolute;
+  left: 0;
+  color: #FF69B4;
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+
+.note {
+  font-size: 0.95rem;
+  color: #999;
+  font-style: italic;
+  padding: 0.75rem;
+  background: #f9f9f9;
+  border-left: 3px solid #FF69B4;
+  border-radius: 4px;
+  margin-top: 0.5rem;
+}
+
+.link {
+  color: #FF69B4;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.link:hover {
+  color: #ff1493;
+  text-decoration: underline;
+}
+
+.lastUpdated {
+  text-align: center;
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 1px solid #eee;
+}
+
+.lastUpdated p {
+  font-size: 0.9rem;
+  color: #999;
+  font-style: italic;
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 1rem 0.5rem;
+  }
+
+  .content {
+    padding: 1.5rem;
+  }
+
+  .title {
+    font-size: 2rem;
+  }
+
+  .sectionTitle {
+    font-size: 1.5rem;
+  }
+
+  .subsection h3 {
+    font-size: 1.2rem;
+  }
+}

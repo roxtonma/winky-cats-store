@@ -9,8 +9,7 @@ type AuthContextType = {
   userProfile: UserProfile | null
   session: Session | null
   loading: boolean
-  signUp: (email: string, password: string) => Promise<{ error: Error | null }>
-  signIn: (email: string, password: string) => Promise<{ error: Error | null }>
+  signInWithMagicLink: (email: string) => Promise<{ error: Error | null }>
   signInWithGoogle: () => Promise<{ error: Error | null }>
   signOut: () => Promise<void>
   refreshProfile: () => Promise<void>
@@ -192,30 +191,27 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return () => subscription.unsubscribe()
   }, [])
 
-  const signUp = async (email: string, password: string) => {
-    const { error } = await supabase.auth.signUp({
-      email,
-      password,
-    })
-    return { error }
-  }
+  const signInWithMagicLink = async (email: string) => {
+    console.log('[AuthContext] signInWithMagicLink called for:', email)
+    try {
+      const { error } = await supabase.auth.signInWithOtp({
+        email,
+        options: {
+          emailRedirectTo: `${window.location.origin}/auth/callback`,
+        },
+      })
 
-  const signIn = async (email: string, password: string) => {
-    console.log('[AuthContext] signIn called for:', email)
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    })
+      if (error) {
+        console.error('[AuthContext] Magic link error:', error)
+        return { error }
+      }
 
-    if (error) {
-      console.error('[AuthContext] signIn error:', error)
-      return { error }
+      console.log('[AuthContext] Magic link sent successfully')
+      return { error: null }
+    } catch (error) {
+      console.error('[AuthContext] Exception during magic link:', error)
+      return { error: error as Error }
     }
-
-    console.log('[AuthContext] signIn successful, session will be handled by middleware')
-    // The middleware and onAuthStateChange will handle session persistence
-    // No need for complex polling anymore
-    return { error: null }
   }
 
   const signInWithGoogle = async () => {
@@ -273,8 +269,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         userProfile,
         session,
         loading,
-        signUp,
-        signIn,
+        signInWithMagicLink,
         signInWithGoogle,
         signOut,
         refreshProfile,

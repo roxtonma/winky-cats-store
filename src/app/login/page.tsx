@@ -1,87 +1,58 @@
 'use client'
 
-import { useState, useEffect, Suspense } from 'react'
-import { useRouter, useSearchParams } from 'next/navigation'
+import { useState, Suspense } from 'react'
 import Link from 'next/link'
 import { useAuth } from '@/contexts/AuthContext'
-import { supabase } from '@/lib/supabase'
 import styles from './page.module.css'
 
 function LoginForm() {
-  const router = useRouter()
-  const searchParams = useSearchParams()
-  const { signIn, signInWithGoogle } = useAuth()
+  const { signInWithMagicLink, signInWithGoogle } = useAuth()
   const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
-  const [showSignUpPrompt, setShowSignUpPrompt] = useState(false)
-  const [resetEmailSent, setResetEmailSent] = useState(false)
-  const [resetLoading, setResetLoading] = useState(false)
-  const [passwordResetSuccess, setPasswordResetSuccess] = useState(false)
-
-  useEffect(() => {
-    // Check if redirected after successful password reset
-    if (searchParams.get('reset') === 'success') {
-      setPasswordResetSuccess(true)
-    }
-  }, [searchParams])
+  const [magicLinkSent, setMagicLinkSent] = useState(false)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError('')
-    setShowSignUpPrompt(false)
+    setMagicLinkSent(false)
     setLoading(true)
 
     try {
-      const { error } = await signIn(email, password)
+      const { error } = await signInWithMagicLink(email)
 
       if (error) {
-        console.error('Sign in error:', error)
+        console.error('Magic link error:', error)
 
         // Provide better error messages
-        let errorMessage = error.message || 'Failed to sign in'
-        let isCredentialError = false
+        let errorMessage = error.message || 'Failed to send magic link'
 
-        if (errorMessage.includes('Invalid login credentials')) {
-          errorMessage = 'Invalid credentials. This email may not be registered yet.'
-          isCredentialError = true
-        } else if (errorMessage.includes('Email not confirmed')) {
-          errorMessage = 'Please verify your email address'
+        if (errorMessage.includes('Invalid email')) {
+          errorMessage = 'Please enter a valid email address'
         } else if (errorMessage.includes('Too many requests')) {
-          errorMessage = 'Too many login attempts. Please try again later'
+          errorMessage = 'Too many attempts. Please try again later'
+        } else if (errorMessage.includes('rate limit')) {
+          errorMessage = 'Please wait a moment before requesting another link'
         }
 
         setError(errorMessage)
-        setShowSignUpPrompt(isCredentialError)
         setLoading(false)
         return
       }
 
-      console.log('Sign in successful, auth state updated, redirecting...')
-
-      // Check for redirect path first
-      const redirectPath = sessionStorage.getItem('redirectAfterLogin')
-      if (redirectPath) {
-        sessionStorage.removeItem('redirectAfterLogin')
-        router.push(redirectPath)
-        setLoading(false)
-        return
-      }
-
-      // Redirect to account page - it will handle profile setup check
-      router.push('/account')
+      console.log('Magic link sent successfully')
+      setMagicLinkSent(true)
       setLoading(false)
     } catch (err) {
-      console.error('Login error:', err)
-      setError('An unexpected error occurred. Please check the console for details.')
+      console.error('Magic link error:', err)
+      setError('An unexpected error occurred. Please try again.')
       setLoading(false)
     }
   }
 
   const handleGoogleSignIn = async () => {
     setError('')
-    setShowSignUpPrompt(false)
+    setMagicLinkSent(false)
     setLoading(true)
 
     try {
@@ -100,37 +71,6 @@ function LoginForm() {
       console.error('Google sign in error:', err)
       setError('An unexpected error occurred with Google sign in.')
       setLoading(false)
-    }
-  }
-
-  const handleForgotPassword = async () => {
-    if (!email) {
-      setError('Please enter your email address first')
-      return
-    }
-
-    setError('')
-    setResetEmailSent(false)
-    setResetLoading(true)
-
-    try {
-      const { error } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: `${window.location.origin}/reset-password`,
-      })
-
-      if (error) {
-        console.error('Password reset error:', error)
-        setError('Failed to send reset email. Please try again.')
-        setResetLoading(false)
-        return
-      }
-
-      setResetEmailSent(true)
-      setResetLoading(false)
-    } catch (err) {
-      console.error('Password reset error:', err)
-      setError('An unexpected error occurred. Please try again.')
-      setResetLoading(false)
     }
   }
 
@@ -158,32 +98,19 @@ function LoginForm() {
           Continue with Google
         </button>
 
-        <div className={styles.divider}>or sign in with email</div>
+        <div className={styles.divider}>or continue with email</div>
 
-        {/* Email/Password Form - Secondary Option */}
+        {/* Magic Link Form - Secondary Option */}
         <form onSubmit={handleSubmit} className={styles.form}>
-          {passwordResetSuccess && (
-            <div className={styles.successMessage}>
-              Password updated successfully! You can now sign in with your new password.
-            </div>
-          )}
+          {error && <div className={styles.errorText}>{error}</div>}
 
-          {error && (
-            <div>
-              <div className={styles.errorText}>{error}</div>
-              {showSignUpPrompt && (
-                <div style={{ marginTop: '1rem', textAlign: 'center' }}>
-                  <Link href="/signup" className={styles.signUpPrompt}>
-                    Create an account instead →
-                  </Link>
-                </div>
-              )}
-            </div>
-          )}
-
-          {resetEmailSent && (
+          {magicLinkSent && (
             <div className={styles.successMessage}>
-              Check your email for a password reset link. Please also check your spam folder if you don&apos;t see it.
+              Check your email! We sent you a magic link to sign in. The link will expire in 1 hour.
+              <br />
+              <small style={{ fontSize: '0.875rem', marginTop: '0.5rem', display: 'block' }}>
+                Don&apos;t see it? Check your spam folder.
+              </small>
             </div>
           )}
 
@@ -200,40 +127,31 @@ function LoginForm() {
               placeholder="you@example.com"
               required
               autoComplete="email"
+              disabled={magicLinkSent}
             />
-          </div>
-
-          <div className={styles.formGroup}>
-            <label htmlFor="password" className={styles.label}>
-              Password
-            </label>
-            <input
-              id="password"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className={styles.input}
-              placeholder="••••••••"
-              required
-              autoComplete="current-password"
-            />
-            <button
-              type="button"
-              onClick={handleForgotPassword}
-              className={styles.forgotPasswordLink}
-              disabled={resetLoading}
-            >
-              {resetLoading ? 'Sending...' : 'Forgot Password?'}
-            </button>
           </div>
 
           <button
             type="submit"
             className={styles.button}
-            disabled={loading}
+            disabled={loading || magicLinkSent}
           >
-            {loading ? 'Signing in...' : 'Sign In'}
+            {loading ? 'Sending...' : magicLinkSent ? 'Magic Link Sent!' : 'Send Magic Link'}
           </button>
+
+          {magicLinkSent && (
+            <button
+              type="button"
+              onClick={() => {
+                setMagicLinkSent(false)
+                setEmail('')
+              }}
+              className={styles.forgotPasswordLink}
+              style={{ marginTop: '0.5rem', textAlign: 'center', width: '100%' }}
+            >
+              Try a different email
+            </button>
+          )}
         </form>
 
         <div style={{ textAlign: 'center', marginTop: '1.5rem' }}>

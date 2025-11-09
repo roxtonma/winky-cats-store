@@ -6,7 +6,6 @@ import { VerifyPaymentRequest, VerifyPaymentResponse } from '@/types/order'
 import { checkRateLimit, getClientIp } from '@/lib/rateLimiter'
 import { config } from '@/lib/config'
 import { rateLimitError, paymentError, databaseError, internalError, logError } from '@/lib/errors'
-import OrderConfirmationEmail from '@/emails/OrderConfirmation'
 
 // Use service role key for server-side operations
 const supabase = createClient(
@@ -88,17 +87,40 @@ export async function POST(request: NextRequest) {
           variant: undefined, // Variants not stored in order_items currently
         }))
 
+        // Transform shipping address to match email component's expected format (camelCase)
+        const shippingAddr = order.shipping_address as Record<string, string | undefined>
+        const formattedShippingAddress = {
+          name: order.customer_name,
+          addressLine1: shippingAddr.address_line1 || shippingAddr.addressLine1 || '',
+          addressLine2: shippingAddr.address_line2 || shippingAddr.addressLine2,
+          city: shippingAddr.city || '',
+          state: shippingAddr.state || '',
+          postalCode: shippingAddr.postal_code || shippingAddr.postalCode || '',
+          country: shippingAddr.country || 'India',
+          phone: order.customer_phone,
+        }
+
         await resend.emails.send({
           from: process.env.RESEND_FROM_EMAIL || 'onboarding@resend.dev',
           to: order.customer_email,
           subject: `Order Confirmation - #${order.order_number}`,
-          react: OrderConfirmationEmail({
-            orderNumber: order.order_number,
-            customerName: order.customer_name,
-            items: emailItems,
-            total: order.total_amount,
-            shippingAddress: order.shipping_address,
-          }),
+          html: `
+            <h1>Order Confirmation</h1>
+            <p>Thank you for your order, ${order.customer_name}!</p>
+            <p>Order Number: ${order.order_number}</p>
+            <p>Total Amount: ₹${order.total_amount}</p>
+            <h2>Items:</h2>
+            <ul>
+              ${emailItems.map(item => `<li>${item.name} x ${item.quantity} - ₹${item.price}</li>`).join('')}
+            </ul>
+            <h2>Shipping Address:</h2>
+            <p>
+              ${formattedShippingAddress.addressLine1}<br>
+              ${formattedShippingAddress.addressLine2 ? formattedShippingAddress.addressLine2 + '<br>' : ''}
+              ${formattedShippingAddress.city}, ${formattedShippingAddress.state} ${formattedShippingAddress.postalCode}<br>
+              ${formattedShippingAddress.country}
+            </p>
+          `,
         })
 
         console.log('Order confirmation email sent to:', order.customer_email)
@@ -107,6 +129,112 @@ export async function POST(request: NextRequest) {
         console.error('Failed to send order confirmation email:', emailError)
         logError('Email Send Error', emailError, { orderId: order.id })
       }
+    }
+
+    // Send Slack notification for successful order
+    if (process.env.SLACK_WEBHOOK_NORMAL_ORDERS) {
+      try {
+        const itemsText = orderItems && orderItems.length > 0
+          ? orderItems.map((item: { product?: { name?: string }, variant_size?: string, variant_color_name?: string, quantity: number, unit_price: number }) => {
+              const productName = item.product?.name || 'Product'
+              const size = item.variant_size ? ` (${item.variant_size})` : ''
+              const color = item.variant_color_name ? `, ${item.variant_color_name}` : ''
+              return `• ${productName}${color}${size} x ${item.quantity} - ₹${item.unit_price * item.quantity}`
+            }).join('\n')
+          : '• No items'
+
+        await fetch(process.env.SLACK_WEBHOOK_NORMAL_ORDERS, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            text: '✅ New Order Received & Paid!',
+            blocks: [
+              {
+                type: 'header',
+                text: {
+                  type: 'plain_text',
+                  text: '✅ New Order Received & Paid',
+                  emoji: true
+                }
+              },
+              {
+                type: 'section',
+                fields: [
+                  {
+                    type: 'mrkdwn',
+                    text: `*Order Number:*\n${order.order_number}`
+                  },
+                  {
+                    type: 'mrkdwn',
+                    text: `*Customer:*\n${order.customer_name}`
+                  },
+                  {
+                    type: 'mrkdwn',
+                    text: `*Email:*\n${order.customer_email}`
+                  },
+                  {
+                    type: 'mrkdwn',
+                    text: `*Total Amount:*\n₹${order.total_amount}`
+                  },
+                  {
+                    type: 'mrkdwn',
+                    text: `*Payment ID:*\n\`${order.payment_reference}\``
+                  }
+                ]
+              },
+              {
+                type: 'section',
+                text: {
+                  type: 'mrkdwn',
+                  text: `*Items:*\n${itemsText}`
+                }
+              },
+              {
+                type: 'section',
+                text: {
+                  type: 'mrkdwn',
+                  text: `*Order Status:*\nConfirmed & Forwarding to Qikink for Fulfillment`
+                }
+              },
+              {
+                type: 'context',
+                elements: [
+                  {
+                    type: 'mrkdwn',
+                    text: `Placed at <!date^${Math.floor(new Date().getTime() / 1000)}^{date_short_pretty} at {time}|${new Date().toISOString()}>`
+                  }
+                ]
+              }
+            ]
+          })
+        })
+      } catch (slackError) {
+        console.error('Failed to send Slack notification for order:', slackError)
+        // Don't fail the request if Slack notification fails
+      }
+    }
+
+    // Forward order to Qikink for fulfillment (non-blocking)
+    if (process.env.QIKINK_CLIENT_ID && process.env.QIKINK_CLIENT_SECRET) {
+      // Don't await - forward asynchronously to avoid delaying response
+      fetch(`${request.nextUrl.origin}/api/qikink/forward-order`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ orderId: order.id }),
+      })
+        .then(async (res) => {
+          if (res.ok) {
+            console.log('Order forwarded to Qikink:', order.order_number)
+          } else {
+            const errorData = await res.json().catch(() => ({}))
+            console.error('Failed to forward order to Qikink:', errorData)
+          }
+        })
+        .catch((error) => {
+          console.error('Error calling Qikink forward-order API:', error)
+        })
     }
 
     const response: VerifyPaymentResponse = {

@@ -5,6 +5,7 @@ import { AmazonProductCard } from '@/components/AmazonProductCard'
 import { AmazonDisclosure } from '@/components/AmazonDisclosure'
 import { AmazonProduct, AmazonProductCategory } from '@/types/amazon'
 import { enhanceProductsWithAffiliateLinks } from '@/lib/amazonUtils'
+import { ScrollReveal } from '@/components/ScrollReveal'
 import amazonData from '@/data/amazonProducts.json'
 import styles from './associates.module.css'
 
@@ -184,16 +185,21 @@ export default function AssociatesPage() {
 
   return (
     <div className={styles.container}>
-      <header className={styles.header}>
-        <h1 className={styles.title}>Recommended Products</h1>
-        <p className={styles.subtitle}>
-          Curated selection of quality products from Amazon that we recommend
-        </p>
-      </header>
+      <ScrollReveal delay={0.1}>
+        <header className={styles.header}>
+          <h1 className={styles.title}>Recommended Products</h1>
+          <p className={styles.subtitle}>
+            Curated selection of quality products from Amazon that we recommend
+          </p>
+        </header>
+      </ScrollReveal>
 
-      <AmazonDisclosure />
+      <ScrollReveal delay={0.15}>
+        <AmazonDisclosure />
+      </ScrollReveal>
 
-      <div className={styles.filterBar}>
+      <ScrollReveal delay={0.2}>
+        <div className={styles.filterBar}>
         {/* Search Row - Product and Tag Search Side by Side */}
         <div className={styles.filterGroup}>
           <div className={styles.searchRow}>
@@ -326,22 +332,25 @@ export default function AssociatesPage() {
           </select>
         </div>
       </div>
+      </ScrollReveal>
 
-      {sortedProducts.length === 0 ? (
-        <div className={styles.emptyState}>
-          <p>No products found in this category.</p>
-        </div>
-      ) : (
-        <div className={styles.productsGrid}>
-          {sortedProducts.map(product => (
-            <AmazonProductCard
-              key={product.id}
-              product={product}
-              defaultCurrency={amazonData.defaultCurrency}
-            />
-          ))}
-        </div>
-      )}
+      <ScrollReveal delay={0.25}>
+        {sortedProducts.length === 0 ? (
+          <div className={styles.emptyState}>
+            <p>No products found in this category.</p>
+          </div>
+        ) : (
+          <div className={styles.productsGrid}>
+            {sortedProducts.map(product => (
+              <AmazonProductCard
+                key={product.id}
+                product={product}
+                defaultCurrency={amazonData.defaultCurrency}
+              />
+            ))}
+          </div>
+        )}
+      </ScrollReveal>
     </div>
   )
 }

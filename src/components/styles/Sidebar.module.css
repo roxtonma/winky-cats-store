@@ -485,3 +485,24 @@
     font-size: 1.35rem;
   }
 }
+
+/* Policy Links Section */
+.divider {
+  height: 1px;
+  background: var(--border-light);
+  margin: 0.5rem 0;
+}
+
+.sidebarSection {
+  display: flex;
+  flex-direction: column;
+}
+
+.sectionLabel {
+  padding: 1rem 1.25rem 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-muted);
+}

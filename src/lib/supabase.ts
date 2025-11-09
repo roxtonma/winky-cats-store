@@ -45,8 +45,14 @@ export type Product = {
     colors?: ColorVariant[]
     sizes?: string[]
   }
+  fabric_details?: string
+  fit_info?: string
+  care_instructions?: string
   created_at: string
   updated_at: string
+  is_layerable?: boolean
+  layer_order?: number
+  layer_position?: { x: number; y: number }
 }
 
 export type OrderItem = {

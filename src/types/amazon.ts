@@ -16,6 +16,9 @@ export interface AmazonProduct {
   tags?: string[] // For filtering/categorization
   marketplace?: string // Amazon marketplace domain (e.g., 'amazon.in', 'amazon.com')
   featured?: boolean // If true, this product appears first in "Featured" sort
+  isLayerable?: boolean // Whether product can be used in character customizer
+  layerOrder?: number // Z-index order for layering (higher = on top)
+  layerPosition?: { x: number; y: number } // X/Y offset for layer alignment
 }
 
 export interface AmazonProductsData {

@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
 import RazorpayCheckout from '@/components/RazorpayCheckout'
+import { DiscountCodeInput } from '@/components/DiscountCodeInput'
 import type { CustomerInfo, ShippingAddress } from '@/types/order'
 import { config } from '@/lib/config'
 import { supabase, UserAddress } from '@/lib/supabase'
@@ -18,8 +19,16 @@ export default function CartPage() {
   const { user, userProfile } = useAuth()
   const router = useRouter()
 
+  const [appliedDiscount, setAppliedDiscount] = useState<{
+    code: string
+    type: string
+    value: number
+    discountAmount: number
+  } | null>(null)
+
   const shipping: number = totalAmount > config.shipping.freeShippingThreshold ? 0 : config.shipping.defaultShippingCost
-  const total = totalAmount + shipping
+  const discountAmount = appliedDiscount?.discountAmount || 0
+  const total = totalAmount + shipping - discountAmount
 
   const [showCheckoutForm, setShowCheckoutForm] = useState(false)
   const [authCheckComplete, setAuthCheckComplete] = useState(false)
@@ -80,6 +89,26 @@ export default function CartPage() {
   // Handle address selection change
   const handleAddressSelect = (addressId: string) => {
     setSelectedAddressId(addressId)
+  }
+
+  // Handle discount code
+  const handleDiscountApplied = (discount: {
+    code: string
+    type: string
+    value: number
+    discountAmount: number
+    message: string
+  }) => {
+    setAppliedDiscount({
+      code: discount.code,
+      type: discount.type,
+      value: discount.value,
+      discountAmount: discount.discountAmount
+    })
+  }
+
+  const handleDiscountRemoved = () => {
+    setAppliedDiscount(null)
   }
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -255,11 +284,28 @@ export default function CartPage() {
               <span>Shipping:</span>
               <span>{shipping === 0 ? 'Free' : `₹${shipping.toFixed(2)}`}</span>
             </div>
+            {appliedDiscount && (
+              <div className={styles.summaryRow} style={{ color: '#4CAF50', fontWeight: 600 }}>
+                <span>Discount ({appliedDiscount.code}):</span>
+                <span>-₹{discountAmount.toFixed(2)}</span>
+              </div>
+            )}
             <hr className={styles.summaryDivider} />
             <div className={styles.totalRow}>
               <span>Total:</span>
               <span>₹{total.toFixed(2)}</span>
             </div>
+
+            {/* Discount Code Input */}
+            <DiscountCodeInput
+              onDiscountApplied={handleDiscountApplied}
+              onDiscountRemoved={handleDiscountRemoved}
+              orderAmount={totalAmount}
+              currentDiscount={appliedDiscount ? {
+                code: appliedDiscount.code,
+                discountAmount: appliedDiscount.discountAmount
+              } : null}
+            />
 
             {!showCheckoutForm ? (
               <button className={styles.checkoutBtn} onClick={handleCheckoutClick}>
@@ -406,6 +452,9 @@ export default function CartPage() {
                     shippingAddress={shippingAddress}
                     totalAmount={totalAmount}
                     shippingCost={shipping}
+                    discountCode={appliedDiscount?.code}
+                    discountAmount={appliedDiscount?.discountAmount}
+                    discountType={appliedDiscount?.type}
                     onSuccess={handleOrderSuccess}
                     isFormValid={isFormValid}
                   />

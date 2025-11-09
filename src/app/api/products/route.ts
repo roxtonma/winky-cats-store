@@ -17,6 +17,7 @@ export async function GET(request: NextRequest) {
     const maxPrice = searchParams.get('maxPrice') ? parseFloat(searchParams.get('maxPrice')!) : null
     const inStock = searchParams.get('inStock') === 'true'
     const tags = searchParams.get('tags')?.split(',').filter(Boolean) || []
+    const featured = searchParams.get('featured') === 'true'
 
     // Build query with category join
     let query = supabase
@@ -54,6 +55,11 @@ export async function GET(request: NextRequest) {
     // Tags filter - using contains for array column
     if (tags.length > 0) {
       query = query.contains('tags', tags)
+    }
+
+    // Featured filter
+    if (featured) {
+      query = query.eq('featured', true)
     }
 
     // Apply pagination and ordering

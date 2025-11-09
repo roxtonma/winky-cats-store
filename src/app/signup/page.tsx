@@ -1,63 +1,58 @@
 'use client'
 
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { useAuth } from '@/contexts/AuthContext'
 import styles from '../login/page.module.css'
 
 export default function SignUpPage() {
-  const router = useRouter()
-  const { signUp, signInWithGoogle } = useAuth()
+  const { signInWithMagicLink, signInWithGoogle } = useAuth()
   const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [confirmPassword, setConfirmPassword] = useState('')
   const [error, setError] = useState('')
-  const [success, setSuccess] = useState(false)
+  const [magicLinkSent, setMagicLinkSent] = useState(false)
   const [loading, setLoading] = useState(false)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError('')
-    setSuccess(false)
+    setMagicLinkSent(false)
     setLoading(true)
 
-    if (password !== confirmPassword) {
-      setError('Passwords do not match')
-      setLoading(false)
-      return
-    }
-
-    if (password.length < 6) {
-      setError('Password must be at least 6 characters')
-      setLoading(false)
-      return
-    }
-
     try {
-      const { error } = await signUp(email, password)
+      const { error } = await signInWithMagicLink(email)
 
       if (error) {
-        setError(error.message || 'Failed to create account')
+        console.error('Magic link error:', error)
+
+        // Provide better error messages
+        let errorMessage = error.message || 'Failed to send magic link'
+
+        if (errorMessage.includes('Invalid email')) {
+          errorMessage = 'Please enter a valid email address'
+        } else if (errorMessage.includes('Too many requests')) {
+          errorMessage = 'Too many attempts. Please try again later'
+        } else if (errorMessage.includes('rate limit')) {
+          errorMessage = 'Please wait a moment before requesting another link'
+        }
+
+        setError(errorMessage)
         setLoading(false)
         return
       }
 
-      console.log('Sign up successful, redirecting...')
-      setSuccess(true)
-
-      // Redirect to profile setup
-      router.push('/account/setup')
+      console.log('Magic link sent successfully')
+      setMagicLinkSent(true)
       setLoading(false)
-    } catch {
-      setError('An unexpected error occurred')
+    } catch (err) {
+      console.error('Magic link error:', err)
+      setError('An unexpected error occurred. Please try again.')
       setLoading(false)
     }
   }
 
   const handleGoogleSignIn = async () => {
     setError('')
-    setSuccess(false)
+    setMagicLinkSent(false)
     setLoading(true)
 
     try {
@@ -92,7 +87,7 @@ export default function SignUpPage() {
           type="button"
           onClick={handleGoogleSignIn}
           className={styles.googleButton}
-          disabled={loading || success}
+          disabled={loading || magicLinkSent}
         >
           <svg className={styles.googleIcon} viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
             <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
@@ -103,17 +98,19 @@ export default function SignUpPage() {
           Continue with Google
         </button>
 
-        <div className={styles.divider}>or sign up with email</div>
+        <div className={styles.divider}>or continue with email</div>
 
-        {/* Email/Password Form - Secondary Option */}
+        {/* Magic Link Form - Secondary Option */}
         <form onSubmit={handleSubmit} className={styles.form}>
           {error && <div className={styles.errorText}>{error}</div>}
-          {success && (
-            <div className={styles.success}>
-              <strong>Account created successfully!</strong>
-              <p style={{ margin: '0.5rem 0 0 0', fontSize: '0.875rem' }}>
-                Please check your email inbox (and spam folder) for a verification link from Winky Cats Store.
-              </p>
+
+          {magicLinkSent && (
+            <div className={styles.successMessage}>
+              Check your email! We sent you a magic link to get started. The link will expire in 1 hour.
+              <br />
+              <small style={{ fontSize: '0.875rem', marginTop: '0.5rem', display: 'block' }}>
+                Don&apos;t see it? Check your spam folder.
+              </small>
             </div>
           )}
 
@@ -130,55 +127,31 @@ export default function SignUpPage() {
               placeholder="you@example.com"
               required
               autoComplete="email"
+              disabled={magicLinkSent}
             />
           </div>
-
-          <div className={styles.formGroup}>
-            <label htmlFor="password" className={styles.label}>
-              Password
-            </label>
-            <input
-              id="password"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className={styles.input}
-              placeholder="At least 6 characters"
-              required
-              autoComplete="new-password"
-              minLength={6}
-            />
-          </div>
-
-          <div className={styles.formGroup}>
-            <label htmlFor="confirmPassword" className={styles.label}>
-              Confirm Password
-            </label>
-            <input
-              id="confirmPassword"
-              type="password"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              className={styles.input}
-              placeholder="Re-enter your password"
-              required
-              autoComplete="new-password"
-            />
-          </div>
-
-          {!success && (
-            <div className={styles.info}>
-              You&apos;ll receive a verification email after signup
-            </div>
-          )}
 
           <button
             type="submit"
             className={styles.button}
-            disabled={loading || success}
+            disabled={loading || magicLinkSent}
           >
-            {loading ? 'Creating Account...' : 'Sign Up'}
+            {loading ? 'Sending...' : magicLinkSent ? 'Magic Link Sent!' : 'Send Magic Link'}
           </button>
+
+          {magicLinkSent && (
+            <button
+              type="button"
+              onClick={() => {
+                setMagicLinkSent(false)
+                setEmail('')
+              }}
+              className={styles.forgotPasswordLink}
+              style={{ marginTop: '0.5rem', textAlign: 'center', width: '100%' }}
+            >
+              Try a different email
+            </button>
+          )}
         </form>
 
         <div style={{ textAlign: 'center', marginTop: '1.5rem' }}>

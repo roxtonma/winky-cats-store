@@ -1,13 +1,15 @@
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from 'react-toastify';
 
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import QueryProvider from "@/providers/QueryProvider";
 import { CartProvider } from "@/contexts/CartContext";
 import { AuthProvider } from "@/contexts/AuthContext";
 import Sidebar from "@/components/Sidebar";
+import BottomNav from "@/components/BottomNav";
+import Footer from "@/components/Footer";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -24,6 +26,12 @@ export const metadata: Metadata = {
   description: "Your favorite online fashion store for custom designed clothes, accessories and more",
 };
 
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 5,
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -38,6 +46,8 @@ export default function RootLayout({
               <ToastContainer />
               <Sidebar />
               {children}
+              <BottomNav />
+              <Footer />
             </CartProvider>
           </AuthProvider>
         </QueryProvider>

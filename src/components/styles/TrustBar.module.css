@@ -1,0 +1,93 @@
+.trustBar {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+  padding: 2rem 1.5rem;
+  background: var(--bg-secondary);
+  border-radius: 16px;
+  margin: 2rem auto;
+  max-width: 1200px;
+}
+
+.trustItem {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.5rem;
+}
+
+.trustIcon {
+  flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--accent-light);
+  border-radius: 12px;
+  color: var(--accent-primary);
+}
+
+.trustText {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.trustLabel {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1.2;
+}
+
+.trustValue {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  line-height: 1.2;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.razorpayLogo {
+  height: 18px;
+  width: auto;
+  display: inline-block;
+  vertical-align: middle;
+  margin-left: 0.25rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .trustBar {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    padding: 1.5rem 1rem;
+  }
+
+  .trustIcon {
+    width: 40px;
+    height: 40px;
+  }
+
+  .trustIcon svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .trustLabel {
+    font-size: 0.875rem;
+  }
+
+  .trustValue {
+    font-size: 0.75rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .trustBar {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+}

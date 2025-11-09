@@ -46,8 +46,7 @@ function OrderSuccessContent() {
         )}
 
         <p className={styles.message}>
-          Thank you for your purchase! We&apos;ve received your order and will send you a
-          confirmation email shortly.
+          Thank you for your purchase! We&apos;ve received your order and will process it shortly. Till then please check your &apos;My Orders&apos; page.
         </p>
 
         <div className={styles.actions}>
