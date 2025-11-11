@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useMemo } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { Product } from '@/lib/supabase'
 import { HorizontalScrollCards } from '@/components/HorizontalScrollCards'
 import { ScrollReveal } from '@/components/ScrollReveal'
@@ -68,9 +69,31 @@ export default function Home() {
   return (
     <div className={styles.container}>
       <main className={styles.main}>
-        {/* Enhanced Hero Section */}
+        {/* Enhanced Hero Section with Background Image */}
         <ScrollReveal delay={0.1}>
           <section className={styles.hero}>
+            {/* Hero Background Image - Desktop */}
+            <div className={styles.heroImageWrapper}>
+              <Image
+                src="/images/hero/hero-placeholder.jpg"
+                alt="Winky Cats Store Collection"
+                fill
+                priority
+                className={styles.heroImageDesktop}
+                sizes="(max-width: 768px) 0vw, 100vw"
+              />
+              {/* Hero Background Image - Mobile */}
+              <Image
+                src="/images/hero/hero-mobile-placeholder.jpg"
+                alt="Winky Cats Store Collection"
+                fill
+                priority
+                className={styles.heroImageMobile}
+                sizes="(max-width: 768px) 100vw, 0vw"
+              />
+            </div>
+
+            {/* Hero Content */}
             <div className={styles.heroContent}>
               <div className={styles.heroText}>
                 <h1 className={styles.heroTitle}>Fashion made easier</h1>
