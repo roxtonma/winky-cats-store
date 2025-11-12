@@ -3,10 +3,14 @@
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 1.5rem;
   padding: 2rem 1.5rem;
-  background: var(--bg-secondary);
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur) var(--glass-saturate);
+  -webkit-backdrop-filter: var(--glass-blur) var(--glass-saturate);
+  border: 1px solid var(--glass-border);
   border-radius: 16px;
   margin: 2rem auto;
   max-width: 1200px;
+  box-shadow: var(--shadow-sm);
 }
 
 .trustItem {

@@ -28,7 +28,6 @@ function ProductsContent() {
   // Filter state - initialize first
   const [filters, setFilters] = useState<FilterState>({
     priceRange: [0, 10000],
-    inStock: false,
     selectedTags: [],
     selectedCategory: categoryFilter
   })
@@ -85,7 +84,6 @@ function ProductsContent() {
     category: filters.selectedCategory || undefined,
     minPrice: filters.priceRange[0],
     maxPrice: filters.priceRange[1],
-    inStock: filters.inStock,
     tags: filters.selectedTags,
     limit: 20
   })

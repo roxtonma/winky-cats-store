@@ -93,6 +93,9 @@ export default function Home() {
               />
             </div>
 
+            {/* Scrim Layer - Simple gradient for text readability */}
+            <div className={styles.heroScrimLayer}></div>
+
             {/* Hero Content */}
             <div className={styles.heroContent}>
               <div className={styles.heroText}>

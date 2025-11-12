@@ -16,13 +16,12 @@ interface UseProductsParams {
   category?: string
   minPrice?: number
   maxPrice?: number
-  inStock?: boolean
   tags?: string[]
   limit?: number
 }
 
 export const useProducts = (params: UseProductsParams = {}) => {
-  const { category, minPrice, maxPrice, inStock, tags, limit = 20 } = params
+  const { category, minPrice, maxPrice, tags, limit = 20 } = params
 
   return useInfiniteQuery<ProductsResponse>({
     queryKey: ['products', params],
@@ -35,7 +34,6 @@ export const useProducts = (params: UseProductsParams = {}) => {
       if (category) searchParams.set('category', category)
       if (minPrice !== undefined) searchParams.set('minPrice', String(minPrice))
       if (maxPrice !== undefined) searchParams.set('maxPrice', String(maxPrice))
-      if (inStock) searchParams.set('inStock', 'true')
       if (tags && tags.length > 0) searchParams.set('tags', tags.join(','))
 
       const response = await fetch(`/api/products?${searchParams.toString()}`)

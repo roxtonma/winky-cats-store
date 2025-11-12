@@ -22,9 +22,6 @@ export default function Footer() {
             <h3 className={styles.sectionTitle}>Quick Links</h3>
             <ul className={styles.linkList}>
               <li>
-                <Link href="/" className={styles.link}>Home</Link>
-              </li>
-              <li>
                 <Link href="/products" className={styles.link}>Our Products</Link>
               </li>
               <li>
@@ -32,12 +29,6 @@ export default function Footer() {
               </li>
               <li>
                 <Link href="/associates" className={styles.link}>Affiliate Products</Link>
-              </li>
-              <li>
-                <Link href="/account" className={styles.link}>My Account</Link>
-              </li>
-              <li>
-                <Link href="/account/orders" className={styles.link}>My Orders</Link>
               </li>
             </ul>
           </div>

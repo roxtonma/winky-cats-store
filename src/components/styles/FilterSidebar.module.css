@@ -1,8 +1,11 @@
 .sidebar {
-  background: white;
-  border-radius: 8px;
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur) var(--glass-saturate);
+  -webkit-backdrop-filter: var(--glass-blur) var(--glass-saturate);
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
   padding: 20px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow-sm);
   position: sticky;
   top: 100px;
   height: fit-content;
@@ -15,7 +18,7 @@
   align-items: center;
   margin-bottom: 24px;
   padding-bottom: 16px;
-  border-bottom: 1px solid #e5e7eb;
+  border-bottom: 1px solid var(--border);
 }
 
 .headerActions {
@@ -28,7 +31,7 @@
   font-size: 1.5rem;
   font-weight: 600;
   margin: 0;
-  color: #111827;
+  color: var(--text-primary);
 }
 
 .clearBtn {
@@ -44,14 +47,14 @@
 }
 
 .clearBtn:hover {
-  background-color: #f3f4f6;
+  background-color: var(--accent-light);
 }
 
 .closeBtn {
   display: none;
   background: none;
   border: none;
-  color: #6b7280;
+  color: var(--text-secondary);
   font-size: 1.5rem;
   line-height: 1;
   cursor: pointer;
@@ -65,7 +68,7 @@
 }
 
 .closeBtn:hover {
-  background-color: #f3f4f6;
+  background-color: var(--accent-light);
 }
 
 .backdrop {
@@ -75,7 +78,7 @@
 .filterSection {
   margin-bottom: 28px;
   padding-bottom: 24px;
-  border-bottom: 1px solid #e5e7eb;
+  border-bottom: 1px solid var(--border);
 }
 
 .filterSection:last-child {
@@ -88,7 +91,7 @@
   font-size: 1rem;
   font-weight: 600;
   margin: 0 0 16px 0;
-  color: #374151;
+  color: var(--text-primary);
 }
 
 /* Price Inputs */
@@ -109,7 +112,7 @@
 .priceInput label {
   font-size: 0.75rem;
   font-weight: 500;
-  color: #6b7280;
+  color: var(--text-secondary);
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
@@ -117,9 +120,11 @@
 .input {
   width: 100%;
   padding: 8px 12px;
-  border: 1px solid #d1d5db;
+  border: 1px solid var(--border);
   border-radius: 6px;
   font-size: 0.875rem;
+  color: var(--text-primary);
+  background: var(--bg-secondary);
   transition: border-color 0.2s;
 }
 
@@ -130,7 +135,7 @@
 }
 
 .priceSeparator {
-  color: #9ca3af;
+  color: var(--text-muted);
   font-weight: 500;
   margin-top: 20px;
 }
@@ -140,7 +145,7 @@
   width: 100%;
   height: 6px;
   border-radius: 3px;
-  background: #e5e7eb;
+  background: var(--border);
   outline: none;
   -webkit-appearance: none;
   appearance: none;
@@ -187,11 +192,11 @@
   border-radius: 6px;
   transition: background-color 0.2s;
   font-size: 0.9375rem;
-  color: #374151;
+  color: var(--text-primary);
 }
 
 .checkbox:hover {
-  background-color: #f9fafb;
+  background-color: var(--accent-light);
 }
 
 .checkbox input[type="checkbox"] {
@@ -221,12 +226,12 @@
 
 .categoryChip {
   padding: 10px 16px;
-  background: white;
-  border: 1.5px solid #e5e7eb;
+  background: var(--bg-secondary);
+  border: 1.5px solid var(--border);
   border-radius: 8px;
   font-size: 0.9375rem;
   font-weight: 500;
-  color: #374151;
+  color: var(--text-primary);
   cursor: pointer;
   transition: all 0.2s ease;
   text-align: left;
@@ -235,7 +240,7 @@
 
 .categoryChip:hover {
   border-color: var(--accent-primary);
-  background: #f3f4f6;
+  background: var(--accent-light);
   color: var(--accent-primary);
 }
 

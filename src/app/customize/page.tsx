@@ -176,7 +176,7 @@ export default function CustomizePage() {
                 value={formData.designBrief}
                 onChange={handleInputChange}
                 className={styles.textarea}
-                placeholder="Describe your design idea... What colors do you want? What style? Any text or graphics? Be as detailed as possible!"
+                placeholder="Describe your design idea ... What colors do you want? What style? Any text or graphics? Be as detailed as possible!"
                 rows={6}
                 required
               />

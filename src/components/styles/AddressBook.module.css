@@ -84,6 +84,7 @@
   cursor: pointer;
   transition: all 0.2s;
   background: var(--bg-card);
+  color: white;
 }
 
 .actionButton.edit:hover {

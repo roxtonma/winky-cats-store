@@ -6,16 +6,19 @@
 }
 
 .content {
-  background: white;
+  background: var(--glass-bg);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid var(--glass-border);
   border-radius: 12px;
   padding: 2rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow-sm);
 }
 
 .title {
   font-size: 2.5rem;
   font-weight: 700;
-  color: #333;
+  color: var(--text-primary);
   margin-bottom: 1.5rem;
   text-align: center;
 }
@@ -23,7 +26,7 @@
 .intro {
   text-align: center;
   font-size: 1.1rem;
-  color: #666;
+  color: var(--text-secondary);
   margin-bottom: 3rem;
   max-width: 700px;
   margin-left: auto;
@@ -37,7 +40,7 @@
 }
 
 .section {
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid var(--border-light);
   padding-bottom: 2rem;
 }
 
@@ -48,7 +51,7 @@
 .sectionTitle {
   font-size: 1.8rem;
   font-weight: 600;
-  color: #FF69B4;
+  color: var(--accent-primary);
   margin-bottom: 1.5rem;
 }
 
@@ -59,32 +62,32 @@
 .contactMethod h3 {
   font-size: 1.2rem;
   font-weight: 600;
-  color: #333;
+  color: var(--text-primary);
   margin-bottom: 0.5rem;
 }
 
 .contactMethod p {
   font-size: 1rem;
-  color: #666;
+  color: var(--text-secondary);
   line-height: 1.6;
   margin-bottom: 0.5rem;
 }
 
 .note {
   font-size: 0.9rem;
-  color: #999;
+  color: var(--text-muted);
   font-style: italic;
 }
 
 .link {
-  color: #FF69B4;
+  color: var(--accent-primary);
   text-decoration: none;
   font-weight: 500;
   transition: color 0.3s ease;
 }
 
 .link:hover {
-  color: #ff1493;
+  color: var(--accent-secondary);
   text-decoration: underline;
 }
 
@@ -97,7 +100,7 @@
 
 .socialLinks p {
   font-size: 1rem;
-  color: #666;
+  color: var(--text-secondary);
 }
 
 .linkList {
@@ -116,7 +119,7 @@
   content: '→';
   position: absolute;
   left: 0;
-  color: #FF69B4;
+  color: var(--accent-primary);
   font-weight: bold;
 }
 

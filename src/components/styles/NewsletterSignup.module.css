@@ -85,7 +85,7 @@
   left: 1rem;
   top: 50%;
   transform: translateY(-50%);
-  color: var(--text-muted);
+  color: rgba(255, 255, 255, 0.7);
   pointer-events: none;
 }
 
@@ -95,20 +95,22 @@
   border: 2px solid rgba(255, 255, 255, 0.3);
   border-radius: 12px;
   font-size: 1rem;
-  background: rgba(255, 255, 255, 0.95);
-  color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  color: white;
   transition: all 0.2s;
 }
 
 .input:focus {
   outline: none;
   border-color: white;
-  background: white;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  background: rgba(255, 255, 255, 0.25);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
 .input::placeholder {
-  color: var(--text-muted);
+  color: rgba(255, 255, 255, 0.7);
 }
 
 .input:disabled {

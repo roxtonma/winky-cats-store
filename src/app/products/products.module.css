@@ -81,21 +81,23 @@
   display: none;
   align-items: center;
   gap: 8px;
-  background: white;
-  border: 1px solid #d1d5db;
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur) var(--glass-saturate);
+  -webkit-backdrop-filter: var(--glass-blur) var(--glass-saturate);
+  border: 1px solid var(--glass-border);
   padding: 10px 16px;
   border-radius: 8px;
   font-size: 0.9375rem;
   font-weight: 500;
-  color: #374151;
+  color: var(--text-primary);
   cursor: pointer;
   transition: all 0.2s;
 }
 
 .mobileFilterBtn:hover {
-  background: #f9fafb;
-  border-color: #6366f1;
-  color: #6366f1;
+  background: var(--accent-light);
+  border-color: var(--accent-primary);
+  color: var(--accent-primary);
 }
 
 .mobileFilterBtn svg {
