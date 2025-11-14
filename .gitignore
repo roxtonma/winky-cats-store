@@ -45,3 +45,6 @@ mockups/
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Architecture
+ARCHITECTURE.md

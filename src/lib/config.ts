@@ -24,7 +24,8 @@ export const config = {
 
     // User-based limits (for authenticated users)
     verifiedUserLimit: 2, // Max try-ons for verified users without purchase
-    purchasedUserLimit: Infinity, // Unlimited for users who made a purchase
+    purchasedUserLimit: 5, // Try-ons per ₹100 spent
+    spendThreshold: 100, // ₹100 spend = 5 try-ons
 
     // Processing limits
     maxImageSize: 10 * 1024 * 1024, // 10MB max file size

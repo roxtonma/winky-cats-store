@@ -15,6 +15,7 @@
 .emptyCart {
   text-align: center;
   margin-top: 4rem;
+  margin-bottom: 4rem;
 }
 
 .emptyCart p {
@@ -36,6 +37,8 @@
 }
 
 .continueShoppingBtn:hover {
+  color: white;
+  box-shadow: 0 5px 15px rgba(255, 105, 180, 0.3);
   transform: translateY(-2px);
   text-decoration: none;
 }

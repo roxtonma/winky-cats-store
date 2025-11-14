@@ -98,7 +98,7 @@ export type TryOnUsageResult = {
  * Supports user-based tiers:
  * - Anonymous (IP): 2 per day
  * - Authenticated without purchase: 2 lifetime
- * - Authenticated with purchase: unlimited
+ * - Authenticated with purchase: 5 try-ons per ₹100 spent
  */
 export async function checkTryOnLimit(
   identifier: string,
@@ -111,7 +111,7 @@ export async function checkTryOnLimit(
       process.env.SUPABASE_SERVICE_ROLE_KEY!
     )
 
-    // Check if user has purchased (unlimited try-ons)
+    // Check if user has purchased - calculate based on total spent
     if (userId) {
       const { data: userProfile } = await supabase
         .from('user_profiles')
@@ -120,11 +120,41 @@ export async function checkTryOnLimit(
         .single()
 
       if (userProfile?.has_purchased) {
+        // Calculate total amount spent from paid orders
+        const { data: orders } = await supabase
+          .from('orders')
+          .select('total_amount')
+          .eq('user_id', userId)
+          .eq('payment_status', 'paid')
+
+        const totalSpent = orders?.reduce((sum, order) => sum + (order.total_amount || 0), 0) || 0
+
+        // Calculate allowed attempts: 5 try-ons per ₹100 spent
+        const allowedAttempts = Math.floor(totalSpent / config.tryOn.spendThreshold) * config.tryOn.purchasedUserLimit
+
+        // Get current usage
+        const { data: usageRecords } = await supabase
+          .from('try_on_usage')
+          .select('attempt_count')
+          .eq('user_id', userId)
+
+        const totalUsed = usageRecords?.reduce((sum, record) => sum + record.attempt_count, 0) || 0
+        const remaining = Math.max(0, allowedAttempts - totalUsed)
+
+        if (totalUsed >= allowedAttempts) {
+          return {
+            allowed: false,
+            remaining: 0,
+            totalUsed,
+            message: `Try-on limit reached. You have ${allowedAttempts} attempts available.`,
+          }
+        }
+
         return {
           allowed: true,
-          remaining: 999, // Display as "unlimited"
-          totalUsed: 0,
-          message: 'Unlimited try-ons (Premium Member)',
+          remaining,
+          totalUsed,
+          message: `${remaining} try-ons remaining`,
         }
       }
     }

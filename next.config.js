@@ -52,8 +52,10 @@ const nextConfig = {
   // Optimize package imports to reduce bundle size
   experimental: {
     optimizePackageImports: ['react-toastify', '@tanstack/react-query'],
-    serverExternalPackages: ['resend'], // Prevent bundling Resend to avoid optional peer dependency issues
   },
+
+  // Prevent bundling certain packages (e.g., Resend) to avoid optional peer dependency issues
+  serverExternalPackages: ['resend'],
 
   // Production-specific configurations
   productionBrowserSourceMaps: false, // Disable source maps in production for smaller builds

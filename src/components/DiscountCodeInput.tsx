@@ -28,6 +28,7 @@ export function DiscountCodeInput({
   const [code, setCode] = useState('')
   const [isValidating, setIsValidating] = useState(false)
   const [error, setError] = useState('')
+  const [isExpanded, setIsExpanded] = useState(false)
 
   const handleApplyDiscount = async () => {
     if (!code.trim()) {
@@ -77,6 +78,7 @@ export function DiscountCodeInput({
     onDiscountRemoved()
     setCode('')
     setError('')
+    setIsExpanded(false)
   }
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -122,29 +124,53 @@ export function DiscountCodeInput({
         </div>
       ) : (
         <>
-          <div className={styles.inputGroup}>
-            <input
-              type="text"
-              placeholder="Enter discount code"
-              value={code}
-              onChange={(e) => {
-                setCode(e.target.value.toUpperCase())
-                setError('')
-              }}
-              onKeyDown={handleKeyDown}
-              className={`${styles.input} ${error ? styles.inputError : ''}`}
-              disabled={isValidating}
-            />
-            <button
-              type="button"
-              onClick={handleApplyDiscount}
-              disabled={isValidating || !code.trim()}
-              className={styles.applyButton}
+          <button
+            type="button"
+            onClick={() => setIsExpanded(!isExpanded)}
+            className={styles.toggleButton}
+          >
+            <span>Have a discount code?</span>
+            <svg
+              className={`${styles.chevronIcon} ${isExpanded ? styles.chevronExpanded : ''}`}
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
             >
-              {isValidating ? 'Applying...' : 'Apply'}
-            </button>
-          </div>
-          {error && <div className={styles.errorMessage}>{error}</div>}
+              <polyline points="6 9 12 15 18 9" />
+            </svg>
+          </button>
+          {isExpanded && (
+            <>
+              <div className={styles.inputGroup}>
+                <input
+                  type="text"
+                  placeholder="Enter discount code"
+                  value={code}
+                  onChange={(e) => {
+                    setCode(e.target.value.toUpperCase())
+                    setError('')
+                  }}
+                  onKeyDown={handleKeyDown}
+                  className={`${styles.input} ${error ? styles.inputError : ''}`}
+                  disabled={isValidating}
+                />
+                <button
+                  type="button"
+                  onClick={handleApplyDiscount}
+                  disabled={isValidating || !code.trim()}
+                  className={styles.applyButton}
+                >
+                  {isValidating ? 'Applying...' : 'Apply'}
+                </button>
+              </div>
+              {error && <div className={styles.errorMessage}>{error}</div>}
+            </>
+          )}
         </>
       )}
     </div>

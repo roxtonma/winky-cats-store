@@ -9,6 +9,7 @@ import { useMemo, Suspense, useState, useEffect, useRef, lazy } from 'react'
 import { FilterSidebar, FilterState } from '@/components/FilterSidebar'
 import { ProductImageCarousel } from '@/components/ProductImageCarousel'
 import { useCategories } from '@/hooks/useCategories'
+import { useMediaQuery } from '@/hooks/useMediaQuery'
 import { ScrollReveal } from '@/components/ScrollReveal'
 import type { Product } from '@/lib/supabase'
 
@@ -21,6 +22,9 @@ function ProductsContent() {
   const router = useRouter()
   const categoryFilter = searchParams.get('category')
   const { addItem } = useCart()
+
+  // Detect mobile viewport
+  const isMobile = useMediaQuery('(max-width: 1024px)')
 
   // Fetch categories
   const { data: categories = [] } = useCategories()
@@ -185,7 +189,7 @@ function ProductsContent() {
       </ScrollReveal>
 
       <div className={styles.contentWrapper}>
-        <ScrollReveal delay={0.15}>
+        {isMobile ? (
           <aside className={styles.filterSection}>
             <FilterSidebar
               filters={filters}
@@ -197,7 +201,21 @@ function ProductsContent() {
               categories={categories}
             />
           </aside>
-        </ScrollReveal>
+        ) : (
+          <ScrollReveal delay={0.15}>
+            <aside className={styles.filterSection}>
+              <FilterSidebar
+                filters={filters}
+                onFilterChange={handleFilterChange}
+                availableTags={availableTags}
+                maxPrice={maxPrice}
+                isMobileOpen={isMobileFilterOpen}
+                onMobileClose={() => setIsMobileFilterOpen(false)}
+                categories={categories}
+              />
+            </aside>
+          </ScrollReveal>
+        )}
 
         <main className={styles.productsSection}>
           {/* Category Badge */}

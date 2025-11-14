@@ -2,10 +2,54 @@
   margin: 1rem 0;
 }
 
+.toggleButton {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background: transparent;
+  border: 2px dashed var(--border-color, #e0e0e0);
+  border-radius: 8px;
+  color: var(--text-secondary, #666);
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.toggleButton:hover {
+  border-color: var(--accent-primary, #FF69B4);
+  color: var(--accent-primary, #FF69B4);
+  background: rgba(255, 105, 180, 0.05);
+}
+
+.chevronIcon {
+  transition: transform 0.2s ease;
+}
+
+.chevronExpanded {
+  transform: rotate(180deg);
+}
+
 .inputGroup {
   display: flex;
   gap: 0.5rem;
   width: 100%;
+  margin-top: 0.75rem;
+  animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .input {
@@ -138,8 +182,17 @@
 
 /* Responsive */
 @media (max-width: 480px) {
+  .toggleButton {
+    font-size: 0.9rem;
+    padding: 0.65rem 0.85rem;
+  }
+
   .inputGroup {
     flex-direction: column;
+  }
+
+  .input {
+    width: 100%;
   }
 
   .applyButton {
