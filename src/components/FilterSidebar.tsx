@@ -5,7 +5,6 @@ import styles from './styles/FilterSidebar.module.css'
 
 export type FilterState = {
   priceRange: [number, number]
-  inStock: boolean
   selectedTags: string[]
   selectedCategory?: string | null
 }
@@ -38,10 +37,6 @@ export function FilterSidebar({ filters, onFilterChange, availableTags, maxPrice
     onFilterChange({ ...filters, priceRange: localPriceRange })
   }
 
-  const handleStockToggle = () => {
-    onFilterChange({ ...filters, inStock: !filters.inStock })
-  }
-
   const handleTagToggle = (tag: string) => {
     const newTags = filters.selectedTags.includes(tag)
       ? filters.selectedTags.filter(t => t !== tag)
@@ -56,14 +51,12 @@ export function FilterSidebar({ filters, onFilterChange, availableTags, maxPrice
   const handleClearFilters = () => {
     onFilterChange({
       priceRange: [0, maxPrice],
-      inStock: false,
       selectedTags: [],
       selectedCategory: null
     })
   }
 
   const hasActiveFilters =
-    filters.inStock ||
     filters.selectedTags.length > 0 ||
     filters.priceRange[0] > 0 ||
     filters.priceRange[1] < maxPrice ||
@@ -176,19 +169,6 @@ export function FilterSidebar({ filters, onFilterChange, availableTags, maxPrice
           onTouchEnd={handlePriceCommit}
           className={styles.rangeSlider}
         />
-      </div>
-
-      {/* Stock Filter */}
-      <div className={styles.filterSection}>
-        <h3 className={styles.filterTitle}>Availability</h3>
-        <label className={styles.checkbox}>
-          <input
-            type="checkbox"
-            checked={filters.inStock}
-            onChange={handleStockToggle}
-          />
-          <span>In Stock Only</span>
-        </label>
       </div>
 
       {/* Tags Filter */}

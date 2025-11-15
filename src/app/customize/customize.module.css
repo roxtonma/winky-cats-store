@@ -91,6 +91,17 @@
   outline: none;
   border-color: var(--accent-primary);
   background: white;
+  color: #000000;
+}
+
+/* Fix white-on-white text issue for select dropdowns */
+.select:focus {
+  color: #000000;
+}
+
+.select option {
+  background: white;
+  color: #000000;
 }
 
 .input::placeholder,
@@ -126,6 +137,7 @@
 .fileInput:hover {
   border-color: var(--accent-primary);
   background: white;
+  color: #000000;
 }
 
 .helperText {

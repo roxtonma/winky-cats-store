@@ -1,9 +1,14 @@
 .footer {
-  background: linear-gradient(180deg, #FAFAFA 0%, #F5F5F7 100%);
-  color: #3D3D3D;
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur) var(--glass-saturate);
+  -webkit-backdrop-filter: var(--glass-blur) var(--glass-saturate);
+  border: 1px solid var(--glass-border);
+  color: var(--text-primary);
   padding: 3rem 1rem 1.5rem;
   margin-top: 4rem;
-  border-top: 2px solid #FF6B9D;
+  border-top: 2px solid var(--accent-primary);
+  border-radius: 24px 24px 0 0;
+  box-shadow: var(--shadow-md);
 }
 
 .container {
@@ -27,13 +32,13 @@
   font-size: 1.2rem;
   font-weight: 600;
   margin-bottom: 1rem;
-  color: #FF6B9D;
+  color: var(--accent-primary);
 }
 
 .description {
   font-size: 0.95rem;
   line-height: 1.6;
-  color: #6B6B6B;
+  color: var(--text-secondary);
 }
 
 .linkList {
@@ -46,7 +51,7 @@
 }
 
 .link {
-  color: #6B6B6B;
+  color: var(--text-secondary);
   text-decoration: none;
   font-size: 0.95rem;
   transition: all 0.3s ease;
@@ -65,8 +70,8 @@
 }
 
 .link:hover {
-  color: #FF1F7F;
-  background: #FFE5F0;
+  color: var(--accent-secondary);
+  background: var(--accent-light);
   transform: translateX(5px);
   text-decoration: none;
 }
@@ -92,13 +97,13 @@
   gap: 1.25rem;
   padding: 2rem 1rem;
   margin: 2rem 0 1.5rem 0;
-  border-top: 1px solid #E8E8EA;
+  border-top: 1px solid var(--border);
 }
 
 .paymentTitle {
   font-size: 0.95rem;
   font-weight: 600;
-  color: #3D3D3D;
+  color: var(--text-primary);
   margin: 0;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -109,14 +114,14 @@
   justify-content: space-between;
   align-items: center;
   padding-top: 1.5rem;
-  border-top: 1px solid #E8E8EA;
+  border-top: 1px solid var(--border);
   flex-wrap: wrap;
   gap: 1rem;
 }
 
 .copyright {
   font-size: 0.9rem;
-  color: #9E9E9E;
+  color: var(--text-muted);
   margin: 0;
 }
 
@@ -164,14 +169,14 @@
 }
 
 .socialLink {
-  color: #6B6B6B;
+  color: var(--text-secondary);
   text-decoration: none;
   font-size: 0.9rem;
   transition: color 0.3s ease;
 }
 
 .socialLink:hover {
-  color: #FF6B9D;
+  color: var(--accent-primary);
 }
 
 .socialLink span {

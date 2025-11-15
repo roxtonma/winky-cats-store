@@ -15,7 +15,6 @@ export async function GET(request: NextRequest) {
     // Filter parameters
     const minPrice = searchParams.get('minPrice') ? parseFloat(searchParams.get('minPrice')!) : null
     const maxPrice = searchParams.get('maxPrice') ? parseFloat(searchParams.get('maxPrice')!) : null
-    const inStock = searchParams.get('inStock') === 'true'
     const tags = searchParams.get('tags')?.split(',').filter(Boolean) || []
     const featured = searchParams.get('featured') === 'true'
 
@@ -45,11 +44,6 @@ export async function GET(request: NextRequest) {
     }
     if (maxPrice !== null) {
       query = query.lte('price', maxPrice)
-    }
-
-    // Stock filter
-    if (inStock) {
-      query = query.gt('inventory_quantity', 0)
     }
 
     // Tags filter - using contains for array column

@@ -51,8 +51,10 @@
   position: absolute;
   top: 16px;
   right: 16px;
-  background: rgba(255, 255, 255, 0.9);
-  border: none;
+  background: var(--bg-card);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid var(--border-light);
   border-radius: 50%;
   width: 36px;
   height: 36px;
@@ -65,13 +67,13 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
   font-size: 28px;
   font-weight: 300;
-  color: #374151;
+  color: var(--text-primary);
   line-height: 1;
   padding: 0;
 }
 
 .closeBtn:hover {
-  background: #ffffff;
+  background: var(--bg-secondary);
   transform: scale(1.1);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
@@ -256,14 +258,14 @@
 }
 
 .sizeButtonActive {
-  border-color: var(--text-primary, #000000);
-  background: var(--text-primary, #000000);
+  border-color: var(--accent-primary);
+  background: var(--accent-primary);
   color: white;
 }
 
 .sizeButtonActive:hover {
-  background: #FF1493;
-  border-color: #FF1493;
+  background: var(--accent-secondary);
+  border-color: var(--accent-secondary);
 }
 
 .stockInfo {
@@ -275,13 +277,13 @@
 }
 
 .inStock {
-  color: #059669;
-  background: #d1fae5;
+  color: #10B981;
+  background: rgba(16, 185, 129, 0.15);
 }
 
 .outOfStock {
-  color: #dc2626;
-  background: #fee2e2;
+  color: #EF4444;
+  background: rgba(239, 68, 68, 0.15);
 }
 
 .actionButtons {
@@ -292,8 +294,8 @@
 
 .tryOnBtn {
   background: transparent;
-  color: var(--text-primary, #000000);
-  border: 2px solid var(--text-primary, #000000);
+  color: var(--text-primary);
+  border: 2px solid var(--accent-primary);
   padding: 14px 24px;
   border-radius: 8px;
   font-size: 0.95rem;
@@ -308,11 +310,11 @@
 }
 
 .tryOnBtn:hover {
-  background: #FF1493;
-  border-color: #FF1493;
+  background: var(--accent-secondary);
+  border-color: var(--accent-secondary);
   color: white;
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(255, 20, 147, 0.3);
+  box-shadow: 0 4px 12px rgba(255, 31, 127, 0.3);
 }
 
 .tryOnBtn:active {
@@ -320,7 +322,7 @@
 }
 
 .addToCartBtn {
-  background: var(--text-primary, #000000);
+  background: var(--accent-primary);
   color: white;
   border: none;
   padding: 16px 32px;
@@ -333,9 +335,9 @@
 }
 
 .addToCartBtn:hover:not(:disabled) {
-  background: #FF1493;
+  background: var(--accent-secondary);
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(255, 20, 147, 0.3);
+  box-shadow: 0 4px 12px rgba(255, 31, 127, 0.3);
 }
 
 .addToCartBtn:active:not(:disabled) {

@@ -1,24 +1,31 @@
 :root {
-  /* Modern and sophisticated palette */
-  --bg-primary: #FAFAFA;
-  --bg-secondary: #F5F5F7;
-  --bg-card: #FFFFFF;
-  --text-primary: #1F1F1F;
-  --text-secondary: #6B6B6B;
-  --text-muted: #9E9E9E;
+  /* Dark mode with glassmorphism */
+  --bg-primary: #0A0A0A;
+  --bg-secondary: #1A1A1A;
+  --bg-tertiary: #2A2A2A;
+  --bg-card: rgba(255, 255, 255, 0.05);
+  --text-primary: #FFFFFF;
+  --text-secondary: #B3B3B3;
+  --text-muted: #808080;
 
   /* Refreshed pink theme - softer and more modern */
   --accent-primary: #FF6B9D;
   --accent-secondary: #FF1F7F;
-  --accent-light: #FFE5F0;
+  --accent-light: rgba(255, 107, 157, 0.15);
   --accent-gradient: linear-gradient(135deg, #FF6B9D 0%, #FF1F7F 100%);
 
-  /* Borders and shadows */
-  --border: #E5E5E5;
-  --border-light: #F0F0F0;
-  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.06);
-  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.08);
-  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
+  /* Glassmorphism properties */
+  --glass-bg: rgba(255, 255, 255, 0.08);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --glass-blur: blur(20px);
+  --glass-saturate: saturate(180%);
+
+  /* Borders and shadows for dark mode */
+  --border: rgba(255, 255, 255, 0.1);
+  --border-light: rgba(255, 255, 255, 0.05);
+  --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.5);
+  --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.6);
 
   /* Status colors */
   --success: #10B981;
@@ -27,7 +34,7 @@
 
   /* Focus and interaction */
   --focus-ring: #FF6B9D;
-  --focus-ring-offset: #FFFFFF;
+  --focus-ring-offset: #0A0A0A;
 }
 
 html,
@@ -38,7 +45,12 @@ body {
 
 body {
   color: var(--text-primary);
-  background: var(--bg-primary);
+  background:
+    radial-gradient(circle at 20% 30%, rgba(255, 107, 157, 0.06) 0%, transparent 70%),
+    radial-gradient(circle at 80% 70%, rgba(255, 31, 127, 0.04) 0%, transparent 75%),
+    radial-gradient(circle at 50% 50%, rgba(138, 43, 226, 0.03) 0%, transparent 80%),
+    var(--bg-primary);
+  background-attachment: fixed;
   font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -122,10 +134,12 @@ button:active:not(:disabled) {
   transform: scale(0.98);
 }
 
-/* Card styles */
+/* Card styles with glassmorphism */
 .card {
-  background: var(--bg-card);
-  border: 1px solid var(--border-light);
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur) var(--glass-saturate);
+  -webkit-backdrop-filter: var(--glass-blur) var(--glass-saturate);
+  border: 1px solid var(--glass-border);
   border-radius: 16px;
   padding: 1.5rem;
   box-shadow: var(--shadow-sm);
@@ -133,23 +147,29 @@ button:active:not(:disabled) {
 }
 
 .card:hover {
+  background: rgba(255, 255, 255, 0.1);
   box-shadow: var(--shadow-md);
   transform: translateY(-2px);
+  border-color: rgba(255, 255, 255, 0.15);
 }
 
-/* Input styles */
+/* Input styles with glassmorphism */
 input, textarea, select {
-  background: var(--bg-secondary);
-  border: 1px solid var(--border-light);
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid var(--glass-border);
   color: var(--text-primary);
   padding: 0.75rem;
   border-radius: 6px;
   font-size: 0.95rem;
+  transition: all 0.2s ease;
 }
 
 input:focus, textarea:focus, select:focus {
   outline: none;
   border-color: var(--accent-primary);
+  background: rgba(255, 255, 255, 0.08);
 }
 
 /* Cart animation */

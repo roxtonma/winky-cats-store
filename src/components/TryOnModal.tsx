@@ -117,7 +117,7 @@ export function TryOnModal({
       if (result.remaining !== undefined) {
         setProcessingLogs(prev => [
           ...prev,
-          `Try-on generated successfully! ${result.remaining} attempts remaining today.`
+          `Try-on generated successfully! ${result.remaining} attempts remaining.`
         ])
       } else {
         setProcessingLogs(prev => [...prev, 'Try-on generated successfully!'])
@@ -232,8 +232,8 @@ export function TryOnModal({
                   textAlign: 'center'
                 }}>
                   {results.remaining > 0
-                    ? `${results.remaining} try-on${results.remaining !== 1 ? 's' : ''} remaining today`
-                    : 'Daily limit reached. Try again tomorrow!'}
+                    ? `${results.remaining} try-on${results.remaining !== 1 ? 's' : ''} remaining`
+                    : 'Try-on limit reached'}
                 </div>
               )}
 

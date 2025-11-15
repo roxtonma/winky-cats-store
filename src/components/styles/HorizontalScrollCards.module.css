@@ -1,5 +1,5 @@
 .section {
-  margin: 2rem 0;
+  margin: 2rem 0 0 0;
 }
 
 .header {
@@ -51,10 +51,13 @@
 
 .card {
   flex: 0 0 280px;
-  background: var(--bg-card);
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur) var(--glass-saturate);
+  -webkit-backdrop-filter: var(--glass-blur) var(--glass-saturate);
+  border: 1px solid var(--glass-border);
   border-radius: 16px;
   overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  box-shadow: var(--shadow-sm);
   transition: all 0.3s ease;
   text-decoration: none;
   color: inherit;
@@ -63,8 +66,10 @@
 }
 
 .card:hover {
+  background: rgba(255, 255, 255, 0.12);
   transform: translateY(-4px);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+  box-shadow: var(--shadow-md);
+  border-color: rgba(255, 107, 157, 0.3);
   text-decoration: none;
 }
 

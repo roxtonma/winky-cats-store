@@ -1,7 +1,7 @@
 .disclosure {
-  background: #ffe0f0;
-  border: 1px solid #ffb3d9;
-  border-radius: 8px;
+  background: var(--accent-light);
+  border: 1px solid rgba(255, 107, 157, 0.3);
+  border-radius: 12px;
   padding: 16px;
   display: flex;
   align-items: flex-start;
@@ -10,7 +10,7 @@
 }
 
 .icon {
-  color: #ff1493;
+  color: var(--accent-primary);
   flex-shrink: 0;
 }
 
@@ -18,7 +18,7 @@
   margin: 0;
   font-size: 14px;
   line-height: 1.5;
-  color: #8b0051;
+  color: var(--text-secondary);
   padding-top: 1px;
 }
 
